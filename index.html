@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>K's Korner - School Study Guides</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============ SITE SHELL ============ */
+  :root{
+    --bg:#fff8ec; --ink:#2b2340; --muted:#6b6385; --card:#ffffff;
+    --c1:#ff7a59; --c2:#7c5cff; --c3:#1fb58f; --c4:#ff4f8b; --c5:#ffb400; --c6:#2d9cdb; --c7:#9b59b6;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
+    background-image:radial-gradient(#ffe3b8 1.5px,transparent 1.5px);background-size:22px 22px}
+  .page{display:none}.page.on{display:block;animation:pop .35s}
+  @keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .btn{font-family:'Baloo 2';font-weight:700;font-size:18px;border:3px solid var(--ink);background:#fff;padding:8px 18px;border-radius:14px;cursor:pointer;box-shadow:0 4px 0 var(--ink);color:var(--ink)}
+  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+  .btn.primary{background:var(--c2);color:#fff}
+
+  /* ---- Home ---- */
+  #home{position:relative;min-height:100vh;overflow:hidden}
+  .float{position:absolute;font-size:clamp(28px,5vw,48px);opacity:.85;animation:drift 7s ease-in-out infinite;user-select:none;pointer-events:none}
+  @keyframes drift{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-22px) rotate(8deg)}}
+  .hero{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 18px}
+  .badge{width:clamp(110px,22vw,150px);height:clamp(110px,22vw,150px);border-radius:32px;background:var(--c2);border:5px solid var(--ink);box-shadow:0 10px 0 var(--ink);
+    display:flex;align-items:center;justify-content:center;font-family:'Baloo 2';font-weight:800;font-size:clamp(70px,14vw,100px);color:#fff;transform:rotate(-8deg);animation:wobble 3.5s ease-in-out infinite}
+  @keyframes wobble{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(6deg) scale(1.04)}}
+  .title{font-family:'Baloo 2';font-weight:800;font-size:clamp(46px,11vw,96px);line-height:1;margin:26px 0 4px}
+  .title .k{color:var(--c4)}
+  .title .rn{color:var(--c3)}
+  .tag{display:inline-block;font-family:'Baloo 2';font-weight:700;font-size:clamp(18px,3.6vw,26px);background:var(--c5);border:3px solid var(--ink);border-radius:999px;padding:4px 20px;box-shadow:0 4px 0 var(--ink);transform:rotate(-1.5deg)}
+  .welcome{font-size:19px;color:var(--muted);margin:22px 0 26px;max-width:460px}
+  .enter{font-family:'Baloo 2';font-weight:800;font-size:clamp(26px,5vw,34px);color:#fff;background:var(--c4);border:4px solid var(--ink);border-radius:22px;
+    padding:12px 44px;cursor:pointer;box-shadow:0 8px 0 var(--ink);animation:bounce 1.8s ease-in-out infinite}
+  .enter:hover{background:#ff3577}
+  .enter:active{transform:translateY(6px);box-shadow:0 2px 0 var(--ink);animation:none}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .count{margin-top:22px;font-weight:800;color:var(--muted)}
+
+  /* ---- Contents ---- */
+  .wrap{max-width:960px;margin:0 auto;padding:22px 16px 60px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Baloo 2';font-weight:800;font-size:26px;cursor:pointer}
+  .logo .mini{width:44px;height:44px;border-radius:12px;background:var(--c2);color:#fff;border:3px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:28px;transform:rotate(-8deg)}
+  .toc-h{font-family:'Baloo 2';font-weight:800;font-size:clamp(32px,7vw,48px);margin:18px 0 0;text-align:center}
+  .toc-sub{text-align:center;color:var(--muted);font-size:18px;margin:4px 0 22px}
+  .subject{margin:26px 0 12px;display:flex;align-items:center;gap:10px}
+  .subject h3{font-family:'Baloo 2';font-weight:800;font-size:26px;margin:0}
+  .subject .line{flex:1;height:4px;border-radius:4px;background:repeating-linear-gradient(90deg,var(--ink) 0 10px,transparent 10px 18px);opacity:.25}
+  .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+  .gcard{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:18px;box-shadow:0 6px 0 var(--gc);cursor:pointer;transition:transform .15s;text-align:left;font:inherit;color:inherit}
+  .gcard:hover{transform:translateY(-4px) rotate(-.5deg)}
+  .gcard .num{font-family:'Baloo 2';font-weight:800;color:var(--gc);font-size:15px;letter-spacing:.5px}
+  .gcard .ge{font-size:40px}
+  .gcard h4{font-family:'Baloo 2';font-weight:800;font-size:24px;margin:4px 0}
+  .gcard p{margin:0 0 12px;color:var(--muted);font-size:16px}
+  .gcard .go{display:inline-block;font-family:'Baloo 2';font-weight:700;background:var(--gc);color:#fff;border-radius:10px;padding:4px 14px}
+  .gcard.soon{border-style:dashed;box-shadow:none;cursor:default;opacity:.7;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .gcard.soon:hover{transform:none}
+
+  /* ============ GUIDE: FIGURATIVE LANGUAGE (scoped .g-fig) ============ */
+  .g-fig{--simile:#ff7a59;--metaphor:#7c5cff;--person:#1fb58f;--hyper:#ff4f8b;--ono:#ffb400;--allit:#2d9cdb;--idiom:#9b59b6}
+  .g-fig header{text-align:center;padding:10px 16px 0}
+  .g-fig h1{font-family:'Baloo 2';font-weight:800;font-size:clamp(28px,6vw,46px);margin:0;line-height:1.1}
+  .g-fig h1 span{color:var(--metaphor)}
+  .g-fig .sub{color:var(--muted);font-size:17px;margin:6px auto 0;max-width:560px}
+  .g-fig .gnav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:16px 0}
+  .g-fig .gnav button{font-family:'Baloo 2';font-weight:700;font-size:18px;border:3px solid var(--ink);background:#fff;color:var(--ink);padding:8px 18px;border-radius:999px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+  .g-fig .gnav button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+  .g-fig .gnav button.on{background:var(--ink);color:#fff}
+  .g-fig .view{display:none}.g-fig .view.on{display:block;animation:pop .3s}
+  .g-fig .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+  .g-fig .tcard{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:18px;box-shadow:0 6px 0 var(--c)}
+  .g-fig .tcard .top{display:flex;align-items:center;gap:10px}
+  .g-fig .emoji{font-size:34px}
+  .g-fig .tcard h2{font-family:'Baloo 2';margin:0;font-size:26px;color:var(--c)}
+  .g-fig .def{font-size:17px;margin:8px 0 10px}
+  .g-fig .ex{background:#f6f3ff;border-radius:12px;padding:8px 12px;margin:6px 0;font-size:16px;font-style:italic}
+  .g-fig .tip{margin-top:10px;font-weight:700;background:var(--c);color:#fff;border-radius:12px;padding:8px 12px;font-size:15px}
+  .g-fig .intro{background:#fff;border:3px dashed var(--ink);border-radius:20px;padding:14px 18px;margin-bottom:18px;font-size:18px;text-align:center}
+  .g-fig .fc-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+  .g-fig .flip{width:min(520px,100%);height:300px;perspective:1000px;cursor:pointer}
+  .g-fig .inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .g-fig .flip.flipped .inner{transform:rotateY(180deg)}
+  .g-fig .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:4px solid var(--ink);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;box-shadow:0 8px 0 var(--ink)}
+  .g-fig .front{background:#fff}
+  .g-fig .front .big{font-family:'Baloo 2';font-size:44px;font-weight:800}
+  .g-fig .back{background:var(--c);color:#fff;transform:rotateY(180deg)}
+  .g-fig .back p{font-size:20px;margin:6px 0}
+  .g-fig .hint{color:var(--muted);font-size:15px}
+  .g-fig .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .g-fig .qbox{background:#fff;border:4px solid var(--ink);border-radius:24px;padding:22px;box-shadow:0 8px 0 var(--ink);max-width:680px;margin:0 auto}
+  .g-fig .progress{height:14px;background:#eee;border-radius:999px;overflow:hidden;border:2px solid var(--ink);margin-bottom:14px}
+  .g-fig .bar{height:100%;background:linear-gradient(90deg,var(--person),var(--allit));width:0;transition:width .3s}
+  .g-fig .qmeta{display:flex;justify-content:space-between;color:var(--muted);font-weight:700}
+  .g-fig .sentence{font-family:'Baloo 2';font-size:clamp(22px,4.5vw,30px);text-align:center;margin:16px 0 18px;line-height:1.25}
+  .g-fig .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+  .g-fig .choice{font-family:'Baloo 2';font-weight:700;font-size:19px;padding:12px;border-radius:14px;border:3px solid var(--ink);background:#fff;cursor:pointer;color:var(--ink)}
+  .g-fig .choice:hover:not(:disabled){background:#f6f3ff}
+  .g-fig .choice.right{background:var(--person);color:#fff}
+  .g-fig .choice.wrong{background:var(--hyper);color:#fff}
+  .g-fig .feedback{margin-top:14px;font-size:18px;min-height:28px;text-align:center}
+  .g-fig .done{text-align:center}
+  .g-fig .done .stars{font-size:48px;margin:6px 0}
+  .g-fig .match{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px;margin:0 auto}
+  .g-fig .col{display:flex;flex-direction:column;gap:10px}
+  .g-fig .tile{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px;font-size:17px;cursor:pointer;text-align:center;box-shadow:0 4px 0 var(--ink)}
+  .g-fig .tile.name{font-family:'Baloo 2';font-weight:700;font-size:20px}
+  .g-fig .tile.sel{background:#fff1b3}
+  .g-fig .tile.ok{background:var(--person);color:#fff;cursor:default;opacity:.85}
+  .g-fig .tile.shake{animation:shake .35s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .g-fig .center{text-align:center;margin:12px 0;font-size:18px}
+  @media (max-width:520px){.g-fig .match{gap:8px}.g-fig .tile{font-size:14px;padding:8px}.g-fig .tile.name{font-size:16px}}
+
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<!-- ============ HOME ============ -->
+<section id="home" class="page on">
+  <span class="float" style="top:8%;left:6%">✏️</span>
+  <span class="float" style="top:14%;right:9%;animation-delay:-2s">📚</span>
+  <span class="float" style="top:44%;left:3%;animation-delay:-4s">⭐</span>
+  <span class="float" style="top:52%;right:5%;animation-delay:-1s">🧠</span>
+  <span class="float" style="bottom:10%;left:12%;animation-delay:-3s">🔬</span>
+  <span class="float" style="bottom:7%;right:14%;animation-delay:-5s">➗</span>
+  <span class="float" style="top:4%;left:44%;animation-delay:-6s">🌎</span>
+  <span class="float" style="bottom:24%;left:14%;animation-delay:-2.5s;opacity:.5">💡</span>
+  <span class="float" style="bottom:30%;right:12%;animation-delay:-4.5s;opacity:.5">📝</span>
+  <div class="hero">
+    <div class="badge">K</div>
+    <div class="title"><span class="k">K's</span> <span class="rn">Korner</span></div>
+    <div class="tag">School Study Guides</div>
+    <p class="welcome">Your secret hideout for learning, practicing and getting super smart! 🚀</p>
+    <button class="enter" onclick="go('contents')">ENTER ➜</button>
+    <div class="count" id="count"></div>
+  </div>
+</section>
+
+<!-- ============ CONTENTS ============ -->
+<section id="contents" class="page">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo" onclick="go('home')"><span class="mini">K</span> K's Korner</div>
+      <button class="btn" onclick="go('home')">🏠 Home</button>
+    </div>
+    <h2 class="toc-h">📚 Table of Contents</h2>
+    <p class="toc-sub">Pick a study guide to get started!</p>
+    <div id="toc"></div>
+  </div>
+</section>
+
+<!-- ============ GUIDE: FIGURATIVE LANGUAGE ============ -->
+<section id="figurative-language" class="page g-fig">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo" onclick="go('home')"><span class="mini">K</span> K's Korner</div>
+      <button class="btn" onclick="go('contents')">📚 Contents</button>
+    </div>
+    <header>
+      <h1>Figurative Language <span>Fun!</span> ✨</h1>
+      <p class="sub">Figurative language is when we use words in a creative way to make writing more interesting.</p>
+    </header>
+    <div class="gnav">
+      <button data-v="learn" class="on">📖 Learn</button>
+      <button data-v="cards">🃏 Flashcards</button>
+      <button data-v="quiz">🧠 Quiz</button>
+      <button data-v="match">🧩 Match</button>
+    </div>
+    <div class="view on" data-view="learn">
+      <div class="intro">Read each card. Then try the <b>Flashcards</b>, <b>Quiz</b> and <b>Match</b> game to test yourself! 🚀</div>
+      <div class="grid" id="fig-grid"></div>
+    </div>
+    <div class="view" data-view="cards">
+      <div class="fc-wrap">
+        <div class="hint" id="fig-fcCount"></div>
+        <div class="flip" id="fig-flip"><div class="inner">
+          <div class="face front"><div class="emoji" id="fig-fcEmoji"></div><div class="big" id="fig-fcName"></div><div class="hint">Tap to flip 👆 — can you explain it first?</div></div>
+          <div class="face back" id="fig-fcBack"></div>
+        </div></div>
+        <div class="row">
+          <button class="btn" id="fig-prev">⬅ Back</button>
+          <button class="btn" id="fig-shuf">🔀 Shuffle</button>
+          <button class="btn primary" id="fig-next">Next ➡</button>
+        </div>
+      </div>
+    </div>
+    <div class="view" data-view="quiz"><div class="qbox" id="fig-qbox"></div></div>
+    <div class="view" data-view="match">
+      <p class="center">Tap a <b>type</b>, then tap the <b>example</b> that matches it!</p>
+      <div class="match"><div class="col" id="fig-mNames"></div><div class="col" id="fig-mEx"></div></div>
+      <p class="center" id="fig-mMsg"></p>
+      <div class="center"><button class="btn" id="fig-mReset">🔄 New Round</button></div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* =====================================================================
+   TABLE OF CONTENTS — add one entry here for every new study guide.
+   id must match the guide's <section id="...">.
+   ===================================================================== */
+const GUIDES = [
+  { id:"figurative-language", subject:"Reading & Writing", emoji:"✨", color:"var(--c2)",
+    title:"Figurative Language", desc:"Similes, metaphors, idioms and more — learn them, then play the quiz and match game!" },
+];
+const SUBJECT_EMOJI = {"Reading & Writing":"📖","Math":"➗","Science":"🔬","Social Studies":"🌎"};
+
+/* ---------- shared helpers ---------- */
+const $=s=>document.querySelector(s);
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const PAGES=['home','contents',...GUIDES.map(g=>g.id)];
+function show(id){
+  if(!PAGES.includes(id)) id='home';
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===id));
+  window.scrollTo(0,0);
+}
+function go(id){ try{ if(location.hash!=='#'+id){ location.hash=id; return; } }catch(e){} show(id); }
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+
+/* ---------- build home count + contents ---------- */
+$('#count').textContent = `📚 ${GUIDES.length} study guide${GUIDES.length===1?'':'s'} inside`;
+(function buildTOC(){
+  const bySubject={};
+  GUIDES.forEach(g=>(bySubject[g.subject]=bySubject[g.subject]||[]).push(g));
+  let n=0, html='';
+  for(const [subj,list] of Object.entries(bySubject)){
+    html+=`<div class="subject"><h3>${SUBJECT_EMOJI[subj]||'📘'} ${subj}</h3><div class="line"></div></div><div class="gcards">`;
+    list.forEach(g=>{ n++; html+=`<button class="gcard" style="--gc:${g.color}" onclick="go('${g.id}')">
+      <div class="num">GUIDE #${n}</div><div class="ge">${g.emoji}</div><h4>${g.title}</h4><p>${g.desc}</p><span class="go">Let's go ➜</span></button>`; });
+    html+=`</div>`;
+  }
+  html+=`<div class="subject"><h3>🔜 Coming Soon</h3><div class="line"></div></div>
+    <div class="gcards"><div class="gcard soon" style="--gc:#ccc"><div class="ge">🎁</div><h4>More guides on the way!</h4><p>Check back soon.</p></div></div>`;
+  $('#toc').innerHTML=html;
+})();
+
+/* ---------- confetti ---------- */
+function confetti(){
+  const c=$('#confetti'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
+  const colors=['#ff7a59','#7c5cff','#1fb58f','#ff4f8b','#ffb400','#2d9cdb'];
+  let p=Array.from({length:140},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,r:4+Math.random()*6,vy:2+Math.random()*3,vx:-1.5+Math.random()*3,a:Math.random()*6,col:colors[Math.random()*6|0]}));
+  let f=0;(function draw(){x.clearRect(0,0,c.width,c.height);
+    p.forEach(o=>{o.y+=o.vy;o.x+=o.vx;o.a+=.1;x.save();x.translate(o.x,o.y);x.rotate(o.a);x.fillStyle=o.col;x.fillRect(-o.r/2,-o.r/2,o.r,o.r*1.6);x.restore()});
+    if(++f<180)requestAnimationFrame(draw);else x.clearRect(0,0,c.width,c.height)})();
+}
+
+/* =====================================================================
+   GUIDE: FIGURATIVE LANGUAGE
+   ===================================================================== */
+(function(){
+const root=$('#figurative-language'), q=s=>root.querySelector(s);
+const T=[
+ {n:"Simile",e:"🐆",c:"--simile",d:"Compares two things using like or as.",x:["She is as fast as a cheetah.","His hands were as cold as ice."],t:"Simile = like or as!"},
+ {n:"Metaphor",e:"⭐",c:"--metaphor",d:"Compares two things without using like or as.",x:["He is a shining star.","The classroom was a zoo."],t:"Metaphor = direct comparison!"},
+ {n:"Personification",e:"🌞",c:"--person",d:"Gives an animal, object, or nature human qualities.",x:["The sun peeked out of the clouds.","The wind whispered through the trees."],t:"Can something non-human act like a person?"},
+ {n:"Hyperbole",e:"🎒",c:"--hyper",d:"An exaggeration that isn't meant to be taken literally.",x:["I've told you a million times!","My backpack weighs a ton!"],t:"Hyperbole = HUGE exaggeration!"},
+ {n:"Onomatopoeia",e:"💥",c:"--ono",d:"Words that sound like the noise they describe.",x:["BOOM!  Buzz!","Splash!  Pop!"],t:"Onomatopoeia = sounds!"},
+ {n:"Alliteration",e:"🐍",c:"--allit",d:"Several words close together start with the same sound.",x:["Peter Piper picked peppers.","Silly snakes slither slowly."],t:"Alliteration = repeating beginning sounds!"},
+ {n:"Idiom",e:"🐴",c:"--idiom",d:"A phrase that means something different from the actual words.",x:["It's raining cats and dogs. (It's raining heavily.)","Hold your horses! (Wait!)"],t:"Idiom = doesn't mean exactly what it says!"}
+];
+const Q=[
+ ["My little brother is as busy as a bee.","Simile","It uses \"as\" to compare him to a bee."],
+ ["The leaves danced in the wind.","Personification","Leaves can't really dance — that's a human action!"],
+ ["I'm so hungry I could eat a horse!","Hyperbole","Nobody can really eat a horse — it's a huge exaggeration."],
+ ["Sizzle! went the bacon in the pan.","Onomatopoeia","\"Sizzle\" sounds like the noise it describes."],
+ ["Big brown bears bounce on blue balloons.","Alliteration","Lots of words start with the B sound."],
+ ["That test was a piece of cake.","Idiom","It means the test was easy — not that it was a real cake!"],
+ ["My bedroom is a disaster zone.","Metaphor","It says the room IS a disaster zone, without like or as."],
+ ["The stars twinkled like diamonds.","Simile","It uses \"like\" to compare stars to diamonds."],
+ ["The old car groaned up the hill.","Personification","Cars can't groan like people do."],
+ ["Time flies when you're having fun.","Idiom","Time doesn't really fly — it means time goes by fast."],
+ ["Her voice was music to my ears.","Metaphor","It says her voice IS music — a direct comparison."],
+ ["This line is a mile long!","Hyperbole","The line isn't really a mile — it's an exaggeration."],
+ ["Tick-tock went the clock.","Onomatopoeia","\"Tick-tock\" sounds like a clock."],
+ ["Sally sells seashells by the seashore.","Alliteration","The S sound repeats at the start of the words."],
+ ["He was as quiet as a mouse.","Simile","It uses \"as\" to compare him to a mouse."],
+ ["You need to break the ice at the party.","Idiom","It means start talking to people — not break real ice!"],
+ ["The thunder grumbled angrily.","Personification","Thunder can't feel angry or grumble like a person."],
+ ["My dad is a walking encyclopedia.","Metaphor","It says dad IS an encyclopedia — he knows a lot!"],
+ ["I have a ton of homework tonight.","Hyperbole","It's not really a ton — it's an exaggeration."],
+ ["The dog went woof at the mail carrier.","Onomatopoeia","\"Woof\" sounds like a dog's bark."]
+];
+const col=t=>`var(${t.c})`;
+
+root.querySelectorAll('.gnav button').forEach(b=>b.onclick=()=>{
+  root.querySelectorAll('.gnav button').forEach(x=>x.classList.toggle('on',x===b));
+  root.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.dataset.view===b.dataset.v));
+  if(b.dataset.v==='quiz'&&!qs)startQuiz();
+});
+
+q('#fig-grid').innerHTML=T.map((t,i)=>`<div class="tcard" style="--c:${col(t)}">
+  <div class="top"><span class="emoji">${t.e}</span><h2>${i+1}. ${t.n}</h2></div>
+  <div class="def">${t.d}</div>${t.x.map(x=>`<div class="ex">${x}</div>`).join('')}
+  <div class="tip">💡 Remember: ${t.t}</div></div>`).join('');
+
+let deck=[...T],fi=0;
+function showCard(){const t=deck[fi],f=q('#fig-flip');f.classList.remove('flipped');f.style.setProperty('--c',col(t));
+  setTimeout(()=>{q('#fig-fcEmoji').textContent=t.e;q('#fig-fcName').textContent=t.n;q('#fig-fcName').style.color=col(t);
+  q('#fig-fcBack').innerHTML=`<p><b>${t.d}</b></p><p>“${t.x[0]}”</p><p>💡 ${t.t}</p>`;},150);
+  q('#fig-fcCount').textContent=`Card ${fi+1} of ${deck.length}`}
+q('#fig-flip').onclick=()=>q('#fig-flip').classList.toggle('flipped');
+q('#fig-next').onclick=()=>{fi=(fi+1)%deck.length;showCard()};
+q('#fig-prev').onclick=()=>{fi=(fi-1+deck.length)%deck.length;showCard()};
+q('#fig-shuf').onclick=()=>{deck=shuffle(T);fi=0;showCard()};
+showCard();
+
+let qs=null,qi=0,score=0;
+function startQuiz(){qs=shuffle(Q).slice(0,10);qi=0;score=0;askQ()}
+function askQ(){
+  if(qi>=qs.length)return endQuiz();
+  const [s,a,why]=qs[qi];
+  const opts=shuffle([a,...shuffle(T.map(t=>t.n).filter(n=>n!==a)).slice(0,3)]);
+  q('#fig-qbox').innerHTML=`<div class="progress"><div class="bar" style="width:${qi/qs.length*100}%"></div></div>
+   <div class="qmeta"><span>Question ${qi+1} of ${qs.length}</span><span>⭐ ${score}</span></div>
+   <div class="sentence">“${s}”</div><div class="hint" style="text-align:center;margin-bottom:10px">What kind of figurative language is this?</div>
+   <div class="choices">${opts.map(o=>`<button class="choice">${o}</button>`).join('')}</div><div class="feedback" id="fig-fb"></div>`;
+  root.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
+    root.querySelectorAll('.choice').forEach(x=>{x.disabled=true;if(x.textContent===a)x.classList.add('right')});
+    const fb=q('#fig-fb');
+    if(b.textContent===a){score++;fb.innerHTML=`🎉 <b>Yes!</b> ${why}`}
+    else{b.classList.add('wrong');fb.innerHTML=`😅 <b>Not quite — it's ${a}.</b> ${why}`}
+    fb.insertAdjacentHTML('beforeend',`<div style="margin-top:12px"><button class="btn primary" id="fig-nq">${qi+1<qs.length?'Next ➡':'See my score 🏆'}</button></div>`);
+    q('#fig-nq').onclick=()=>{qi++;askQ()};
+  });
+}
+function endQuiz(){
+  const stars=score>=9?3:score>=6?2:score>=3?1:0;
+  const msg=["Keep practicing — review the Learn cards and try again! 💪","Good start! Practice a bit more! 👍","Great job! You really know your stuff! 🌟","WOW! Figurative language superstar! 🏆"][stars];
+  q('#fig-qbox').innerHTML=`<div class="done"><div class="progress"><div class="bar" style="width:100%"></div></div>
+   <div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
+   <div class="sentence">You got ${score} out of ${qs.length}!</div><p style="font-size:19px">${msg}</p>
+   <button class="btn primary" id="fig-again">🔁 Play Again</button></div>`;
+  q('#fig-again').onclick=startQuiz; if(stars>=2)confetti();
+}
+
+let sel=null,matched=0;
+function newMatch(){
+  matched=0;sel=null;q('#fig-mMsg').textContent='';
+  const pairs=T.map(t=>({n:t.n,x:t.x[Math.random()*2|0].replace(/\s*\(.*\)/,'')}));
+  q('#fig-mNames').innerHTML=shuffle(pairs).map(p=>`<div class="tile name" data-k="${p.n}">${p.n}</div>`).join('');
+  q('#fig-mEx').innerHTML=shuffle(pairs).map(p=>`<div class="tile" data-k="${p.n}">${p.x}</div>`).join('');
+  root.querySelectorAll('#fig-mNames .tile').forEach(t=>t.onclick=()=>{if(t.classList.contains('ok'))return;
+    root.querySelectorAll('#fig-mNames .tile').forEach(x=>x.classList.remove('sel'));t.classList.add('sel');sel=t});
+  root.querySelectorAll('#fig-mEx .tile').forEach(t=>t.onclick=()=>{
+    if(t.classList.contains('ok'))return;
+    const m=q('#fig-mMsg');
+    if(!sel){m.textContent='👈 Pick a type first!';return}
+    if(t.dataset.k===sel.dataset.k){t.classList.add('ok');sel.classList.add('ok');sel.classList.remove('sel');sel=null;matched++;
+      m.textContent=matched===T.length?'🎉 You matched them all! Amazing!':`✅ Nice! ${matched} of ${T.length} matched`;
+      if(matched===T.length)confetti();}
+    else{t.classList.add('shake');setTimeout(()=>t.classList.remove('shake'),400);m.textContent='🤔 Try again!'}
+  });
+}
+q('#fig-mReset').onclick=newMatch;newMatch();
+})();
+
+/* ---------- start on the page in the address (or home) ---------- */
+show(location.hash.slice(1));
+</script>
+</body>
+</html>
