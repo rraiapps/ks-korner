@@ -7,5 +7,5 @@ A kid-friendly study guide website (5th grade), hosted on GitHub Pages.
 
 ## Guides
 1. Figurative Language (Reading & Writing)
-2. Unit 1: Early Peoples & Native Americans (Social Studies)
+2. Early Peoples & Native Americans (Social Studies)
 3. The Three Branches of Government (Social Studies)
