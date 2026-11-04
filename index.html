@@ -51,6 +51,14 @@
   .subject{margin:26px 0 12px;display:flex;align-items:center;gap:10px}
   .subject h3{font-family:'Baloo 2';font-weight:800;font-size:26px;margin:0}
   .subject .line{flex:1;height:4px;border-radius:4px;background:repeating-linear-gradient(90deg,var(--ink) 0 10px,transparent 10px 18px);opacity:.25}
+  .toc-list{max-width:620px;margin:0 auto}
+  .toc-subj{margin:0 0 28px}
+  .toc-subj h3{font-family:'Baloo 2';font-weight:800;font-size:24px;letter-spacing:1px;margin:0 0 6px;padding-bottom:4px;border-bottom:3px solid var(--ink)}
+  .toc-subj ul{list-style:none;margin:0;padding:0}
+  .toc-subj li a{display:block;font-size:20px;font-weight:700;color:var(--ink);text-decoration:none;padding:10px 6px;border-bottom:1px dashed #d9cfe0}
+  .toc-subj li a::after{content:" ➜";color:var(--c2);opacity:0;transition:opacity .15s}
+  .toc-subj li a:hover{color:var(--c2)}
+  .toc-subj li a:hover::after{opacity:1}
   .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
   .gcard{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:18px;box-shadow:0 6px 0 var(--gc);cursor:pointer;transition:transform .15s;text-align:left;font:inherit;color:inherit}
   .gcard:hover{transform:translateY(-4px) rotate(-.5deg)}
@@ -194,7 +202,7 @@
     </div>
     <h2 class="toc-h">📚 Table of Contents</h2>
     <p class="toc-sub">Pick a study guide to get started!</p>
-    <div id="toc"></div>
+    <div id="toc" class="toc-list"></div>
   </div>
 </section>
 
@@ -392,16 +400,11 @@ $('#count').textContent = `📚 ${GUIDES.length} study guide${GUIDES.length===1?
 (function buildTOC(){
   const bySubject={};
   GUIDES.forEach(g=>(bySubject[g.subject]=bySubject[g.subject]||[]).push(g));
-  let n=0, html='';
-  for(const [subj,list] of Object.entries(bySubject)){
-    html+=`<div class="subject"><h3>${SUBJECT_EMOJI[subj]||'📘'} ${subj}</h3><div class="line"></div></div><div class="gcards">`;
-    list.forEach(g=>{ n++; html+=`<button class="gcard" style="--gc:${g.color}" onclick="go('${g.id}')">
-      <div class="num">GUIDE #${n}</div><div class="ge">${g.emoji}</div><h4>${g.title}</h4><p>${g.desc}</p><span class="go">Let's go ➜</span></button>`; });
-    html+=`</div>`;
-  }
-  html+=`<div class="subject"><h3>🔜 Coming Soon</h3><div class="line"></div></div>
-    <div class="gcards"><div class="gcard soon" style="--gc:#ccc"><div class="ge">🎁</div><h4>More guides on the way!</h4><p>Check back soon.</p></div></div>`;
-  $('#toc').innerHTML=html;
+  $('#toc').innerHTML=Object.entries(bySubject).map(([subj,list])=>`
+    <div class="toc-subj">
+      <h3>${SUBJECT_EMOJI[subj]||'📘'} ${subj.toUpperCase()}</h3>
+      <ul>${list.map(g=>`<li><a href="#${g.id}" onclick="go('${g.id}');return false;">${g.title}</a></li>`).join('')}</ul>
+    </div>`).join('');
 })();
 
 /* ---------- confetti ---------- */
