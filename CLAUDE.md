@@ -8,5 +8,6 @@
   2. Add an entry to the `GUIDES` array (id, subject, emoji, color, title, desc). TOC + homepage count build from it.
   3. Update the Guides list in README.md.
   4. Test in headless Chromium (no page errors; enter → contents → guide → back), then commit and push to `main`.
-- Guides so far: `figurative-language`, `early-americans` (Social Studies Unit 1).
+- Guides so far: `figurative-language`, `early-americans` (Social Studies Unit 1), `three-branches` (Social Studies; has a "Which Branch?" sorting game).
+- Stay politically neutral: no current officeholders' names or opinions.
 - Never put the child's full name, school or other personal info on the site (repo is public).
