@@ -62,60 +62,77 @@
   .gcard.soon{border-style:dashed;box-shadow:none;cursor:default;opacity:.7;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center}
   .gcard.soon:hover{transform:none}
 
-  /* ============ GUIDE: FIGURATIVE LANGUAGE (scoped .g-fig) ============ */
+  /* ============ SHARED GUIDE STYLES (.guide) — every guide section uses class="page guide g-xxx" ============ */
   .g-fig{--simile:#ff7a59;--metaphor:#7c5cff;--person:#1fb58f;--hyper:#ff4f8b;--ono:#ffb400;--allit:#2d9cdb;--idiom:#9b59b6}
-  .g-fig header{text-align:center;padding:10px 16px 0}
-  .g-fig h1{font-family:'Baloo 2';font-weight:800;font-size:clamp(28px,6vw,46px);margin:0;line-height:1.1}
-  .g-fig h1 span{color:var(--metaphor)}
-  .g-fig .sub{color:var(--muted);font-size:17px;margin:6px auto 0;max-width:560px}
-  .g-fig .gnav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:16px 0}
-  .g-fig .gnav button{font-family:'Baloo 2';font-weight:700;font-size:18px;border:3px solid var(--ink);background:#fff;color:var(--ink);padding:8px 18px;border-radius:999px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
-  .g-fig .gnav button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
-  .g-fig .gnav button.on{background:var(--ink);color:#fff}
-  .g-fig .view{display:none}.g-fig .view.on{display:block;animation:pop .3s}
-  .g-fig .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
-  .g-fig .tcard{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:18px;box-shadow:0 6px 0 var(--c)}
-  .g-fig .tcard .top{display:flex;align-items:center;gap:10px}
-  .g-fig .emoji{font-size:34px}
-  .g-fig .tcard h2{font-family:'Baloo 2';margin:0;font-size:26px;color:var(--c)}
-  .g-fig .def{font-size:17px;margin:8px 0 10px}
-  .g-fig .ex{background:#f6f3ff;border-radius:12px;padding:8px 12px;margin:6px 0;font-size:16px;font-style:italic}
-  .g-fig .tip{margin-top:10px;font-weight:700;background:var(--c);color:#fff;border-radius:12px;padding:8px 12px;font-size:15px}
-  .g-fig .intro{background:#fff;border:3px dashed var(--ink);border-radius:20px;padding:14px 18px;margin-bottom:18px;font-size:18px;text-align:center}
-  .g-fig .fc-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
-  .g-fig .flip{width:min(520px,100%);height:300px;perspective:1000px;cursor:pointer}
-  .g-fig .inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
-  .g-fig .flip.flipped .inner{transform:rotateY(180deg)}
-  .g-fig .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:4px solid var(--ink);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;box-shadow:0 8px 0 var(--ink)}
-  .g-fig .front{background:#fff}
-  .g-fig .front .big{font-family:'Baloo 2';font-size:44px;font-weight:800}
-  .g-fig .back{background:var(--c);color:#fff;transform:rotateY(180deg)}
-  .g-fig .back p{font-size:20px;margin:6px 0}
-  .g-fig .hint{color:var(--muted);font-size:15px}
-  .g-fig .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
-  .g-fig .qbox{background:#fff;border:4px solid var(--ink);border-radius:24px;padding:22px;box-shadow:0 8px 0 var(--ink);max-width:680px;margin:0 auto}
-  .g-fig .progress{height:14px;background:#eee;border-radius:999px;overflow:hidden;border:2px solid var(--ink);margin-bottom:14px}
-  .g-fig .bar{height:100%;background:linear-gradient(90deg,var(--person),var(--allit));width:0;transition:width .3s}
-  .g-fig .qmeta{display:flex;justify-content:space-between;color:var(--muted);font-weight:700}
-  .g-fig .sentence{font-family:'Baloo 2';font-size:clamp(22px,4.5vw,30px);text-align:center;margin:16px 0 18px;line-height:1.25}
-  .g-fig .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
-  .g-fig .choice{font-family:'Baloo 2';font-weight:700;font-size:19px;padding:12px;border-radius:14px;border:3px solid var(--ink);background:#fff;cursor:pointer;color:var(--ink)}
-  .g-fig .choice:hover:not(:disabled){background:#f6f3ff}
-  .g-fig .choice.right{background:var(--person);color:#fff}
-  .g-fig .choice.wrong{background:var(--hyper);color:#fff}
-  .g-fig .feedback{margin-top:14px;font-size:18px;min-height:28px;text-align:center}
-  .g-fig .done{text-align:center}
-  .g-fig .done .stars{font-size:48px;margin:6px 0}
-  .g-fig .match{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px;margin:0 auto}
-  .g-fig .col{display:flex;flex-direction:column;gap:10px}
-  .g-fig .tile{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px;font-size:17px;cursor:pointer;text-align:center;box-shadow:0 4px 0 var(--ink)}
-  .g-fig .tile.name{font-family:'Baloo 2';font-weight:700;font-size:20px}
-  .g-fig .tile.sel{background:#fff1b3}
-  .g-fig .tile.ok{background:var(--person);color:#fff;cursor:default;opacity:.85}
-  .g-fig .tile.shake{animation:shake .35s}
+  .guide header{text-align:center;padding:10px 16px 0}
+  .guide h1{font-family:'Baloo 2';font-weight:800;font-size:clamp(28px,6vw,46px);margin:0;line-height:1.1}
+  .guide h1 span{color:var(--metaphor)}
+  .guide .sub{color:var(--muted);font-size:17px;margin:6px auto 0;max-width:560px}
+  .guide .gnav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:16px 0}
+  .guide .gnav button{font-family:'Baloo 2';font-weight:700;font-size:18px;border:3px solid var(--ink);background:#fff;color:var(--ink);padding:8px 18px;border-radius:999px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+  .guide .gnav button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+  .guide .gnav button.on{background:var(--ink);color:#fff}
+  .guide .view{display:none}.guide .view.on{display:block;animation:pop .3s}
+  .guide .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+  .guide .tcard{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:18px;box-shadow:0 6px 0 var(--c)}
+  .guide .tcard .top{display:flex;align-items:center;gap:10px}
+  .guide .emoji{font-size:34px}
+  .guide .tcard h2{font-family:'Baloo 2';margin:0;font-size:26px;color:var(--c)}
+  .guide .def{font-size:17px;margin:8px 0 10px}
+  .guide .ex{background:#f6f3ff;border-radius:12px;padding:8px 12px;margin:6px 0;font-size:16px;font-style:italic}
+  .guide .tip{margin-top:10px;font-weight:700;background:var(--c);color:#fff;border-radius:12px;padding:8px 12px;font-size:15px}
+  .guide .intro{background:#fff;border:3px dashed var(--ink);border-radius:20px;padding:14px 18px;margin-bottom:18px;font-size:18px;text-align:center}
+  .guide .fc-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+  .guide .flip{width:min(520px,100%);height:300px;perspective:1000px;cursor:pointer}
+  .guide .inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .guide .flip.flipped .inner{transform:rotateY(180deg)}
+  .guide .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:4px solid var(--ink);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;box-shadow:0 8px 0 var(--ink)}
+  .guide .front{background:#fff}
+  .guide .front .big{font-family:'Baloo 2';font-size:44px;font-weight:800}
+  .guide .back{background:var(--c);color:#fff;transform:rotateY(180deg)}
+  .guide .back p{font-size:20px;margin:6px 0}
+  .guide .hint{color:var(--muted);font-size:15px}
+  .guide .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .guide .qbox{background:#fff;border:4px solid var(--ink);border-radius:24px;padding:22px;box-shadow:0 8px 0 var(--ink);max-width:680px;margin:0 auto}
+  .guide .progress{height:14px;background:#eee;border-radius:999px;overflow:hidden;border:2px solid var(--ink);margin-bottom:14px}
+  .guide .bar{height:100%;background:linear-gradient(90deg,var(--person),var(--allit));width:0;transition:width .3s}
+  .guide .qmeta{display:flex;justify-content:space-between;color:var(--muted);font-weight:700}
+  .guide .sentence{font-family:'Baloo 2';font-size:clamp(22px,4.5vw,30px);text-align:center;margin:16px 0 18px;line-height:1.25}
+  .guide .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+  .guide .choice{font-family:'Baloo 2';font-weight:700;font-size:19px;padding:12px;border-radius:14px;border:3px solid var(--ink);background:#fff;cursor:pointer;color:var(--ink)}
+  .guide .choice:hover:not(:disabled){background:#f6f3ff}
+  .guide .choice.right{background:var(--person);color:#fff}
+  .guide .choice.wrong{background:var(--hyper);color:#fff}
+  .guide .feedback{margin-top:14px;font-size:18px;min-height:28px;text-align:center}
+  .guide .done{text-align:center}
+  .guide .done .stars{font-size:48px;margin:6px 0}
+  .guide .match{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px;margin:0 auto}
+  .guide .col{display:flex;flex-direction:column;gap:10px}
+  .guide .tile{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px;font-size:17px;cursor:pointer;text-align:center;box-shadow:0 4px 0 var(--ink)}
+  .guide .tile.name{font-family:'Baloo 2';font-weight:700;font-size:20px}
+  .guide .tile.sel{background:#fff1b3}
+  .guide .tile.ok{background:var(--person);color:#fff;cursor:default;opacity:.85}
+  .guide .tile.shake{animation:shake .35s}
   @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-  .g-fig .center{text-align:center;margin:12px 0;font-size:18px}
-  @media (max-width:520px){.g-fig .match{gap:8px}.g-fig .tile{font-size:14px;padding:8px}.g-fig .tile.name{font-size:16px}}
+  .guide .center{text-align:center;margin:12px 0;font-size:18px}
+  @media (max-width:520px){.guide .match{gap:8px}.guide .tile{font-size:14px;padding:8px}.guide .tile.name{font-size:16px}}
+
+  /* ============ GUIDE: SOCIAL STUDIES UNIT 1 (.g-ss1) ============ */
+  .g-ss1{--early:#c0773a;--native:#1fb58f;--bering:#2d9cdb;--taino:#ff7a59;--inuit:#5b7cfa;--iroquois:#8b5a2b;--plains:#d4a017}
+  .g-ss1 h1 span{color:var(--bering)}
+  .guide .facts{margin:8px 0 0;padding:0;list-style:none}
+  .guide .facts li{background:#f6f3ff;border-radius:12px;padding:8px 12px;margin:6px 0;font-size:16px}
+  .guide .facts li::before{content:"✔️ ";}
+  .guide .kw{font-weight:800;color:var(--c);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+  .guide .vocab{margin-top:22px;background:#fff;border:3px solid var(--ink);border-radius:20px;padding:16px 18px;box-shadow:0 6px 0 var(--ink)}
+  .guide .vocab h3{font-family:'Baloo 2';font-size:24px;margin:0 0 8px}
+  .guide .vocab dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:0;font-size:16px}
+  .guide .vocab dt{font-weight:800}
+  .guide .vocab dd{margin:0}
+  .guide .front .qtext{font-family:'Baloo 2';font-size:clamp(22px,4.5vw,30px);font-weight:700;line-height:1.25}
+  .guide .front .tagline{font-family:'Baloo 2';font-weight:800;color:var(--c);font-size:18px;margin-bottom:6px}
+  .guide .back .ans{font-family:'Baloo 2';font-size:40px;font-weight:800;line-height:1.1}
+  @media (max-width:520px){.guide .vocab dl{grid-template-columns:1fr}.guide .vocab dd{margin-bottom:6px}}
 
   #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
 </style>
@@ -158,7 +175,7 @@
 </section>
 
 <!-- ============ GUIDE: FIGURATIVE LANGUAGE ============ -->
-<section id="figurative-language" class="page g-fig">
+<section id="figurative-language" class="page guide g-fig">
   <div class="wrap">
     <div class="topbar">
       <div class="logo" onclick="go('home')"><span class="mini">K</span> K's Korner</div>
@@ -202,6 +219,55 @@
   </div>
 </section>
 
+<!-- ============ GUIDE: SOCIAL STUDIES UNIT 1 ============ -->
+<section id="early-americans" class="page guide g-ss1">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo" onclick="go('home')"><span class="mini">K</span> K's Korner</div>
+      <button class="btn" onclick="go('contents')">📚 Contents</button>
+    </div>
+    <header>
+      <h1>Social Studies <span>Unit 1</span> 🌎</h1>
+      <p class="sub">Early peoples, the Bering Land Bridge and Native American groups.</p>
+    </header>
+    <div class="gnav">
+      <button data-v="learn" class="on">📖 Learn</button>
+      <button data-v="cards">🃏 Flashcards</button>
+      <button data-v="quiz">🧠 Quiz</button>
+      <button data-v="match">🧩 Match</button>
+    </div>
+    <div class="view on" data-view="learn">
+      <div class="intro">Read each card — the <b>underlined words</b> are the big ideas to remember! Then test yourself with the <b>Flashcards</b>, <b>Quiz</b> and <b>Match</b> game. 🚀</div>
+      <div class="grid" id="ss1-grid"></div>
+      <div class="vocab">
+        <h3>📝 Word Bank</h3>
+        <dl id="ss1-vocab"></dl>
+      </div>
+    </div>
+    <div class="view" data-view="cards">
+      <div class="fc-wrap">
+        <div class="hint" id="ss1-fcCount"></div>
+        <div class="flip" id="ss1-flip"><div class="inner">
+          <div class="face front"><div class="tagline" id="ss1-fcTag"></div><div class="qtext" id="ss1-fcQ"></div><div class="hint" style="margin-top:12px">Say your answer out loud, then tap to flip 👆</div></div>
+          <div class="face back" id="ss1-fcBack"></div>
+        </div></div>
+        <div class="row">
+          <button class="btn" id="ss1-prev">⬅ Back</button>
+          <button class="btn" id="ss1-shuf">🔀 Shuffle</button>
+          <button class="btn primary" id="ss1-next">Next ➡</button>
+        </div>
+      </div>
+    </div>
+    <div class="view" data-view="quiz"><div class="qbox" id="ss1-qbox"></div></div>
+    <div class="view" data-view="match">
+      <p class="center">Tap a <b>group</b>, then tap the <b>fact</b> that goes with it!</p>
+      <div class="match"><div class="col" id="ss1-mNames"></div><div class="col" id="ss1-mEx"></div></div>
+      <p class="center" id="ss1-mMsg"></p>
+      <div class="center"><button class="btn" id="ss1-mReset">🔄 New Round</button></div>
+    </div>
+  </div>
+</section>
+
 <script>
 /* =====================================================================
    TABLE OF CONTENTS — add one entry here for every new study guide.
@@ -210,6 +276,8 @@
 const GUIDES = [
   { id:"figurative-language", subject:"Reading & Writing", emoji:"✨", color:"var(--c2)",
     title:"Figurative Language", desc:"Similes, metaphors, idioms and more — learn them, then play the quiz and match game!" },
+  { id:"early-americans", subject:"Social Studies", emoji:"🦣", color:"var(--c6)",
+    title:"Unit 1: Early Peoples & Native Americans", desc:"The Bering Land Bridge, the Taino, Inuit, Iroquois and Plains — learn it, quiz it, match it!" },
 ];
 const SUBJECT_EMOJI = {"Reading & Writing":"📖","Math":"➗","Science":"🔬","Social Studies":"🌎"};
 
@@ -360,6 +428,164 @@ function newMatch(){
   });
 }
 q('#fig-mReset').onclick=newMatch;newMatch();
+})();
+
+/* =====================================================================
+   GUIDE: SOCIAL STUDIES UNIT 1 — Early Peoples & Native Americans
+   ===================================================================== */
+(function(){
+const root=$('#early-americans'), q=s=>root.querySelector(s);
+const K=w=>`<span class="kw">${w}</span>`;
+
+// Learn cards (facts from the class study guide)
+const T=[
+ {n:"Early Peoples",e:"🪨",c:"--early",facts:[`The tool early people used for hunting and building was ${K("stone")}.`,`Early peoples used ${K("pottery")} to store water and food.`],t:"Stone for tools, pottery for storing!"},
+ {n:"Native Americans",e:"🌽",c:"--native",facts:[`Native Americans used the ${K("Three Sisters")} farming method to plant crops.`,`The Three Sisters are ${K("corn, beans and squash")} — planted together so they help each other grow.`],t:"Three Sisters = corn, beans, squash!"},
+ {n:"Bering Land Bridge",e:"🦣",c:"--bering",facts:[`The Bering Land Bridge was used for ${K("migration")}.`,`Early people crossed it during the ${K("Ice Age")}.`,`It connected ${K("Asia to North America")}.`,`Early people survived by ${K("following animals like mammoths for food")} across the bridge.`],t:"Ice Age + Asia ➜ North America + mammoths!"},
+ {n:"The Taino",e:"🏝️",c:"--taino",facts:[`The Taino lived mainly in the ${K("Caribbean")}.`,`The Taino used ${K("hammocks")} for ${K("sleeping")}.`,`The Taino grew crops like ${K("cassava")}.`],t:"Taino = Caribbean, hammocks, cassava!"},
+ {n:"The Inuit",e:"🧊",c:"--inuit",facts:[`The Inuit lived in the ${K("Arctic")} and used ${K("igloos")} for shelter.`,`The most important resource to the Inuit was ${K("seals")}.`,`The Arctic is an environment with ${K("extreme cold and ice")}.`],t:"Inuit = Arctic, igloos, seals!"},
+ {n:"The Iroquois",e:"🏠",c:"--iroquois",facts:[`The Iroquois built the ${K("longhouse")} made from ${K("wood")}.`,`The main role of the Iroquois councils was ${K("governance")}.`],t:"Iroquois = wooden longhouses + councils!"},
+ {n:"The Plains",e:"🦬",c:"--plains",facts:[`The Plains tribes followed the ${K("bison")} for food and resources.`],t:"Plains = follow the bison!"}
+];
+const V=[
+ ["Migration","Moving from one place to another to live."],
+ ["Ice Age","A long time ago when much of the Earth was covered in ice."],
+ ["Resource","Something people use to live, like food, water or animal skins."],
+ ["Cassava","A root vegetable the Taino grew and ate."],
+ ["Longhouse","A long wooden house where many Iroquois families lived together."],
+ ["Governance","Making rules and decisions for a group."],
+ ["Bison","A large, shaggy animal (like a buffalo) that roamed the Plains."]
+];
+// Flashcards: [topic index, question, answer, extra]
+const F=[
+ [0,"What tool did early people use for hunting and building?","Stone","Stone tools were strong and easy to find."],
+ [0,"What did early peoples use to store water and food?","Pottery","Pots and bowls made from clay."],
+ [1,"What farming method did Native Americans use?","The Three Sisters","Corn, beans and squash planted together."],
+ [2,"What was the Bering Land Bridge used for?","Migration","Moving from one place to another."],
+ [2,"When did early people cross the Bering Land Bridge?","The Ice Age","Lots of water was frozen, so land was uncovered."],
+ [2,"What two places did the Bering Land Bridge connect?","Asia & North America","People walked from Asia into North America."],
+ [2,"How did the land bridge help early people survive?","Following mammoths","They followed animals like mammoths for food."],
+ [3,"Where did the Taino mainly live?","The Caribbean","Warm islands in the Caribbean Sea."],
+ [3,"What did the Taino use hammocks for?","Sleeping","Hanging beds made of woven material."],
+ [3,"What crop did the Taino grow?","Cassava","A root vegetable."],
+ [4,"Where did the Inuit live?","The Arctic","Extreme cold and ice!"],
+ [4,"What did the Inuit use for shelter?","Igloos","Shelters built from blocks of snow and ice."],
+ [4,"What was the most important resource to the Inuit?","Seals","Used for food, clothing and more."],
+ [5,"What did the Iroquois build out of wood?","The longhouse","Many families lived together inside."],
+ [5,"What was the main role of the Iroquois councils?","Governance","Making rules and decisions."],
+ [6,"What animal did the Plains tribes follow?","Bison","For food and resources."]
+];
+// Quiz: [question, correct, wrong1, wrong2, wrong3, why]
+const Q=[
+ ["Early people used ____ for hunting and building tools.","stone","plastic","paper","glass","Early people made strong tools out of stone."],
+ ["Early peoples used ____ to store water and food.","pottery","backpacks","refrigerators","plastic bottles","They made clay pots to store water and food."],
+ ["Native Americans used the ____ farming method to plant crops.","Three Sisters","Three Brothers","Four Seasons","Big Garden","The Three Sisters are corn, beans and squash."],
+ ["The Three Sisters crops are corn, beans and ____.","squash","rice","wheat","apples","Corn, beans and squash grow well together."],
+ ["The Bering Land Bridge was used for ____.","migration","sailing ships","building igloos","growing cassava","Migration means moving from one place to another."],
+ ["Early people crossed the Bering Land Bridge during the ____.","Ice Age","Space Age","summer vacation","Middle Ages","During the Ice Age, frozen water left a land bridge uncovered."],
+ ["The Bering Land Bridge connected ____ to North America.","Asia","Europe","Africa","Australia","People walked from Asia into North America."],
+ ["Early people crossed the bridge by following animals like ____ for food.","mammoths","dinosaurs","penguins","dolphins","They followed herds of mammoths across the bridge."],
+ ["The Taino mainly lived in the ____.","Caribbean","Arctic","Great Plains","desert","The Taino lived on warm Caribbean islands."],
+ ["The Taino used hammocks for ____.","sleeping","fishing","cooking","hunting","Hammocks were their hanging beds."],
+ ["The Taino grew crops like ____.","cassava","wheat","rice","oranges","Cassava is a root vegetable the Taino grew."],
+ ["The Inuit lived in the ____.","Arctic","Caribbean","rainforest","desert","The Arctic is super cold and icy."],
+ ["The Inuit used ____ for shelter.","igloos","longhouses","hammocks","castles","Igloos are built from blocks of snow and ice."],
+ ["The most important resource to the Inuit was ____.","seals","bison","cassava","corn","Seals gave the Inuit food, clothing and more."],
+ ["Which environment has extreme cold and ice?","the Arctic","the Caribbean","the Plains","the desert","The Arctic is where the Inuit lived."],
+ ["The Iroquois built the ____ made from wood.","longhouse","igloo","pyramid","castle","Many Iroquois families lived together in a longhouse."],
+ ["The main role of the Iroquois councils was ____.","governance","farming","hunting","building boats","Governance means making rules and decisions."],
+ ["The Plains tribes followed the ____ for food and resources.","bison","seals","penguins","camels","Bison gave Plains tribes food, clothing and tools."],
+ ["Which group lived in the Arctic?","Inuit","Taino","Iroquois","Plains","The Inuit lived in the icy Arctic."],
+ ["Which group built longhouses?","Iroquois","Inuit","Taino","Plains","The Iroquois built wooden longhouses."],
+ ["Which group grew cassava?","Taino","Inuit","Iroquois","Plains","The Taino grew cassava in the Caribbean."],
+ ["Which group followed the bison?","Plains","Taino","Inuit","Iroquois","Plains tribes followed the bison herds."]
+];
+// Match pairs
+const M=[
+ ["Early Peoples","Stone tools and pottery"],
+ ["Native Americans","Three Sisters farming"],
+ ["Bering Land Bridge","Connected Asia to North America"],
+ ["The Taino","Hammocks and cassava in the Caribbean"],
+ ["The Inuit","Igloos and seals in the Arctic"],
+ ["The Iroquois","Wooden longhouses and councils"],
+ ["The Plains","Followed the bison"]
+];
+const col=t=>`var(${t.c})`;
+
+root.querySelectorAll('.gnav button').forEach(b=>b.onclick=()=>{
+  root.querySelectorAll('.gnav button').forEach(x=>x.classList.toggle('on',x===b));
+  root.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.dataset.view===b.dataset.v));
+  if(b.dataset.v==='quiz'&&!qs)startQuiz();
+});
+
+// Learn
+q('#ss1-grid').innerHTML=T.map(t=>`<div class="tcard" style="--c:${col(t)}">
+  <div class="top"><span class="emoji">${t.e}</span><h2>${t.n}</h2></div>
+  <ul class="facts">${t.facts.map(f=>`<li>${f}</li>`).join('')}</ul>
+  <div class="tip">💡 Remember: ${t.t}</div></div>`).join('');
+q('#ss1-vocab').innerHTML=V.map(([w,d])=>`<dt>${w}</dt><dd>${d}</dd>`).join('');
+
+// Flashcards
+let deck=[...F],fi=0;
+function showCard(){const [ti,qq,a,x]=deck[fi],t=T[ti],f=q('#ss1-flip');f.classList.remove('flipped');f.style.setProperty('--c',col(t));
+  setTimeout(()=>{q('#ss1-fcTag').textContent=`${t.e} ${t.n}`;q('#ss1-fcQ').textContent=qq;
+  q('#ss1-fcBack').innerHTML=`<div class="ans">${a}</div><p>${x}</p>`;},150);
+  q('#ss1-fcCount').textContent=`Card ${fi+1} of ${deck.length}`}
+q('#ss1-flip').onclick=()=>q('#ss1-flip').classList.toggle('flipped');
+q('#ss1-next').onclick=()=>{fi=(fi+1)%deck.length;showCard()};
+q('#ss1-prev').onclick=()=>{fi=(fi-1+deck.length)%deck.length;showCard()};
+q('#ss1-shuf').onclick=()=>{deck=shuffle(F);fi=0;showCard()};
+showCard();
+
+// Quiz
+let qs=null,qi=0,score=0;
+function startQuiz(){qs=shuffle(Q).slice(0,10);qi=0;score=0;askQ()}
+function askQ(){
+  if(qi>=qs.length)return endQuiz();
+  const [s,a,w1,w2,w3,why]=qs[qi];
+  const opts=shuffle([a,w1,w2,w3]);
+  q('#ss1-qbox').innerHTML=`<div class="progress"><div class="bar" style="width:${qi/qs.length*100}%"></div></div>
+   <div class="qmeta"><span>Question ${qi+1} of ${qs.length}</span><span>⭐ ${score}</span></div>
+   <div class="sentence">${s}</div>
+   <div class="choices">${opts.map(o=>`<button class="choice">${o}</button>`).join('')}</div><div class="feedback" id="ss1-fb"></div>`;
+  root.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
+    root.querySelectorAll('.choice').forEach(x=>{x.disabled=true;if(x.textContent===a)x.classList.add('right')});
+    const fb=q('#ss1-fb');
+    if(b.textContent===a){score++;fb.innerHTML=`🎉 <b>Yes!</b> ${why}`}
+    else{b.classList.add('wrong');fb.innerHTML=`😅 <b>Not quite — it's ${a}.</b> ${why}`}
+    fb.insertAdjacentHTML('beforeend',`<div style="margin-top:12px"><button class="btn primary" id="ss1-nq">${qi+1<qs.length?'Next ➡':'See my score 🏆'}</button></div>`);
+    q('#ss1-nq').onclick=()=>{qi++;askQ()};
+  });
+}
+function endQuiz(){
+  const stars=score>=9?3:score>=6?2:score>=3?1:0;
+  const msg=["Keep practicing — review the Learn cards and try again! 💪","Good start! Practice a bit more! 👍","Great job! You really know your stuff! 🌟","WOW! Social Studies superstar! 🏆"][stars];
+  q('#ss1-qbox').innerHTML=`<div class="done"><div class="progress"><div class="bar" style="width:100%"></div></div>
+   <div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
+   <div class="sentence">You got ${score} out of ${qs.length}!</div><p style="font-size:19px">${msg}</p>
+   <button class="btn primary" id="ss1-again">🔁 Play Again</button></div>`;
+  q('#ss1-again').onclick=startQuiz; if(stars>=2)confetti();
+}
+
+// Match
+let sel=null,matched=0;
+function newMatch(){
+  matched=0;sel=null;q('#ss1-mMsg').textContent='';
+  q('#ss1-mNames').innerHTML=shuffle(M).map(([n])=>`<div class="tile name" data-k="${n}">${n}</div>`).join('');
+  q('#ss1-mEx').innerHTML=shuffle(M).map(([n,x])=>`<div class="tile" data-k="${n}">${x}</div>`).join('');
+  root.querySelectorAll('#ss1-mNames .tile').forEach(t=>t.onclick=()=>{if(t.classList.contains('ok'))return;
+    root.querySelectorAll('#ss1-mNames .tile').forEach(x=>x.classList.remove('sel'));t.classList.add('sel');sel=t});
+  root.querySelectorAll('#ss1-mEx .tile').forEach(t=>t.onclick=()=>{
+    if(t.classList.contains('ok'))return;
+    const m=q('#ss1-mMsg');
+    if(!sel){m.textContent='👈 Pick a group first!';return}
+    if(t.dataset.k===sel.dataset.k){t.classList.add('ok');sel.classList.add('ok');sel.classList.remove('sel');sel=null;matched++;
+      m.textContent=matched===M.length?'🎉 You matched them all! Amazing!':`✅ Nice! ${matched} of ${M.length} matched`;
+      if(matched===M.length)confetti();}
+    else{t.classList.add('shake');setTimeout(()=>t.classList.remove('shake'),400);m.textContent='🤔 Try again!'}
+  });
+}
+q('#ss1-mReset').onclick=newMatch;newMatch();
 })();
 
 /* ---------- start on the page in the address (or home) ---------- */
