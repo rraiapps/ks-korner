@@ -1,7 +1,7 @@
 # K's Korner – notes for Claude
 
 - Audience: a 5th grader (age 10). Keep language simple, fun and encouraging.
-- Site is ONE self-contained file: `index.html` (no build step). Served by GitHub Pages from `main` / root.
+- Site is ONE self-contained file: `index.html` (no build step). Served by GitHub Pages from `main` / root at https://kskornerapp.com (`CNAME` file — do not delete).
 - Pages: `#home` → `#contents` → one `<section id="guide-id" class="page g-xxx">` per guide.
 - Adding a guide:
   1. Add its `<section class="page guide g-xxx">` (with the topbar: logo → home, "📚 Contents" button). Shared look comes from `.guide` styles (tabs, learn cards, flashcards, quiz, match); put only guide-specific colors/CSS under `.g-xxx`. Prefix element ids (e.g. `ss1-`) and put its JS in its own IIFE.
