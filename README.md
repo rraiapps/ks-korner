@@ -9,3 +9,4 @@ A kid-friendly study guide website (5th grade), hosted on GitHub Pages at https:
 1. Figurative Language (Reading & Writing)
 2. Early Peoples & Native Americans (Social Studies)
 3. The Three Branches of Government (Social Studies)
+4. Decimal Number Forms (Math) – generates new numbers every time; includes a Practice Sheet

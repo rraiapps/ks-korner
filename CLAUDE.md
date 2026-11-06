@@ -8,7 +8,7 @@
   2. Add an entry to the `GUIDES` array (id, subject, emoji, color, title, desc). TOC (simple list: SUBJECT heading, then topic links) + homepage count build from it. Name each guide after its topic only (no "Unit 1" etc.).
   3. Update the Guides list in README.md.
   4. Test in headless Chromium (no page errors; enter → contents → guide → back), then commit and push to `main`.
-- Guides so far: `figurative-language`, `early-americans` (Social Studies), `three-branches` (Social Studies).
-- Every guide uses the same style: Learn (topic cards with underlined key words + "Remember" tip + Word Bank), Flashcards, Quiz, Match. User prefers this over other formats (e.g. no 5 W's layout).
+- Guides so far: `figurative-language`, `early-americans` (Social Studies), `three-branches` (Social Studies), `decimal-forms` (Math).
+- Every guide uses the same style: Learn (topic cards with underlined key words + "Remember" tip + Word Bank), Flashcards, Quiz, Match. User prefers this over other formats (e.g. no 5 W's layout). Math guides may add a "✏️ Practice Sheet" tab (homework-style, auto-checked) and generate fresh problems with level buttons — see `decimal-forms`.
 - Stay politically neutral: no current officeholders' names or opinions.
 - Never put the child's full name, school or other personal info on the site (repo is public).

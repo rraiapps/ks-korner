@@ -147,6 +147,42 @@
   .g-gov{--all:#1fb58f;--leg:#2d9cdb;--exe:#ff4f8b;--jud:#7c5cff;--chk:#ffb400}
   .g-gov h1 span{color:var(--exe)}
 
+  /* ============ GUIDE: DECIMAL NUMBER FORMS (.g-dec) ============ */
+  .g-dec{--pv:#2d9cdb;--sf:#7c5cff;--ef:#1fb58f;--wf:#ff7a59;--tz:#ff4f8b;--bn:#d4a017}
+  .g-dec h1 span{color:var(--ef)}
+  .g-dec .levels{display:none;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 16px}
+  .g-dec .lvl{font-family:'Baloo 2';font-weight:700;font-size:17px;line-height:1.1;border:3px solid var(--ink);background:#fff;color:var(--ink);border-radius:14px;padding:6px 14px;cursor:pointer;display:flex;flex-direction:column;align-items:center}
+  .g-dec .lvl small{font-family:'Nunito';font-weight:700;font-size:12px;color:var(--muted)}
+  .g-dec .lvl.on{background:var(--ink);color:#fff}.g-dec .lvl.on small{color:#ddd}
+  .g-dec .pvwrap{overflow-x:auto}
+  .g-dec table.pv{border-collapse:collapse;margin:6px 0;font-size:13px;width:100%}
+  .g-dec .pv th{font-weight:800;padding:4px 2px;writing-mode:vertical-rl;transform:rotate(180deg);height:92px;vertical-align:bottom;color:var(--muted)}
+  .g-dec .pv td{border:2px solid var(--ink);text-align:center;font-family:'Baloo 2';font-weight:800;font-size:22px;padding:2px 4px;background:#fff}
+  .g-dec .pv .pt{border:none;background:none;writing-mode:horizontal-tb;transform:none;font-size:28px;color:var(--ink)}
+  .g-dec .small{font-size:15px}
+  .g-dec .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.8em;line-height:1.05}
+  .g-dec .frac span:first-child{border-bottom:2px solid currentColor;padding:0 2px}
+  .g-dec .num{display:inline-block;font-size:1.25em;color:var(--sf);margin-top:4px}
+  .g-dec .num.wordy{font-size:1em}
+  .g-dec .choices.long{grid-template-columns:1fr}
+  .g-dec .choice{font-size:18px}
+  .g-dec .forms{background:#f6f3ff;border-radius:12px;padding:10px 14px;margin-top:10px;text-align:left;font-size:16px}
+  .g-dec .front .qtext.long{font-size:clamp(18px,3.8vw,24px)}
+  .g-dec .back .ans.long{font-size:clamp(18px,3.8vw,26px)}
+  .g-dec .sheet{background:#fff;border:4px solid var(--ink);border-radius:24px;padding:14px;box-shadow:0 8px 0 var(--ink);max-width:820px;margin:0 auto}
+  .g-dec .prow{display:grid;grid-template-columns:34px 1fr;border-bottom:2px solid var(--ink);padding:10px 4px}
+  .g-dec .prow:last-child{border-bottom:none}
+  .g-dec .pnum{font-family:'Baloo 2';font-weight:800;font-size:22px}
+  .g-dec .pf{margin:5px 0}
+  .g-dec .plbl{font-weight:800;margin-right:6px}
+  .g-dec .pgiven{font-size:18px}
+  .g-dec .pin{display:block;width:100%;font:inherit;font-size:18px;padding:8px 10px;border:2px solid #cfc6dd;border-radius:10px;margin-top:4px;background:#fffdf8}
+  .g-dec .pin:focus{outline:none;border-color:var(--sf)}
+  .g-dec .pin.good{border-color:#1fb58f;background:#e6f8f2}
+  .g-dec .pin.bad{border-color:#ff4f8b;background:#ffeef4}
+  .g-dec .pfix{font-size:15px;color:#c2185b;margin-top:3px}
+  .g-dec .tipbox{max-width:820px;margin:0 auto 12px;background:#fff8d6;border:2px dashed var(--ink);border-radius:14px;padding:8px 14px;font-size:15px}
+
   #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
 </style>
 </head>
@@ -330,6 +366,60 @@
   </div>
 </section>
 
+<!-- ============ GUIDE: DECIMAL NUMBER FORMS ============ -->
+<section id="decimal-forms" class="page guide g-dec">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo" onclick="go('home')"><span class="mini">K</span> K's Korner</div>
+      <button class="btn" onclick="go('contents')">📚 Contents</button>
+    </div>
+    <header>
+      <h1>Decimal Number <span>Forms</span> 🔢</h1>
+      <p class="sub">Standard form, expanded form and word form — with endless practice!</p>
+    </header>
+    <div class="gnav">
+      <button data-v="learn" class="on">📖 Learn</button>
+      <button data-v="sheet">✏️ Practice Sheet</button>
+      <button data-v="cards">🃏 Flashcards</button>
+      <button data-v="quiz">🧠 Quiz</button>
+      <button data-v="match">🧩 Match</button>
+    </div>
+    <div class="levels" id="dec-levels"></div>
+    <div class="view on" data-view="learn">
+      <div class="intro">Read each card — the <b>underlined words</b> are the big ideas to remember! Then try the <b>Practice Sheet</b> — it's just like your homework, with new numbers every time. 🚀</div>
+      <div class="grid" id="dec-grid"></div>
+      <div class="vocab"><h3>📝 Word Bank</h3><dl id="dec-vocab"></dl></div>
+    </div>
+    <div class="view" data-view="sheet">
+      <div class="tipbox">✏️ Fill in the missing forms, then tap <b>Check My Answers</b>. Tips: use <b>+</b> between parts of expanded form (like <b>50 + 6 + 0.09</b>), and remember <b>“and”</b> for the decimal point in word form.</div>
+      <div class="sheet" id="dec-sheet"></div>
+      <p class="center" id="dec-sMsg"></p>
+      <div class="center row"><button class="btn primary" id="dec-check">✅ Check My Answers</button><button class="btn" id="dec-new">🔄 New Sheet</button></div>
+    </div>
+    <div class="view" data-view="cards">
+      <div class="fc-wrap">
+        <div class="hint" id="dec-fcCount"></div>
+        <div class="flip" id="dec-flip"><div class="inner">
+          <div class="face front"><div class="tagline" id="dec-fcTag" style="--c:var(--sf)"></div><div class="qtext" id="dec-fcQ"></div><div class="hint" style="margin-top:12px">Say or write your answer, then tap to flip 👆</div></div>
+          <div class="face back" id="dec-fcBack" style="--c:var(--sf)"></div>
+        </div></div>
+        <div class="row">
+          <button class="btn" id="dec-prev">⬅ Back</button>
+          <button class="btn" id="dec-shuf">🔄 New Cards</button>
+          <button class="btn primary" id="dec-next">Next ➡</button>
+        </div>
+      </div>
+    </div>
+    <div class="view" data-view="quiz"><div class="qbox" id="dec-qbox"></div></div>
+    <div class="view" data-view="match">
+      <p class="center">Tap a <b>number</b>, then tap its <b>word form</b>!</p>
+      <div class="match"><div class="col" id="dec-mNames"></div><div class="col" id="dec-mEx"></div></div>
+      <p class="center" id="dec-mMsg"></p>
+      <div class="center"><button class="btn" id="dec-mReset">🔄 New Round</button></div>
+    </div>
+  </div>
+</section>
+
 <script>
 /* =====================================================================
    TABLE OF CONTENTS — add one entry here for every new study guide.
@@ -342,6 +432,8 @@ const GUIDES = [
     title:"Early Peoples & Native Americans", desc:"The Bering Land Bridge, the Taino, Inuit, Iroquois and Plains — learn it, quiz it, match it!" },
   { id:"three-branches", subject:"Social Studies", emoji:"🏛️", color:"var(--c4)",
     title:"The Three Branches of Government", desc:"The Legislative, Executive and Judicial branches and how they keep each other in check!" },
+  { id:"decimal-forms", subject:"Math", emoji:"🔢", color:"var(--c5)",
+    title:"Decimal Number Forms", desc:"Standard, expanded and word form — with a practice sheet that makes new problems every time!" },
 ];
 const SUBJECT_EMOJI = {"Reading & Writing":"📖","Math":"➗","Science":"🔬","Social Studies":"🌎"};
 
@@ -807,6 +899,230 @@ function newMatch(){
   });
 }
 q('#gov-mReset').onclick=newMatch;newMatch();
+})();
+
+/* =====================================================================
+   GUIDE: DECIMAL NUMBER FORMS (Math) — standard, expanded, word form
+   Numbers are generated fresh, so there is always new practice.
+   ===================================================================== */
+(function(){
+const root=$('#decimal-forms'), q=s=>root.querySelector(s);
+const K=w=>`<span class="kw">${w}</span>`;
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+
+/* ---------- number helpers (numbers kept as digit strings: no rounding errors) ---------- */
+const ONES=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+const TENS=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+function w100(n){return n<20?ONES[n]:TENS[Math.floor(n/10)]+(n%10?'-'+ONES[n%10]:'')}
+function w1000(n){const h=Math.floor(n/100),r=n%100;return [h?ONES[h]+' hundred':'',r?w100(r):''].filter(Boolean).join(' ')}
+function intWords(n){
+  if(n===0)return 'zero';
+  const parts=[],m=Math.floor(n/1e6),t=Math.floor(n%1e6/1000),r=n%1000;
+  if(m)parts.push(w1000(m)+' million');
+  if(t)parts.push(w1000(t)+' thousand');
+  if(r)parts.push(w1000(r));
+  return parts.join(' ');
+}
+const PLACE=['','tenth','hundredth','thousandth'];
+const commas=s=>s.replace(/\B(?=(\d{3})+(?!\d))/g,',');
+function N(whole,dec){return {whole:String(whole),dec}}  // whole: digit string, dec: digit string (1–3, last digit not 0)
+const std=n=>commas(n.whole)+'.'+n.dec;
+function word(n){
+  const d=parseInt(n.dec,10),dw=intWords(d)+' '+PLACE[n.dec.length]+(d===1?'':'s');
+  const w=parseInt(n.whole,10);
+  return w?intWords(w)+' and '+dw:dw;
+}
+function terms(n){ // expanded-form terms as plain strings (no commas)
+  const t=[],W=n.whole;
+  for(let i=0;i<W.length;i++){const d=W[i];if(d!=='0')t.push(d+'0'.repeat(W.length-1-i))}
+  for(let i=0;i<n.dec.length;i++){const d=n.dec[i];if(d!=='0')t.push('0.'+'0'.repeat(i)+d)}
+  return t;
+}
+const expanded=n=>terms(n).map(x=>x.includes('.')?x:commas(x)).join(' + ');
+const frac=d=>`<span class="frac"><span>1</span><span>${commas(String(d))}</span></span>`;
+function expandedFrac(n){
+  const t=[],W=n.whole;
+  for(let i=0;i<W.length;i++){const d=W[i],p=W.length-1-i;if(d==='0')continue;
+    t.push(p===0?d:`(${d} × ${commas('1'+'0'.repeat(p))})`)}
+  for(let i=0;i<n.dec.length;i++){const d=n.dec[i];if(d!=='0')t.push(`(${d} × ${frac(10**(i+1))})`)}
+  return t.join(' + ');
+}
+
+/* ---------- random numbers by level ---------- */
+let level=2;
+function digits(len,zeroChance){let s=String(rnd(1,9));for(let i=1;i<len;i++)s+=Math.random()<zeroChance?'0':String(rnd(0,9));return s}
+function decPart(len,zeroChance){let s='';for(let i=0;i<len-1;i++)s+=Math.random()<zeroChance?'0':String(rnd(0,9));return s+String(rnd(1,9))}
+function make(){
+  if(level===1) return N(digits(rnd(1,2),.15),decPart(rnd(1,2),.2));
+  if(level===2) return N(digits(rnd(2,4),.35),decPart(rnd(2,3),.4));
+  return N(digits(rnd(5,7),.45),decPart(3,.4));
+}
+const same=(a,b)=>a.whole===b.whole&&a.dec===b.dec;
+function mutate(n){ // a believable mistake
+  let w=n.whole,d=n.dec;
+  const pick=rnd(1,6);
+  if(pick===1){ d=d[0]==='0'&&d.length>1?d.slice(1):(d.length<3?'0'+d:d.slice(1)+'0'); }        // decimal digits in the wrong place
+  else if(pick===2&&w.length>1){ const i=rnd(1,w.length-1); w=w[i]==='0'?w.slice(0,i)+w.slice(i+1):w.slice(0,i)+'0'+w.slice(i); } // missing/extra zero
+  else if(pick===3&&d.length>1){ const a=d.split(''),i=rnd(0,a.length-2);[a[i],a[i+1]]=[a[i+1],a[i]];d=a.join(''); } // swapped decimal digits
+  else if(pick===4&&w.length>1){ const a=w.split(''),i=rnd(0,a.length-2);[a[i],a[i+1]]=[a[i+1],a[i]];w=a.join(''); } // swapped whole digits
+  else if(pick===5){ d=d.length<3?d+'0':d; d=d.replace(/0+$/,'')||'1'; const a=d.split('');const i=rnd(0,a.length-1);a[i]=String((+a[i]+1)%10);d=a.join(''); }
+  else { const a=w.split('');const i=rnd(0,a.length-1);a[i]=String(i===0?((+a[i])%9)+1:(+a[i]+1)%10);w=a.join(''); }
+  if(w[0]==='0')w=w.replace(/^0+/,'')||'1';
+  if(!d||d.endsWith('0'))d=(d.replace(/0+$/,'')||'')+String(rnd(1,9));
+  if(d.length>3)d=d.slice(0,2)+String(rnd(1,9));
+  return N(w,d);
+}
+function wrongs(n,k=3){const out=[];let guard=0;
+  while(out.length<k&&guard++<200){const m=mutate(Math.random()<.3&&out.length?out[rnd(0,out.length-1)]:n);
+    if(!same(m,n)&&!out.some(o=>same(o,m)))out.push(m)}
+  while(out.length<k){const m=N(n.whole,decPart(n.dec.length,.3));if(!same(m,n)&&!out.some(o=>same(o,m)))out.push(m)}
+  return out;
+}
+const allForms=n=>`<div class="forms"><div><b>Standard:</b> ${std(n)}</div><div><b>Expanded:</b> ${expanded(n)}</div><div><b>Word:</b> ${word(n)}</div></div>`;
+
+/* ---------- tabs + level picker ---------- */
+let view='learn';
+root.querySelectorAll('.gnav button').forEach(b=>b.onclick=()=>{
+  view=b.dataset.v;
+  root.querySelectorAll('.gnav button').forEach(x=>x.classList.toggle('on',x===b));
+  root.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.dataset.view===view));
+  q('#dec-levels').style.display=view==='learn'?'none':'flex';
+  refresh(false);
+});
+const LV=[[1,'⭐ Warm-Up','like 45.07'],[2,'⭐⭐ Tricky Zeros','like 3,004.013'],[3,'⭐⭐⭐ Millions','like 1,000,820.632']];
+q('#dec-levels').innerHTML=LV.map(([n,l,ex])=>`<button class="lvl${n===level?' on':''}" data-l="${n}">${l}<small>${ex}</small></button>`).join('');
+root.querySelectorAll('.lvl').forEach(b=>b.onclick=()=>{level=+b.dataset.l;
+  root.querySelectorAll('.lvl').forEach(x=>x.classList.toggle('on',x===b));refresh(true)});
+const built={};
+function refresh(force){
+  if(view==='learn')return;
+  if(force||built[view]!==level){built[view]=level;({cards:newDeck,quiz:startQuiz,match:newMatch,sheet:newSheet})[view]()}
+}
+
+/* ---------- Learn ---------- */
+const T=[
+ {n:"Place Value",e:"🔢",c:"--pv",html:`<p>Every digit has a <b>place</b>. The <b>decimal point</b> separates whole numbers from parts of a whole.</p>
+   <div class="pvwrap"><table class="pv"><tr><th>thousands</th><th>hundreds</th><th>tens</th><th>ones</th><th class="pt">.</th><th>tenths</th><th>hundredths</th><th>thousandths</th></tr>
+   <tr><td>3</td><td>0</td><td>0</td><td>4</td><td class="pt">.</td><td>0</td><td>1</td><td>3</td></tr></table></div>
+   <p class="small">3,004.013 → the 3 on the right is in the <b>thousandths</b> place.</p>`,t:"Places after the decimal end in “-ths”!"},
+ {n:"Standard Form",e:"✏️",c:"--sf",facts:[`${K("Standard form")} is the regular way we write a number with digits.`,`Example: ${K("56.092")}`,`Big numbers get a ${K("comma")} every 3 digits: ${K("1,000,820.632")}`],t:"Standard form = just the digits!"},
+ {n:"Expanded Form",e:"🧩",c:"--ef",facts:[`${K("Expanded form")} breaks a number into the value of each digit, added together.`,`56.092 = ${K("50 + 6 + 0.09 + 0.002")}`,`${K("Skip the zeros")} — they're worth nothing, so they don't get a spot.`,`You might also see it with fractions: (5 × 10) + 6 + (9 × ${frac(100)}) + (2 × ${frac(1000)})`],t:"Each digit gets its own piece!"},
+ {n:"Word Form",e:"🗣️",c:"--wf",facts:[`${K("Word form")} is how you say the number out loud.`,`Say the whole number, say ${K("“and”")} for the decimal point, then say the decimal part like a regular number.`,`End with the ${K("last place name")}: tenths, hundredths or thousandths.`,`56.092 = ${K("fifty-six and ninety-two thousandths")}`],t:"“and” = the decimal point!"},
+ {n:"Tricky Zeros",e:"0️⃣",c:"--tz",facts:[`Zeros are ${K("placeholders")} — they keep the other digits in the right spot.`,`3.008 has an 8 in the ${K("thousandths")} place → ${K("three and eight thousandths")}`,`3.08 is different → three and eight ${K("hundredths")}`,`In expanded form, 3.008 = ${K("3 + 0.008")}`],t:"Count the places after the decimal!"},
+ {n:"Big Numbers",e:"🏔️",c:"--bn",facts:[`One million = ${K("1,000,000")} (six zeros!).`,`Use commas to split big numbers into groups of 3: millions, thousands, ones.`,`1,000,820.632 = ${K("1,000,000 + 800 + 20 + 0.6 + 0.03 + 0.002")}`,`Word form: ${K("one million eight hundred twenty and six hundred thirty-two thousandths")}`],t:"Commas help you read big numbers!"}
+];
+q('#dec-grid').innerHTML=T.map(t=>`<div class="tcard" style="--c:var(${t.c})">
+  <div class="top"><span class="emoji">${t.e}</span><h2>${t.n}</h2></div>
+  ${t.html||`<ul class="facts">${t.facts.map(f=>`<li>${f}</li>`).join('')}</ul>`}
+  <div class="tip">💡 Remember: ${t.t}</div></div>`).join('');
+const V=[["Digit","One of the symbols 0–9."],["Place value","How much a digit is worth because of where it sits."],["Decimal point","The dot that separates whole numbers from parts of a whole."],["Tenths","1 out of 10 parts. 0.1"],["Hundredths","1 out of 100 parts. 0.01"],["Thousandths","1 out of 1,000 parts. 0.001"],["Standard form","A number written with digits: 56.092"],["Expanded form","A number broken into the value of each digit: 50 + 6 + 0.09 + 0.002"],["Word form","A number written in words: fifty-six and ninety-two thousandths"]];
+q('#dec-vocab').innerHTML=V.map(([w,d])=>`<dt>${w}</dt><dd>${d}</dd>`).join('');
+
+/* ---------- Flashcards (fresh numbers each deck) ---------- */
+const FT=[["✍️ Write it in WORD FORM",n=>std(n),n=>word(n)],["🧩 Write it in EXPANDED FORM",n=>std(n),n=>expanded(n)],["✏️ Write it in STANDARD FORM",n=>word(n),n=>std(n)],["✏️ Write it in STANDARD FORM",n=>expanded(n),n=>std(n)]];
+let deck=[],fi=0;
+function newDeck(){deck=Array.from({length:12},(_,i)=>({n:make(),t:FT[i%4]}));deck=shuffle(deck);fi=0;showCard()}
+function showCard(){const c=deck[fi],f=q('#dec-flip');f.classList.remove('flipped');
+  setTimeout(()=>{const front=c.t[1](c.n),back=c.t[2](c.n);
+    q('#dec-fcTag').textContent=c.t[0];
+    const fq=q('#dec-fcQ');fq.textContent=front;fq.classList.toggle('long',front.length>28);
+    q('#dec-fcBack').innerHTML=`<div class="ans${back.length>24?' long':''}">${back}</div><p>Did you get it? 🎯</p>`;},150);
+  q('#dec-fcCount').textContent=`Card ${fi+1} of ${deck.length}`}
+q('#dec-flip').onclick=()=>q('#dec-flip').classList.toggle('flipped');
+q('#dec-next').onclick=()=>{fi=(fi+1)%deck.length;showCard()};
+q('#dec-prev').onclick=()=>{fi=(fi-1+deck.length)%deck.length;showCard()};
+q('#dec-shuf').onclick=newDeck;
+
+/* ---------- Quiz (10 fresh questions) ---------- */
+const QT=[
+ n=>({p:`What is the <b>expanded form</b> of <span class="num">${std(n)}</span>?`,f:expanded}),
+ n=>({p:`What is the <b>word form</b> of <span class="num">${std(n)}</span>?`,f:word}),
+ n=>({p:`What is the <b>standard form</b> of<br><span class="num wordy">${word(n)}</span>?`,f:std}),
+ n=>({p:`What is the <b>standard form</b> of<br><span class="num wordy">${Math.random()<.5?expanded(n):expandedFrac(n)}</span>?`,f:std})
+];
+let qs=null,qi=0,score=0;
+function startQuiz(){qs=Array.from({length:10},(_,i)=>{const n=make(),t=QT[i%4](n),opts=shuffle([n,...wrongs(n)]);
+  return {n,p:t.p,opts:opts.map(t.f),ans:opts.findIndex(o=>same(o,n)),long:t.f===word||t.f===expanded}});
+  qs=shuffle(qs);qi=0;score=0;askQ()}
+function askQ(){
+  if(qi>=qs.length)return endQuiz();
+  const Q=qs[qi];
+  q('#dec-qbox').innerHTML=`<div class="progress"><div class="bar" style="width:${qi/qs.length*100}%"></div></div>
+   <div class="qmeta"><span>Question ${qi+1} of ${qs.length}</span><span>⭐ ${score}</span></div>
+   <div class="sentence">${Q.p}</div>
+   <div class="choices${Q.long?' long':''}">${Q.opts.map((o,i)=>`<button class="choice" data-i="${i}">${o}</button>`).join('')}</div><div class="feedback" id="dec-fb"></div>`;
+  root.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
+    root.querySelectorAll('.choice').forEach(x=>{x.disabled=true;if(+x.dataset.i===Q.ans)x.classList.add('right')});
+    const fb=q('#dec-fb');
+    if(+b.dataset.i===Q.ans){score++;fb.innerHTML=`🎉 <b>Yes!</b>`}
+    else{b.classList.add('wrong');fb.innerHTML=`😅 <b>Not quite.</b> Here's the number in all 3 forms:`}
+    fb.insertAdjacentHTML('beforeend',allForms(Q.n)+`<div style="margin-top:12px"><button class="btn primary" id="dec-nq">${qi+1<qs.length?'Next ➡':'See my score 🏆'}</button></div>`);
+    q('#dec-nq').onclick=()=>{qi++;askQ()};
+  });
+}
+function endQuiz(){
+  const stars=score>=9?3:score>=6?2:score>=3?1:0;
+  const msg=["Keep practicing — peek at the Learn cards and try again! 💪","Good start! Practice a bit more! 👍","Great job! You really know your number forms! 🌟","WOW! Decimal superstar! 🏆"][stars];
+  q('#dec-qbox').innerHTML=`<div class="done"><div class="progress"><div class="bar" style="width:100%"></div></div>
+   <div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
+   <div class="sentence">You got ${score} out of ${qs.length}!</div><p style="font-size:19px">${msg}</p>
+   <button class="btn primary" id="dec-again">🔁 New Quiz</button></div>`;
+  q('#dec-again').onclick=startQuiz; if(stars>=2)confetti();
+}
+
+/* ---------- Match (standard ↔ word form) ---------- */
+let sel=null,matched=0,pairs=[];
+function newMatch(){
+  matched=0;sel=null;q('#dec-mMsg').textContent='';
+  pairs=[];while(pairs.length<5){const n=make();if(!pairs.some(p=>same(p,n)))pairs.push(n)}
+  q('#dec-mNames').innerHTML=shuffle(pairs.map((n,i)=>[i,n])).map(([i,n])=>`<div class="tile name" data-k="${i}">${std(n)}</div>`).join('');
+  q('#dec-mEx').innerHTML=shuffle(pairs.map((n,i)=>[i,n])).map(([i,n])=>`<div class="tile" data-k="${i}">${word(n)}</div>`).join('');
+  root.querySelectorAll('#dec-mNames .tile').forEach(t=>t.onclick=()=>{if(t.classList.contains('ok'))return;
+    root.querySelectorAll('#dec-mNames .tile').forEach(x=>x.classList.remove('sel'));t.classList.add('sel');sel=t});
+  root.querySelectorAll('#dec-mEx .tile').forEach(t=>t.onclick=()=>{
+    if(t.classList.contains('ok'))return;
+    const m=q('#dec-mMsg');
+    if(!sel){m.textContent='👈 Pick a number first!';return}
+    if(t.dataset.k===sel.dataset.k){t.classList.add('ok');sel.classList.add('ok');sel.classList.remove('sel');sel=null;matched++;
+      m.textContent=matched===pairs.length?'🎉 You matched them all! Amazing!':`✅ Nice! ${matched} of ${pairs.length} matched`;
+      if(matched===pairs.length)confetti();}
+    else{t.classList.add('shake');setTimeout(()=>t.classList.remove('shake'),400);m.textContent='🤔 Try again!'}
+  });
+}
+q('#dec-mReset').onclick=newMatch;
+
+/* ---------- Practice Sheet (like the homework: fill in the missing forms) ---------- */
+const normStd=s=>{s=String(s).replace(/[\s,$]/g,'');if(s.startsWith('.'))s='0'+s;
+  let [w,d='']=s.split('.');w=w.replace(/^0+(?=\d)/,'');d=d.replace(/0+$/,'');return d?w+'.'+d:w};
+const normWord=s=>String(s).toLowerCase().replace(/[-–—]/g,' ').replace(/[^a-z ]/g,'').replace(/\s+/g,' ').trim();
+const normExp=s=>String(s).split('+').map(x=>normStd(x)).filter(x=>x&&x!=='0').sort().join('|');
+let sheet=[];
+const GIVEN=['std','word','exp'];
+function newSheet(){
+  sheet=Array.from({length:6},(_,i)=>({n:make(),given:GIVEN[i%3]}));
+  const LBL={std:'Standard Form',exp:'Expanded Form',word:'Word Form'};
+  const show={std:n=>std(n),exp:n=>expanded(n),word:n=>word(n)};
+  q('#dec-sheet').innerHTML=sheet.map((r,i)=>`<div class="prow"><div class="pnum">${i+1}.</div><div class="pfields">
+    ${['std','exp','word'].map(f=>`<div class="pf"><span class="plbl">${LBL[f]}:</span>${r.given===f
+      ?`<span class="pgiven">${show[f](r.n)}</span>`
+      :`<input class="pin" data-r="${i}" data-f="${f}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${f==='exp'?'like 50 + 6 + 0.09':f==='std'?'like 56.092':'like fifty-six and ninety-two thousandths'}"><div class="pfix"></div>`}</div>`).join('')}
+  </div></div>`).join('');
+  q('#dec-sMsg').innerHTML='';
+}
+q('#dec-check').onclick=()=>{
+  let right=0,total=0;
+  root.querySelectorAll('.pin').forEach(inp=>{
+    const r=sheet[+inp.dataset.r],f=inp.dataset.f,v=inp.value;total++;
+    const ok=f==='std'?normStd(v)===normStd(std(r.n)):f==='exp'?normExp(v)===normExp(terms(r.n).join('+')):normWord(v)===normWord(word(r.n));
+    inp.classList.toggle('good',ok);inp.classList.toggle('bad',!ok);
+    const fix=inp.nextElementSibling;
+    fix.innerHTML=ok?'':`Answer: <b>${f==='std'?std(r.n):f==='exp'?expanded(r.n):word(r.n)}</b>`;
+    if(ok)right++;
+  });
+  q('#dec-sMsg').innerHTML=right===total?`🎉 <b>Perfect! ${right} out of ${total}!</b>`:`You got <b>${right} out of ${total}</b>. Check the answers in pink, then try a new sheet! 💪`;
+  if(right===total)confetti();
+};
+q('#dec-new').onclick=newSheet;
 })();
 
 /* ---------- start on the page in the address (or home) ---------- */
