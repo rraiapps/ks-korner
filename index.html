@@ -183,6 +183,32 @@
   .g-dec .pfix{font-size:15px;color:#c2185b;margin-top:3px}
   .g-dec .tipbox{max-width:820px;margin:0 auto 12px;background:#fff8d6;border:2px dashed var(--ink);border-radius:14px;padding:8px 14px;font-size:15px}
 
+  /* ============ SHARED ENGINE STYLES (levels, practice sheets, fractions) ============ */
+  .guide .levels{display:none;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 16px}
+  .guide .lvl{font-family:'Baloo 2';font-weight:700;font-size:17px;line-height:1.1;border:3px solid var(--ink);background:#fff;color:var(--ink);border-radius:14px;padding:6px 14px;cursor:pointer;display:flex;flex-direction:column;align-items:center}
+  .guide .lvl small{font-family:'Nunito';font-weight:700;font-size:12px;color:var(--muted)}
+  .guide .lvl.on{background:var(--ink);color:#fff}.guide .lvl.on small{color:#ddd}
+  .guide .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.8em;line-height:1.05;margin:0 2px}
+  .guide .frac span:first-child{border-bottom:2px solid currentColor;padding:0 2px}
+  .guide .bigq{font-family:'Baloo 2';font-weight:800;font-size:26px}
+  .guide .circ{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:3px solid var(--ink);border-radius:50%;font-size:20px;color:var(--muted);vertical-align:middle;margin:0 6px}
+  .guide .choices.long{grid-template-columns:1fr}
+  .guide .front .qtext.long{font-size:clamp(18px,3.8vw,24px)}
+  .guide .back .ans.long{font-size:clamp(20px,4vw,28px)}
+  .guide .tipbox{max-width:820px;margin:0 auto 12px;background:#fff8d6;border:2px dashed var(--ink);border-radius:14px;padding:8px 14px;font-size:15px}
+  .guide .sheet{background:#fff;border:4px solid var(--ink);border-radius:24px;padding:10px 14px;box-shadow:0 8px 0 var(--ink);max-width:820px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0 18px}
+  .guide .prow{display:grid;grid-template-columns:34px 1fr;border-bottom:2px dashed #d9cfe0;padding:10px 2px}
+  .guide .pnum{font-family:'Baloo 2';font-weight:800;font-size:20px}
+  .guide .pq{margin-bottom:6px}
+  .guide .pin{display:block;width:100%;font:inherit;font-size:18px;padding:8px 10px;border:2px solid #cfc6dd;border-radius:10px;background:#fffdf8}
+  .guide .pin:focus{outline:none;border-color:#7c5cff}
+  .guide .pin.good,.guide .pchoices.good .pch.on{border-color:#1fb58f;background:#e6f8f2}
+  .guide .pin.bad,.guide .pchoices.bad .pch.on{border-color:#ff4f8b;background:#ffeef4}
+  .guide .pchoices{display:flex;gap:8px}
+  .guide .pch{font-family:'Baloo 2';font-weight:800;font-size:24px;width:54px;height:46px;border:3px solid var(--ink);border-radius:12px;background:#fff;cursor:pointer;color:var(--ink)}
+  .guide .pch.on{background:#fff1b3}
+  .guide .pfix{font-size:14px;color:#c2185b;margin-top:4px}
+
   #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
 </style>
 </head>
@@ -434,6 +460,12 @@ const GUIDES = [
     title:"The Three Branches of Government", desc:"The Legislative, Executive and Judicial branches and how they keep each other in check!" },
   { id:"decimal-forms", subject:"Math", emoji:"🔢", color:"var(--c5)",
     title:"Decimal Number Forms", desc:"Standard, expanded and word form — with a practice sheet that makes new problems every time!" },
+  { id:"appositives", subject:"Reading & Writing", emoji:"🏷️", color:"var(--c2)", title:"Appositives", desc:"" },
+  { id:"sentence-combining", subject:"Reading & Writing", emoji:"🔗", color:"var(--c6)", title:"Sentence Combining", desc:"" },
+  { id:"multiplication", subject:"Math", emoji:"✖️", color:"var(--c1)", title:"Multiplication Facts", desc:"" },
+  { id:"comparing-decimals", subject:"Math", emoji:"🐊", color:"var(--c6)", title:"Comparing Decimals", desc:"" },
+  { id:"decimals-fractions", subject:"Math", emoji:"🍕", color:"var(--c3)", title:"Decimals and Fractions", desc:"" },
+  { id:"matter", subject:"Science", emoji:"🧪", color:"var(--c3)", title:"Matter", desc:"" },
 ];
 const SUBJECT_EMOJI = {"Reading & Writing":"📖","Math":"➗","Science":"🔬","Social Studies":"🌎"};
 
@@ -1123,6 +1155,496 @@ q('#dec-check').onclick=()=>{
   if(right===total)confetti();
 };
 q('#dec-new').onclick=newSheet;
+})();
+
+/* =====================================================================
+   GUIDE ENGINE — makeGuide(cfg) builds a full guide section:
+   Learn · (✏️ Practice Sheet) · Flashcards · Quiz · Match, with optional levels.
+   ===================================================================== */
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const fracH=(n,d,w)=>`${w?w+' ':''}<span class="frac"><span>${n}</span><span>${d}</span></span>`;
+const KW=w=>`<span class="kw">${w}</span>`;
+function staticQuiz(Q,n=10){return shuffle(Q).slice(0,n).map(([p,a,w1,w2,w3,why])=>{const o=shuffle([a,w1,w2,w3]);return {p,opts:o,ans:o.indexOf(a),why}})}
+function staticFlash(F,T){return shuffle(F).map(([ti,q,a,x])=>({tag:T[ti].e+' '+T[ti].n,q,a,x,c:T[ti].c}))}
+function makeGuide(cfg){
+  const sec=document.createElement('section');
+  sec.id=cfg.id; sec.className='page guide g-'+cfg.prefix;
+  const tabs=[['learn','📖 Learn']];
+  if(cfg.practice)tabs.push(['sheet','✏️ Practice Sheet']);
+  tabs.push(['cards','🃏 Flashcards'],['quiz','🧠 Quiz'],['match','🧩 Match']);
+  sec.innerHTML=`<div class="wrap">
+    <div class="topbar"><div class="logo" onclick="go('home')"><span class="mini">K</span> K's Korner</div><button class="btn" onclick="go('contents')">📚 Contents</button></div>
+    <header><h1>${cfg.h1}</h1><p class="sub">${cfg.sub}</p></header>
+    <div class="gnav">${tabs.map(([v,l],i)=>`<button data-v="${v}"${i?'':' class="on"'}>${l}</button>`).join('')}</div>
+    <div class="levels"></div>
+    <div class="view on" data-view="learn">
+      <div class="intro">${cfg.intro||'Read each card — the <b>underlined words</b> are the big ideas to remember! Then test yourself with the other tabs. 🚀'}</div>
+      <div class="grid"></div>
+      <div class="vocab"><h3>📝 Word Bank</h3><dl></dl></div>
+    </div>
+    ${cfg.practice?`<div class="view" data-view="sheet">
+      <div class="tipbox">${cfg.practice.tip}</div>
+      <div class="sheet"></div>
+      <p class="center sMsg"></p>
+      <div class="center row"><button class="btn primary sCheck">✅ Check My Answers</button><button class="btn sNew">🔄 New Sheet</button></div>
+    </div>`:''}
+    <div class="view" data-view="cards"><div class="fc-wrap">
+      <div class="hint fcCount"></div>
+      <div class="flip"><div class="inner">
+        <div class="face front"><div class="tagline fcTag"></div><div class="qtext fcQ"></div><div class="hint" style="margin-top:12px">Say your answer out loud, then tap to flip 👆</div></div>
+        <div class="face back fcBack"></div>
+      </div></div>
+      <div class="row"><button class="btn fPrev">⬅ Back</button><button class="btn fShuf">${cfg.levels?'🔄 New Cards':'🔀 Shuffle'}</button><button class="btn primary fNext">Next ➡</button></div>
+    </div></div>
+    <div class="view" data-view="quiz"><div class="qbox"></div></div>
+    <div class="view" data-view="match">
+      <p class="center">${cfg.matchPrompt||'Tap a word on the left, then tap what matches it on the right!'}</p>
+      <div class="match"><div class="col mL"></div><div class="col mR"></div></div>
+      <p class="center mMsg"></p>
+      <div class="center"><button class="btn mReset">🔄 New Round</button></div>
+    </div></div>`;
+  const firstScript=document.querySelector('body > script');
+  document.body.insertBefore(sec,firstScript);
+  const q=s=>sec.querySelector(s), qa=s=>sec.querySelectorAll(s);
+  let level=cfg.levels?cfg.levels[0][0]:0, view='learn';
+  const built={};
+
+  // tabs + levels
+  qa('.gnav button').forEach(b=>b.onclick=()=>{view=b.dataset.v;
+    qa('.gnav button').forEach(x=>x.classList.toggle('on',x===b));
+    qa('.view').forEach(v=>v.classList.toggle('on',v.dataset.view===view));
+    q('.levels').style.display=(cfg.levels&&view!=='learn')?'flex':'none';
+    refresh(false)});
+  if(cfg.levels){
+    q('.levels').innerHTML=cfg.levels.map(([n,l,ex])=>`<button class="lvl${n===level?' on':''}" data-l="${n}">${l}<small>${ex}</small></button>`).join('');
+    qa('.lvl').forEach(b=>b.onclick=()=>{level=b.dataset.l;qa('.lvl').forEach(x=>x.classList.toggle('on',x===b));refresh(true)});
+    level=String(level);
+  }
+  function refresh(force){if(view==='learn')return;
+    if(force||built[view]!==level){built[view]=level;({sheet:newSheet,cards:newDeck,quiz:startQuiz,match:newMatch})[view]()}}
+
+  // learn
+  q('.grid').innerHTML=cfg.cards.map(t=>`<div class="tcard" style="--c:${t.c}">
+    <div class="top"><span class="emoji">${t.e}</span><h2>${t.n}</h2></div>
+    ${t.html||`<ul class="facts">${t.facts.map(f=>`<li>${f}</li>`).join('')}</ul>`}
+    <div class="tip">💡 Remember: ${t.t}</div></div>`).join('');
+  q('.vocab dl').innerHTML=cfg.vocab.map(([w,d])=>`<dt>${w}</dt><dd>${d}</dd>`).join('');
+
+  // flashcards
+  let deck=[],fi=0;
+  function newDeck(){deck=cfg.flash(level);fi=0;showCard()}
+  function showCard(){const c=deck[fi],f=q('.flip');f.classList.remove('flipped');f.style.setProperty('--c',c.c||cfg.color);
+    setTimeout(()=>{q('.fcTag').textContent=c.tag;const fq=q('.fcQ');fq.innerHTML=c.q;fq.classList.toggle('long',fq.textContent.length>60);
+      const a=document.createElement('div');a.innerHTML=c.a;
+      q('.fcBack').innerHTML=`<div class="ans${a.textContent.length>22?' long':''}">${c.a}</div>${c.x?`<p>${c.x}</p>`:''}`;},150);
+    q('.fcCount').textContent=`Card ${fi+1} of ${deck.length}`}
+  q('.flip').onclick=()=>q('.flip').classList.toggle('flipped');
+  q('.fNext').onclick=()=>{fi=(fi+1)%deck.length;showCard()};
+  q('.fPrev').onclick=()=>{fi=(fi-1+deck.length)%deck.length;showCard()};
+  q('.fShuf').onclick=newDeck;
+
+  // quiz
+  let qs=null,qi=0,score=0;
+  function startQuiz(){qs=cfg.quiz(level);qi=0;score=0;askQ()}
+  function askQ(){
+    if(qi>=qs.length)return endQuiz();
+    const Q=qs[qi],long=Q.opts.some(o=>String(o).replace(/<[^>]+>/g,'').length>26);
+    q('.qbox').innerHTML=`<div class="progress"><div class="bar" style="width:${qi/qs.length*100}%"></div></div>
+      <div class="qmeta"><span>Question ${qi+1} of ${qs.length}</span><span>⭐ ${score}</span></div>
+      <div class="sentence">${Q.p}</div>
+      <div class="choices${long?' long':''}">${Q.opts.map((o,i)=>`<button class="choice" data-i="${i}">${o}</button>`).join('')}</div><div class="feedback"></div>`;
+    qa('.choice').forEach(b=>b.onclick=()=>{
+      qa('.choice').forEach(x=>{x.disabled=true;if(+x.dataset.i===Q.ans)x.classList.add('right')});
+      const fb=q('.feedback');
+      if(+b.dataset.i===Q.ans){score++;fb.innerHTML=`🎉 <b>Yes!</b> ${Q.why||''}`}
+      else{b.classList.add('wrong');fb.innerHTML=`😅 <b>Not quite — it's ${Q.opts[Q.ans]}.</b> ${Q.why||''}`}
+      fb.insertAdjacentHTML('beforeend',`<div style="margin-top:12px"><button class="btn primary nq">${qi+1<qs.length?'Next ➡':'See my score 🏆'}</button></div>`);
+      q('.nq').onclick=()=>{qi++;askQ()};
+    });
+  }
+  function endQuiz(){
+    const stars=score>=9?3:score>=6?2:score>=3?1:0;
+    const msg=["Keep practicing — review the Learn cards and try again! 💪","Good start! Practice a bit more! 👍","Great job! You really know your stuff! 🌟",cfg.superstar||"WOW! Superstar! 🏆"][stars];
+    q('.qbox').innerHTML=`<div class="done"><div class="progress"><div class="bar" style="width:100%"></div></div>
+      <div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
+      <div class="sentence">You got ${score} out of ${qs.length}!</div><p style="font-size:19px">${msg}</p>
+      <button class="btn primary qAgain">🔁 Play Again</button></div>`;
+    q('.qAgain').onclick=startQuiz; if(stars>=2)confetti();
+  }
+
+  // match
+  let sel=null,matched=0,pairs=[];
+  function newMatch(){
+    matched=0;sel=null;q('.mMsg').textContent='';
+    pairs=cfg.match(level);
+    q('.mL').innerHTML=shuffle(pairs.map((p,i)=>[i,p[0]])).map(([i,t])=>`<div class="tile name" data-k="${i}">${t}</div>`).join('');
+    q('.mR').innerHTML=shuffle(pairs.map((p,i)=>[i,p[1]])).map(([i,t])=>`<div class="tile" data-k="${i}">${t}</div>`).join('');
+    qa('.mL .tile').forEach(t=>t.onclick=()=>{if(t.classList.contains('ok'))return;qa('.mL .tile').forEach(x=>x.classList.remove('sel'));t.classList.add('sel');sel=t});
+    qa('.mR .tile').forEach(t=>t.onclick=()=>{
+      if(t.classList.contains('ok'))return;const m=q('.mMsg');
+      if(!sel){m.textContent='👈 Pick one on the left first!';return}
+      if(t.dataset.k===sel.dataset.k){t.classList.add('ok');sel.classList.add('ok');sel.classList.remove('sel');sel=null;matched++;
+        m.textContent=matched===pairs.length?'🎉 You matched them all! Amazing!':`✅ Nice! ${matched} of ${pairs.length} matched`;
+        if(matched===pairs.length)confetti();}
+      else{t.classList.add('shake');setTimeout(()=>t.classList.remove('shake'),400);m.textContent='🤔 Try again!'}
+    });
+  }
+  q('.mReset').onclick=newMatch;
+
+  // practice sheet
+  let rows=[];
+  function newSheet(){
+    rows=cfg.practice.rows(level);
+    q('.sheet').innerHTML=rows.map((r,i)=>`<div class="prow"><div class="pnum">${i+1}.</div><div class="pfields">
+      <div class="pq">${r.q}</div>
+      ${r.kind==='choice'
+        ?`<div class="pchoices" data-r="${i}">${r.choices.map(c=>`<button class="pch" data-v="${c}">${c}</button>`).join('')}</div>`
+        :`<input class="pin" data-r="${i}" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="${r.inputmode||'text'}" placeholder="${r.placeholder||'Your answer'}">`}
+      <div class="pfix"></div></div></div>`).join('');
+    qa('.pchoices').forEach(g=>g.querySelectorAll('.pch').forEach(b=>b.onclick=()=>{g.querySelectorAll('.pch').forEach(x=>x.classList.toggle('on',x===b));g.dataset.val=b.dataset.v;g.classList.remove('good','bad')}));
+    q('.sMsg').innerHTML='';
+  }
+  if(cfg.practice){
+    q('.sNew').onclick=newSheet;
+    q('.sCheck').onclick=()=>{let right=0;
+      rows.forEach((r,i)=>{
+        const el=r.kind==='choice'?q(`.pchoices[data-r="${i}"]`):q(`.pin[data-r="${i}"]`);
+        const v=r.kind==='choice'?(el.dataset.val||''):el.value;
+        const ok=r.check(v);el.classList.toggle('good',ok);el.classList.toggle('bad',!ok);
+        el.parentElement.querySelector('.pfix').innerHTML=ok?'':`Answer: <b>${r.answer}</b>${r.why?` — ${r.why}`:''}`;
+        if(ok)right++;});
+      q('.sMsg').innerHTML=right===rows.length?`🎉 <b>Perfect! ${right} out of ${rows.length}!</b>`:`You got <b>${right} out of ${rows.length}</b>. Check the answers in pink, then try a new sheet! 💪`;
+      if(right===rows.length)confetti();};
+  }
+}
+
+/* =====================================================================
+   GUIDE: APPOSITIVES (Reading & Writing)
+   ===================================================================== */
+(function(){
+const T=[
+ {n:"What Is an Appositive?",e:"🏷️",c:"#7c5cff",facts:[`An ${KW("appositive")} is a word or group of words that ${KW("renames")} or ${KW("tells more about")} a noun.`,`It sits ${KW("right next to")} the noun it describes.`,`Example: The crane, ${KW("a beautiful white bird")}, was nearly invisible in the snow.`],t:"An appositive is a name tag for a noun!"},
+ {n:"Commas Hug It",e:"🤗",c:"#ff7a59",facts:[`Put a ${KW("comma before")} and a ${KW("comma after")} the appositive.`,`Hiroko${KW(", a skilled weaver,")} wove beautiful silk.`,`If the appositive is at the end, it gets one comma and a period: I met Hiroko${KW(", a skilled weaver.")}`],t:"Commas give the appositive a hug!"},
+ {n:"The Take-Away Test",e:"✂️",c:"#1fb58f",facts:[`Cover up the appositive. The sentence should ${KW("still make sense")}.`,`Ryota, ${KW("the village carpenter")}, welcomed the girl. → Ryota welcomed the girl. ✅`,`That's how you know it's ${KW("extra information")}.`],t:"Take it out — the sentence still works!"},
+ {n:"Make It Specific",e:"🌟",c:"#ffb400",facts:[`A good appositive gives ${KW("new, interesting")} details.`,`Okay: Ryota, ${KW("a man")}, ...`,`Better: Ryota, ${KW("a kind old farmer")}, ...`,`Use describing words to paint a picture!`],t:"Specific details make writing pop!"},
+ {n:"Spot the Appositive",e:"🔍",c:"#2d9cdb",facts:[`Look for a ${KW("noun")}, then a ${KW("comma")}, then words that ${KW("rename")} it.`,`My dog, ${KW("a fluffy poodle")}, loves to swim.`,`Mrs. Garcia, ${KW("our principal")}, read us a story.`],t:"Noun + comma + rename = appositive!"}
+];
+const V=[["Appositive","Words that rename or tell more about a noun, right next to it."],["Noun","A person, place, thing or idea."],["Rename","To call something by another name or description."],["Comma","The punctuation mark ( , ) that sets off the appositive."],["Specific","Exact and detailed, not general."]];
+const F=[
+ [0,"What is an appositive?","Words that rename a noun","It sits right next to the noun."],
+ [0,"Find the appositive: <i>My cat, a lazy orange tabby, sleeps all day.</i>","a lazy orange tabby","It renames “my cat.”"],
+ [1,"Where do the commas go around an appositive?","Before and after it","Commas hug the appositive."],
+ [2,"How can you test if something is an appositive?","Take it out","The sentence should still make sense."],
+ [3,"Which is better: “Max, a boy,” or “Max, the fastest runner in fifth grade,”?","The fastest runner in fifth grade","Specific details are more interesting."],
+ [4,"Find the appositive: <i>Mrs. Garcia, our principal, read us a story.</i>","our principal","It tells who Mrs. Garcia is."],
+ [4,"Find the appositive: <i>We visited Paris, the capital of France.</i>","the capital of France","It renames Paris."],
+ [1,"Fix the commas: <i>Leo my best friend plays soccer.</i>","Leo, my best friend, plays soccer.","Commas before and after."],
+ [0,"What part of speech does an appositive rename?","A noun","A person, place, thing or idea."],
+ [4,"Find the appositive: <i>Jupiter, the largest planet, has many moons.</i>","the largest planet","It renames Jupiter."]
+];
+const Q=[
+ ["What is the appositive? <i>Our teacher, Mr. Brown, loves science.</i>","Mr. Brown","Our teacher","loves science","science","“Mr. Brown” renames “our teacher.”"],
+ ["What is the appositive? <i>Bella, my little sister, is six years old.</i>","my little sister","Bella","is six years old","six years old","“my little sister” tells who Bella is."],
+ ["What is the appositive? <i>The Nile, the longest river in Africa, flows north.</i>","the longest river in Africa","The Nile","flows north","Africa","It tells more about the Nile."],
+ ["Which sentence uses commas correctly?","Sam, my cousin, lives in Ohio.","Sam my cousin, lives in Ohio.","Sam, my cousin lives in Ohio.","Sam my, cousin lives in Ohio.","Commas go before AND after the appositive."],
+ ["Which sentence uses commas correctly?","Our dog, a golden retriever, loves the beach.","Our dog a golden retriever, loves the beach.","Our dog, a golden retriever loves the beach.","Our, dog a golden retriever loves the beach.","The commas hug “a golden retriever.”"],
+ ["Which sentence has an appositive?","Mia, the class president, gave a speech.","Mia gave a long speech.","Mia and Jo gave a speech.","Mia gave a speech, and we clapped.","“the class president” renames Mia."],
+ ["Which sentence has an appositive?","Mount Everest, the tallest mountain on Earth, is in Asia.","Mount Everest is very tall.","We read about tall mountains.","Climbing is hard, but it is fun.","“the tallest mountain on Earth” renames Mount Everest."],
+ ["Which appositive gives the most specific detail? <i>Ryota, ____, welcomed the girl.</i>","a kind old farmer","a man","a person","someone","Specific details paint a picture!"],
+ ["Which appositive fits best? <i>The cheetah, ____, can run 70 miles per hour.</i>","the fastest land animal","a slow turtle","my homework","the ocean","It has to describe the cheetah."],
+ ["Which appositive fits best? <i>Antarctica, ____, is covered in ice.</i>","the coldest continent","a hot desert","my best friend","a tiny island","It has to rename Antarctica."],
+ ["An appositive renames a ____.","noun","verb","comma","period","Appositives rename nouns: people, places, things or ideas."],
+ ["If you take the appositive out, the sentence should ____.","still make sense","stop making sense","need a new verb","become a question","Appositives are extra information."],
+ ["Where does an appositive go?","right next to the noun it renames","at the end of every sentence","before the first word","only in questions","It sits right beside its noun."],
+ ["What is the appositive? <i>I read Charlotte's Web, a book about a pig and a spider.</i>","a book about a pig and a spider","I read","Charlotte's Web","a pig","It tells more about the book."],
+ ["Which sentence is missing a comma?","Leo, my best friend plays soccer.","Leo, my best friend, plays soccer.","My best friend, Leo, plays soccer.","Leo plays soccer with me.","Add a comma after “friend” to close the hug."]
+];
+const M=[["Paris","the capital of France"],["Jupiter","the largest planet"],["The cheetah","the fastest land animal"],["Mount Everest","the tallest mountain on Earth"],["The Pacific","the largest ocean"],["Antarctica","the coldest continent"],["Mercury","the planet closest to the sun"],["The Nile","the longest river in Africa"],["A whale shark","the biggest fish in the ocean"]];
+makeGuide({id:"appositives",prefix:"app",color:"#7c5cff",h1:`<span style="color:#7c5cff">Appositives</span> 🏷️`,sub:"Words that rename a noun — and the commas that hug them.",
+  cards:T,vocab:V,flash:()=>staticFlash(F,T),quiz:()=>staticQuiz(Q),
+  match:()=>shuffle(M).slice(0,6),matchPrompt:"Tap a noun, then tap the appositive that renames it!",superstar:"WOW! Appositive ace! 🏆"});
+})();
+
+/* =====================================================================
+   GUIDE: SENTENCE COMBINING (Reading & Writing)
+   ===================================================================== */
+(function(){
+const T=[
+ {n:"Why Combine?",e:"🔗",c:"#2d9cdb",facts:[`Lots of short sentences sound ${KW("choppy")}.`,`${KW("Combining")} them makes writing ${KW("smoother")} and more interesting.`,`Max was unhappy. Max wasn't doing well in school. → Max was unhappy ${KW("and")} wasn't doing well in school.`],t:"Join short sentences to make one smooth one!"},
+ {n:"The Big Four",e:"4️⃣",c:"#ff7a59",facts:[`${KW("and")} — adds more information`,`${KW("but")} — shows a difference`,`${KW("so")} — shows a result (what happened next)`,`${KW("because")} — gives a reason (why)`],t:"and = more, but = different, so = result, because = why!"},
+ {n:"Comma Rules",e:"✏️",c:"#1fb58f",facts:[`When ${KW("and, but, or so")} join two complete sentences, put a ${KW("comma before")} them.`,`It was raining${KW(", so")} we stayed inside.`,`Usually ${KW("no comma")} before ${KW("because")}: We stayed inside ${KW("because")} it was raining.`],t:"Comma before and, but, so!"},
+ {n:"Don't Repeat Yourself",e:"🔁",c:"#7c5cff",facts:[`If both sentences have the ${KW("same subject")}, you only need to say it once.`,`Max was unhappy. Max wasn't doing well. → ${KW("Max")} was unhappy and wasn't doing well.`],t:"Same subject? Say it once!"},
+ {n:"Subordinating Conjunctions",e:"⏰",c:"#ff4f8b",facts:[`These words join a less important idea to a main idea: ${KW("when, after, before, while, if, since, although, until")}.`,`${KW("When")} the bell rang, we went to lunch.`,`If one starts the sentence, put a ${KW("comma")} after that part.`],t:"When, after, if, although… they start a part!"},
+ {n:"Example from Class",e:"🏫",c:"#ffb400",facts:[`Max was unhappy. Max wasn't doing well in school. The principal switched his classes.`,`→ Max was unhappy ${KW("and")} wasn't doing well in school${KW(", so")} the principal switched his classes.`],t:"You can use two conjunctions in one sentence!"}
+];
+const V=[["Conjunction","A joining word, like and, but, so or because."],["Combine","To join two or more things into one."],["Complete sentence","Has a subject and a verb and makes sense on its own."],["Subject","Who or what the sentence is about."],["Choppy","Lots of short sentences in a row that sound bumpy."],["Subordinating conjunction","A word like when, if, after or although that starts a less important part of a sentence."]];
+const F=[
+ [1,"Which conjunction gives a reason (why)?","because","We stayed in because it rained."],
+ [1,"Which conjunction shows a result?","so","It rained, so we stayed in."],
+ [1,"Which conjunction shows a difference?","but","I like cats, but I'm allergic."],
+ [1,"Which conjunction adds more information?","and","I like pizza and tacos."],
+ [2,"Where does the comma go? <i>It was cold so I wore a coat.</i>","It was cold, so I wore a coat.","Comma before “so.”"],
+ [0,"Combine: <i>I was hungry. I ate a snack.</i>","I was hungry, so I ate a snack.","“so” shows the result."],
+ [0,"Combine: <i>I wanted to play. It was raining.</i>","I wanted to play, but it was raining.","“but” shows the difference."],
+ [3,"Combine: <i>Mia likes art. Mia likes music.</i>","Mia likes art and music.","Same subject — say it once!"],
+ [4,"Combine with <b>when</b>: <i>The bell rang. We went to lunch.</i>","When the bell rang, we went to lunch.","Comma after the “when” part."],
+ [0,"Combine with <b>because</b>: <i>I was tired. I stayed up late.</i>","I was tired because I stayed up late.","“because” tells why."],
+ [4,"Name 3 subordinating conjunctions.","when, if, although","Also: after, before, while, since, until."],
+ [2,"Do you usually use a comma before “because”?","No","We left early because it snowed."]
+];
+const Q=[
+ ["I wanted to go outside, ____ it was raining.","but","so","because","and","“but” shows something different from what you wanted."],
+ ["It was raining, ____ we played a board game.","so","but","because","although","“so” shows what happened as a result."],
+ ["We stayed inside ____ it was raining.","because","so","but","and","“because” gives the reason."],
+ ["I packed a sandwich ____ an apple.","and","but","so","because","“and” adds more information."],
+ ["Sara studied hard, ____ she got an A.","so","but","because","although","Getting an A was the result."],
+ ["Leo was tired ____ he stayed up late.","because","so","but","until","Staying up late is the reason."],
+ ["I love soccer, ____ I don't like running.","but","so","because","and","“but” shows a difference."],
+ ["Which sentence uses the comma correctly?","It was cold, so I wore a coat.","It was cold so, I wore a coat.","It was, cold so I wore a coat.","It, was cold so I wore a coat.","Comma goes right before “so.”"],
+ ["Which sentence uses the comma correctly?","When the bell rang, we lined up.","When the bell, rang we lined up.","When, the bell rang we lined up.","When the bell rang we, lined up.","Put the comma after the “when” part."],
+ ["Best way to combine: <i>Mia likes art. Mia likes music.</i>","Mia likes art and music.","Mia likes art, Mia likes music.","Mia likes art because music.","Mia likes art so Mia likes music.","Same subject — only say “Mia” once."],
+ ["Best way to combine: <i>The dog barked. The mail carrier came.</i>","The dog barked when the mail carrier came.","The dog barked the mail carrier came.","The dog barked, the mail carrier came.","The dog barked but, the mail carrier came.","“when” tells when it happened."],
+ ["Best way to combine: <i>I was hungry. I ate a snack.</i>","I was hungry, so I ate a snack.","I was hungry, but I ate a snack.","I was hungry because I ate a snack.","I was hungry I ate a snack.","Eating a snack was the result of being hungry."],
+ ["Which word is a subordinating conjunction?","although","and","but","so","Although, when, if, after, before, while and since are subordinating conjunctions."],
+ ["____ it was late, we kept reading.","Although","Because","So","And","“Although” means “even though.”"],
+ ["Why do writers combine sentences?","to make writing smoother","to make it choppy","to use fewer words always","to remove all commas","Combining makes writing flow."]
+];
+const M=[["and","adds more information"],["but","shows a difference"],["so","shows a result"],["because","gives a reason"],["although","means “even though”"],["when","tells the time something happened"],["if","tells a condition (maybe)"],["before","happens earlier"],["after","happens later"],["while","at the same time"]];
+makeGuide({id:"sentence-combining",prefix:"sc",color:"#2d9cdb",h1:`Sentence <span style="color:#2d9cdb">Combining</span> 🔗`,sub:"Use conjunctions to join short sentences into smooth ones.",
+  cards:T,vocab:V,flash:()=>staticFlash(F,T),quiz:()=>staticQuiz(Q),
+  match:()=>shuffle(M).slice(0,6),matchPrompt:"Tap a conjunction, then tap its job!",superstar:"WOW! Sentence-combining champ! 🏆"});
+})();
+
+/* =====================================================================
+   GUIDE: MATTER (Science)
+   ===================================================================== */
+(function(){
+const T=[
+ {n:"What Is Matter?",e:"🧪",c:"#7c5cff",facts:[`${KW("Matter")} is anything that has ${KW("mass")} and ${KW("takes up space")}.`,`All matter is made of tiny, invisible pieces called ${KW("particles")}.`,`Air, honey, ice and you are all matter!`],t:"Mass + takes up space = matter!"},
+ {n:"Matter or Not?",e:"🕵️",c:"#ff7a59",facts:[`${KW("Matter:")} air in a balloon, honey, an ice cube, a rock, water.`,`${KW("NOT matter:")} sunlight, heat, sound and feelings.`,`Light, heat and sound are ${KW("energy")}, not matter. Feelings aren't matter either!`],t:"Energy and feelings are NOT matter!"},
+ {n:"Solids",e:"🧊",c:"#2d9cdb",facts:[`Particles are ${KW("packed tightly")} and ${KW("vibrate in place")}.`,`Solids have a ${KW("definite shape")} and a ${KW("definite volume")}.`,`Water example: ${KW("ice")}. Others: a key, a rock, a table, an apple.`],t:"Solids keep their shape!"},
+ {n:"Liquids",e:"💧",c:"#1fb58f",facts:[`Particles are close but can ${KW("slide past")} each other.`,`Liquids ${KW("take the shape of their container")} but have a ${KW("definite volume")}.`,`Water example: ${KW("liquid water")}. Others: milk, juice, syrup, soap.`],t:"Liquids pour and take the container's shape!"},
+ {n:"Gases",e:"💨",c:"#ffb400",facts:[`Particles are ${KW("far apart")} and ${KW("move fast")}.`,`Gases have ${KW("no definite shape")} and ${KW("no definite volume")} — they spread out to fill any space.`,`Water example: ${KW("water vapor")} (steam). Others: air, wind, your breath, the air in a balloon.`],t:"Gases spread out everywhere!"},
+ {n:"Measuring Tools",e:"📏",c:"#ff4f8b",facts:[`${KW("Weight / mass")} → a ${KW("scale")} or ${KW("pan balance")}`,`${KW("Volume")} of a liquid → a ${KW("graduated cylinder")}`,`${KW("Temperature")} → a ${KW("thermometer")}`,`${KW("Length")} → a ${KW("ruler")}`],t:"Scale = weight, ruler = length!"},
+ {n:"Bigger Isn't Always Heavier",e:"⚖️",c:"#8b5a2b",facts:[`On a pan balance, a ${KW("small metal marble")} can be heavier than a ${KW("large foam ball")}.`,`The heavier side goes ${KW("down")}.`,`How heavy something is depends on ${KW("how much matter is packed inside")}, not just its size.`,`Adding more matter (like 5 more candies to a jar) makes it ${KW("heavier")}.`],t:"Size doesn't decide weight!"},
+ {n:"Physical Properties",e:"🔎",c:"#9b59b6",facts:[`A ${KW("physical property")} is something you can observe or measure.`,`Examples: ${KW("color, length, hardness, texture, mass, temperature")}.`,`A wooden ruler is ${KW("brown")}, ${KW("hard")} and ${KW("12 inches long")}.`],t:"Use your senses and tools to describe matter!"}
+];
+const V=[["Matter","Anything that has mass and takes up space."],["Mass","How much matter is in an object."],["Weight","How heavy an object is because gravity pulls on it."],["Volume","The amount of space something takes up."],["Particles","The tiny, invisible pieces that make up all matter."],["Solid","Matter with a definite shape and definite volume."],["Liquid","Matter that takes the shape of its container but keeps its volume."],["Gas","Matter with no definite shape or volume."],["Water vapor","Water in the gas state."],["Physical property","Something you can observe or measure, like color or mass."]];
+const F=[
+ [0,"What is matter?","Anything with mass that takes up space","It's made of tiny particles."],
+ [0,"What are the tiny pieces that make up matter?","Particles","They're too small to see."],
+ [1,"Is sunlight matter?","No","Light is energy."],
+ [1,"Is the air inside a balloon matter?","Yes","Air has mass and takes up space."],
+ [2,"Does a solid have a definite shape?","Yes","And a definite volume."],
+ [3,"Does a liquid have a definite volume?","Yes","But it takes the shape of its container."],
+ [4,"Does a gas have a definite shape or volume?","No — neither","Gases spread out to fill any space."],
+ [2,"How do particles move in a solid?","They vibrate in place","They're packed tightly."],
+ [4,"What is water called in the gas state?","Water vapor","Like steam from a hot pot."],
+ [5,"What tool measures weight or mass?","A scale or pan balance","Not a ruler — a ruler measures length."],
+ [5,"What tool measures the volume of a liquid?","A graduated cylinder","It has lines marked on the side."],
+ [5,"What tool measures temperature?","A thermometer","It shows how hot or cold something is."],
+ [6,"Is the bigger object always heavier?","No","A small marble can outweigh a big foam ball."],
+ [6,"What happens to the weight of a candy jar if you add 5 candies?","It gets heavier","You added more matter."],
+ [7,"Name two physical properties.","Color and hardness","Others: length, mass, texture, temperature."],
+ [3,"Is syrup a solid, liquid or gas?","Liquid","It pours and takes the bottle's shape."]
+];
+const ITEMS=[["milk","liquid"],["a teddy bear","solid"],["your breath","gas"],["a rock","solid"],["wind","gas"],["syrup","liquid"],["an apple","solid"],["ice cubes","solid"],["steam from a pot","gas"],["a key","solid"],["juice","liquid"],["a beach ball","solid"],["hand soap","liquid"],["the air inside a balloon","gas"],["hot cocoa","liquid"],["a table","solid"]];
+const Q=[
+ ["Matter is anything that has mass and ____.","takes up space","is alive","is a liquid","makes a sound","All matter has mass and takes up space."],
+ ["The tiny invisible pieces that make up all matter are called ____.","particles","atoms of light","cells","sparks","Everything is made of particles."],
+ ["Which of these is NOT matter?","sunlight","honey","an ice cube","air in a balloon","Light is energy, not matter."],
+ ["Which of these is NOT matter?","the sound of music","a rock","milk","steam","Sound is energy, not matter."],
+ ["Which of these is NOT matter?","feeling happy","a teddy bear","juice","wind","Feelings don't have mass or take up space."],
+ ["Which state of matter has a definite shape AND a definite volume?","solid","liquid","gas","none of them","Solids keep their shape."],
+ ["A liquid takes the shape of its container but has a definite ____.","volume","shape","color","temperature","A cup of water is still a cup of water in any container."],
+ ["Which state of matter has NO definite shape and NO definite volume?","gas","solid","liquid","ice","Gases spread out to fill any space."],
+ ["In which state are particles packed tightly and only vibrate in place?","solid","liquid","gas","water vapor","Solid particles are packed tight."],
+ ["Water vapor is water in which state?","gas","solid","liquid","not matter","Water vapor (like steam) is a gas."],
+ ["Which tool measures weight or mass?","a scale","a ruler","a thermometer","a graduated cylinder","Scales and pan balances measure weight."],
+ ["Which tool measures the volume of a liquid?","a graduated cylinder","a ruler","a thermometer","a scale","A graduated cylinder has markings for volume."],
+ ["Which tool measures temperature?","a thermometer","a ruler","a scale","a graduated cylinder","Thermometers show how hot or cold."],
+ ["Which tool measures length?","a ruler","a thermometer","a scale","a graduated cylinder","Rulers measure how long something is."],
+ ["A small metal marble and a big foam ball are on a pan balance. The marble side goes down. Which is heavier?","the marble","the foam ball","they weigh the same","you can't tell","The heavier side goes down."],
+ ["What does the marble and foam ball experiment prove?","bigger isn't always heavier","bigger is always heavier","foam is a liquid","marbles aren't matter","Weight depends on how much matter is packed in."],
+ ["You add 5 more candies to a jar. What happens to its weight?","it increases","it decreases","it stays the same","it disappears","More matter = more weight."],
+ ["Which is a physical property of a wooden ruler?","it is hard","it is happy","it is a gas","it is sunlight","Hardness is something you can observe."]
+];
+function quiz(){
+  const base=staticQuiz(Q,6);
+  const items=shuffle(ITEMS).slice(0,4).map(([it,st])=>{const o=shuffle(['solid','liquid','gas','not matter']);
+    return {p:`Is <b>${it}</b> a solid, liquid or gas?`,opts:o,ans:o.indexOf(st),why:`${it[0].toUpperCase()+it.slice(1)} is a ${st}.`}});
+  return shuffle([...base,...items]);
+}
+const M=[["Matter","anything with mass that takes up space"],["Weight","how heavy something is (gravity's pull)"],["Volume","the amount of space something takes up"],["Particles","tiny invisible pieces of matter"],["Scale","measures weight"],["Graduated cylinder","measures liquid volume"],["Thermometer","measures temperature"],["Ruler","measures length"],["Solid","definite shape and volume"],["Liquid","takes the shape of its container"],["Gas","spreads out to fill any space"]];
+makeGuide({id:"matter",prefix:"mat",color:"#7c5cff",h1:`<span style="color:#1fb58f">Matter</span> 🧪`,sub:"The building blocks of the universe — solids, liquids, gases and how we measure them.",
+  cards:T,vocab:V,flash:()=>staticFlash(F,T),quiz,
+  match:()=>shuffle(M).slice(0,6),matchPrompt:"Tap a science word, then tap what it means!",superstar:"WOW! Matter master! 🏆"});
+})();
+
+/* =====================================================================
+   GUIDE: MULTIPLICATION FACTS (Math) — tables 1–16, endless practice
+   ===================================================================== */
+(function(){
+const RANGE={'1':[1,5],'2':[6,10],'3':[11,16],'4':[1,16]};
+function fact(L){const [lo,hi]=RANGE[L];const a=rnd(lo,hi),b=rnd(1,12);return {a,b,p:a*b}}
+function tip(a,b){
+  if(a>=11&&a<=16)return `Break it apart: 10 × ${b} = ${10*b}, plus ${a-10} × ${b} = ${(a-10)*b}. Total: ${a*b}.`;
+  if(a===9&&b<=10)return `9s trick: the digits of ${a*b} add up to 9.`;
+  if(a===5)return `5s always end in 0 or 5.`;
+  if(a===10)return `10s: just add a zero!`;
+  if(a===4)return `4s: double ${b} (${2*b}), then double again (${4*b}).`;
+  if(a===8)return `8s: double, double, double! ${b} → ${2*b} → ${4*b} → ${8*b}.`;
+  return `Think: ${a} groups of ${b} = ${a*b}.`;
+}
+const T=[
+ {n:"What Multiplication Means",e:"🍪",c:"#ff7a59",facts:[`Multiplication is a fast way to add ${KW("equal groups")}.`,`3 × 4 means ${KW("3 groups of 4")}: 4 + 4 + 4 = ${KW("12")}.`,`The numbers you multiply are ${KW("factors")}. The answer is the ${KW("product")}.`],t:"Multiply = equal groups!"},
+ {n:"Flip It",e:"🔄",c:"#7c5cff",facts:[`You can ${KW("switch the order")} and get the same answer.`,`6 × 8 = ${KW("48")} and 8 × 6 = ${KW("48")}.`,`So if you know 3 × 9, you already know 9 × 3!`],t:"Flip the factors — same product!"},
+ {n:"Easy Patterns",e:"✨",c:"#1fb58f",facts:[`${KW("× 1")}: the number stays the same.`,`${KW("× 10")}: add a zero (7 × 10 = 70).`,`${KW("× 5")}: answers end in 0 or 5.`,`${KW("× 11")} (up to 9): repeat the digit (4 × 11 = 44).`],t:"Look for patterns!"},
+ {n:"Doubling Tricks",e:"✌️",c:"#2d9cdb",facts:[`${KW("× 2")}: double it.`,`${KW("× 4")}: double, then double again.`,`${KW("× 8")}: double three times! 8 × 7 → 14 → 28 → ${KW("56")}`],t:"2s, 4s and 8s are doubling!"},
+ {n:"The 9s Trick",e:"🖐️",c:"#ff4f8b",facts:[`For 9 × 1 to 9 × 10, the digits of the answer ${KW("add up to 9")}.`,`9 × 7 = ${KW("63")} → 6 + 3 = 9 ✅`,`The tens digit is ${KW("one less")} than the number you're multiplying by 9.`],t:"9s digits add up to 9!"},
+ {n:"Big Tables (11–16)",e:"🏔️",c:"#ffb400",facts:[`${KW("Break apart")} the big number into 10 + something.`,`13 × 7 = (10 × 7) + (3 × 7) = 70 + 21 = ${KW("91")}`,`15 × 8 = (10 × 8) + (5 × 8) = 80 + 40 = ${KW("120")}`],t:"Big facts = 10s fact + small fact!"}
+];
+const V=[["Multiply","To add equal groups quickly."],["Factor","A number you multiply."],["Product","The answer to a multiplication problem."],["Equal groups","Groups that all have the same amount."],["Multiple","The products of a number (multiples of 3: 3, 6, 9, 12…)."],["Array","Objects arranged in equal rows and columns."]];
+function opts(correct,extra){const set=new Set([correct]);for(const x of shuffle(extra))if(x>0&&!set.has(x)&&set.size<4)set.add(x);
+  let k=1;while(set.size<4){const y=correct+k*(k%2?1:-1)*rnd(1,3);if(y>0)set.add(y);k++}return shuffle([...set])}
+makeGuide({id:"multiplication",prefix:"mul",color:"#ff7a59",h1:`Multiplication <span style="color:#ff7a59">Facts</span> ✖️`,sub:"Times tables from 1 to 16 — with tricks and endless practice!",
+  intro:"Read the trick cards, then try the <b>Practice Sheet</b>. Pick a level up top — new problems every time! 🚀",
+  cards:T,vocab:V,
+  levels:[['1','⭐ 1s–5s','like 4 × 7'],['2','⭐⭐ 6s–10s','like 8 × 9'],['3','⭐⭐⭐ 11s–16s','like 13 × 6'],['4','🔀 Mix It Up','1s–16s']],
+  practice:{tip:"✏️ Type each answer, then tap <b>Check My Answers</b>. Some problems have a missing factor — find the number that goes in the box!",
+    rows:L=>Array.from({length:12},()=>{const {a,b,p}=fact(L);
+      if(Math.random()<.25)return {q:`<span class="bigq">${a} × ☐ = ${p}</span>`,inputmode:'numeric',check:v=>v.trim()===String(b),answer:b,why:`${a} × ${b} = ${p}`};
+      const [x,y]=Math.random()<.5?[a,b]:[b,a];
+      return {q:`<span class="bigq">${x} × ${y} =</span>`,inputmode:'numeric',check:v=>v.trim()===String(p),answer:p,why:tip(a,b)}})},
+  flash:L=>Array.from({length:12},()=>{const {a,b,p}=fact(L);return {tag:`✖️ The ${a}s`,q:`<span class="bigq">${a} × ${b}</span>`,a:String(p),x:tip(a,b)}}),
+  quiz:L=>Array.from({length:10},()=>{const {a,b,p}=fact(L);
+    if(Math.random()<.25){const o=opts(b,[b+1,b-1,b+2,b-2]);return {p:`${a} × <b>?</b> = ${p}`,opts:o,ans:o.indexOf(b),why:`${a} × ${b} = ${p}.`}}
+    const o=opts(p,[p+a,p-a,p+b,p-b,a*(b+1),(a+1)*b,p+10,p-10]);return {p:`What is <b>${a} × ${b}</b>?`,opts:o,ans:o.indexOf(p),why:tip(a,b)}}),
+  match:L=>{const out=[],seen=new Set();let g=0;while(out.length<6&&g++<200){const {a,b,p}=fact(L);if(!seen.has(p)){seen.add(p);out.push([`${a} × ${b}`,String(p)])}}return out},
+  matchPrompt:"Tap a fact, then tap its product!",superstar:"WOW! Multiplication master! 🏆"});
+})();
+
+/* =====================================================================
+   GUIDE: COMPARING DECIMALS (Math) — tenths & hundredths, <, >, =
+   Values are kept as whole hundredths (integers) so comparisons are exact.
+   ===================================================================== */
+(function(){
+const pad2=n=>String(n).padStart(2,'0');
+function fmt(h,len){const w=Math.floor(h/100),r=h%100;return len===1?`${w}.${r/10}`:`${w}.${pad2(r)}`}
+const sym=(a,b)=>a<b?'<':a>b?'>':'=';
+function pair(L){for(let g=0;g<50;g++){const p=pair0(L);if(!/\.0+$/.test(p.A)&&!/\.0+$/.test(p.B))return p}return pair0('1')}
+function pair0(L){
+  let a,b,la,lb;
+  if(L==='1'){ // both hundredths
+    const k=rnd(1,4);a=rnd(1,99);
+    if(k===1)b=a; else if(k===2){b=(a%10)*10+Math.floor(a/10);if(b===a||b===0)b=a+rnd(1,5)} else if(k===3)b=Math.min(99,Math.max(1,a+pick([-3,-2,-1,1,2,3]))); else b=rnd(1,99);
+    la=lb=2;
+  } else {
+    const t=rnd(1,9),k=rnd(1,4);a=t*10;la=1;lb=2;
+    if(k===1)b=a; else if(k===2)b=Math.min(99,Math.max(1,a+pick([-9,-5,-2,-1,1,2,5,9]))); else if(k===3)b=rnd(0,t-1)*10+t||a+1; else b=rnd(1,99);
+    if(b%10===0&&Math.random()<.5)lb=2;
+    if(L==='3'){const w=rnd(0,9),w2=Math.random()<.8?w:Math.max(0,w+pick([-1,1]));a+=w*100;b+=w2*100;
+      if(Math.random()<.3){la=2;lb=1;b=Math.floor(b/100)*100+Math.round((b%100)/10)%10*10||b} }
+  }
+  if(lb===1&&b%10!==0)lb=2;
+  if(la===1&&a%10!==0)la=2;
+  if(Math.random()<.5)[a,b,la,lb]=[b,a,lb,la];
+  return {a,b,A:fmt(a,la),B:fmt(b,lb),s:sym(a,b)};
+}
+const explain=p=>`Add zeros so they line up: ${fmt(p.a,2)} ${p.s} ${fmt(p.b,2)}.`;
+const T=[
+ {n:"Line Up the Decimal Points",e:"📐",c:"#2d9cdb",facts:[`Write the numbers ${KW("on top of each other")} with the decimal points lined up.`,`Then compare ${KW("place by place")}, starting from the left.`],t:"Line up the dots first!"},
+ {n:"Add a Zero",e:"0️⃣",c:"#1fb58f",facts:[`A zero at the ${KW("end")} of a decimal doesn't change its value.`,`0.4 = ${KW("0.40")} (4 tenths = 40 hundredths)`,`Add a zero so both numbers have the ${KW("same number of digits")}. Then compare like whole numbers: 0.40 vs 0.39 → 40 > 39.`],t:"0.4 and 0.40 are the same!"},
+ {n:"Tenths First",e:"🥇",c:"#7c5cff",facts:[`The ${KW("tenths")} place is worth more than the hundredths place.`,`Compare the tenths digits first. If they're the same, compare the ${KW("hundredths")}.`,`0.72 vs 0.73 → tenths are both 7, hundredths 2 < 3, so ${KW("0.72 < 0.73")}.`],t:"Tenths beat hundredths!"},
+ {n:"The Symbols",e:"🐊",c:"#ff7a59",facts:[`${KW("<")} means “is less than.” ${KW(">")} means “is greater than.” ${KW("=")} means “is equal to.”`,`The open mouth ${KW("eats the bigger number")}: 0.9 > 0.29`],t:"The alligator eats the bigger number!"},
+ {n:"Longer Isn't Bigger",e:"⚠️",c:"#ff4f8b",facts:[`More digits does ${KW("NOT")} mean a bigger number.`,`0.29 vs 0.9 → think 0.29 vs ${KW("0.90")}. 29 < 90, so ${KW("0.29 < 0.9")}.`,`0.7 is greater than 0.07: 70 hundredths vs 7 hundredths.`],t:"Add the zero before you decide!"},
+ {n:"Think Money",e:"💵",c:"#d4a017",facts:[`Decimals are like ${KW("dollars and cents")}.`,`0.4 = ${KW("40 cents")} and 0.39 = ${KW("39 cents")} → 0.4 > 0.39.`,`0.10 = 10 cents and 0.01 = 1 cent → 0.10 > 0.01.`],t:"Would you rather have the money? That's the bigger one!"}
+];
+const V=[["Decimal","A number with a decimal point, like 0.45."],["Tenths","The first place after the decimal point (0.1)."],["Hundredths","The second place after the decimal point (0.01)."],["Less than ( < )","The first number is smaller."],["Greater than ( > )","The first number is bigger."],["Equal to ( = )","Both numbers have the same value."],["Equivalent","Worth the same amount, like 0.4 and 0.40."]];
+const WORDS=['zero','one','two','three','four','five','six','seven','eight','nine'];
+makeGuide({id:"comparing-decimals",prefix:"cmp",color:"#2d9cdb",h1:`Comparing <span style="color:#2d9cdb">Decimals</span> 🐊`,sub:"Tenths and hundredths — which is bigger? Use <, > or =.",
+  intro:"Read the cards, then try the <b>Practice Sheet</b> — it's just like your homework, with new problems every time! 🚀",
+  cards:T,vocab:V,
+  levels:[['1','⭐ Hundredths','like 0.27 vs 0.72'],['2','⭐⭐ Tenths vs Hundredths','like 0.4 vs 0.39'],['3','⭐⭐⭐ With Whole Numbers','like 2.5 vs 2.49']],
+  practice:{tip:"✏️ Tap the symbol that makes each statement true: <b>&lt;</b> less than, <b>&gt;</b> greater than, <b>=</b> equal to.",
+    rows:L=>Array.from({length:12},()=>{const p=pair(L);
+      return {q:`<span class="bigq">${p.A} <span class="circ">?</span> ${p.B}</span>`,kind:'choice',choices:['<','>','='],check:v=>v===p.s,answer:`${p.A} ${p.s} ${p.B}`,why:explain(p)}})},
+  flash:L=>Array.from({length:12},()=>{const p=pair(L);return {tag:'🐊 < , > or = ?',q:`<span class="bigq">${p.A} <span class="circ">?</span> ${p.B}</span>`,a:p.s,x:explain(p)}}),
+  quiz:L=>Array.from({length:10},(_,i)=>{
+    if(i%4===3){const vals=new Set();const list=[];let g=0;while(list.length<4&&g++<100){const p=pair(L);for(const [h,s] of [[p.a,p.A],[p.b,p.B]])if(!vals.has(h)&&list.length<4){vals.add(h);list.push([h,s])}}
+      const best=list.reduce((m,x)=>x[0]>m[0]?x:m);const o=shuffle(list.map(x=>x[1]));
+      return {p:'Which number is the <b>greatest</b>?',opts:o,ans:o.indexOf(best[1]),why:`Line them up with zeros: ${list.map(x=>fmt(x[0],2)).join(', ')}.`}}
+    const p=pair(L),o=['<','>','='];return {p:`Which symbol makes it true?<br><span class="bigq">${p.A} <span class="circ">?</span> ${p.B}</span>`,opts:o,ans:o.indexOf(p.s),why:explain(p)}}),
+  match:()=>{const used=new Set(),out=[];while(out.length<6){const t=rnd(1,9),h=Math.random()<.5?t*10:rnd(1,99);if(used.has(h))continue;used.add(h);
+      out.push(h%10===0?[`0.${h/10}`,`${h} hundredths`]:[`0.${pad2(h)}`,`${h} hundredth${h===1?'':'s'}`])}return out},
+  matchPrompt:"Tap a decimal, then tap the same amount in hundredths!",superstar:"WOW! Decimal detective! 🏆"});
+})();
+
+/* =====================================================================
+   GUIDE: DECIMALS AND FRACTIONS (Math) — tenths & hundredths, mixed numbers
+   Values kept as whole hundredths (integers).
+   ===================================================================== */
+(function(){
+const pad2=n=>String(n).padStart(2,'0');
+const dec=f=>`${f.w}.${f.d===10?f.n:pad2(f.n)}`;
+const val=f=>f.w*100+(f.d===10?f.n*10:f.n);
+const fH=f=>fracH(f.n,f.d,f.w||'');
+const fTxt=f=>`${f.w?f.w+' ':''}${f.n}/${f.d}`;
+function make(L){
+  const d=Math.random()<.45?10:100, n=d===10?rnd(1,9):(Math.random()<.35?rnd(1,9):rnd(10,99));
+  const w=L==='1'?0:(Math.random()<.6?rnd(1,9):0);
+  return {w,n,d};
+}
+function parseVal(s){ // returns value in hundredths, or null
+  s=String(s).trim().replace(/\s+/g,' ');
+  let m;
+  if((m=s.match(/^(\d+) (\d+)\/(\d+)$/))||(m=s.match(/^()(\d+)\/(\d+)$/))){const w=+(m[1]||0),n=+m[2],d=+m[3];if(!d)return null;const t=(w*d+n)*100;return t%d===0?t/d:null}
+  if((m=s.match(/^(\d*)\.(\d+)$/))||(m=s.match(/^(\d+)$/))){const w=+(m[1]||0),f=(m[2]||'').replace(/0+$/,'');if(f.length>2)return null;return w*100+(+(f.padEnd(2,'0')||0))}
+  return null;
+}
+function wrongDecs(f){ // believable mistakes
+  const out=new Set(),c=dec(f);
+  if(f.d===100&&f.n<10)out.add(`${f.w}.${f.n}`);              // 6/100 → 0.6
+  if(f.d===10)out.add(`${f.w}.0${f.n}`);                       // 3/10 → 0.03
+  out.add(`${f.n}.${f.w}`.replace(/^0\./,'0.'));
+  out.add(`${f.w}.${f.d===10?f.n+1>9?f.n-1:f.n+1:pad2(Math.min(99,f.n+1))}`);
+  out.add(`${f.w+1}.${f.d===10?f.n:pad2(f.n)}`);
+  out.add(`${f.w}.${f.d}`);
+  return shuffle([...out].filter(x=>x!==c&&parseVal(x)!==val(f))).slice(0,3);
+}
+function wrongFracs(f){
+  const out=[],c=val(f),cands=[{w:f.w,n:f.n,d:f.d===10?100:10},{w:f.w,n:f.d===10?f.n:Math.min(9,f.n),d:f.d===10?100:10},{w:f.w+1,n:f.n,d:f.d},{w:f.w,n:Math.min(f.d-1,f.n+1),d:f.d},{w:0,n:f.n,d:1000}];
+  for(const x of cands){const v=x.d===1000?-1:val(x);if(v!==c&&!out.some(o=>fTxt(o)===fTxt(x)))out.push(x)}
+  return shuffle(out).slice(0,3);
+}
+const T=[
+ {n:"Tenths",e:"🍕",c:"#ff7a59",html:`<ul class="facts"><li>1 whole cut into ${KW("10 equal parts")} = tenths.</li><li>${fracH(1,10)} = ${KW("0.1")} and ${fracH(3,10)} = ${KW("0.3")}</li><li>Tenths use ${KW("one")} digit after the decimal point.</li></ul>`,t:"/10 → one digit after the dot!"},
+ {n:"Hundredths",e:"💯",c:"#2d9cdb",html:`<ul class="facts"><li>1 whole cut into ${KW("100 equal parts")} = hundredths.</li><li>${fracH(21,100)} = ${KW("0.21")} and ${fracH(85,100)} = ${KW("0.85")}</li><li>Hundredths use ${KW("two")} digits after the decimal point.</li></ul>`,t:"/100 → two digits after the dot!"},
+ {n:"Tricky Zeros",e:"0️⃣",c:"#ff4f8b",html:`<ul class="facts"><li>${fracH(6,100)} = ${KW("0.06")} — not 0.6!</li><li>The 6 has to be in the ${KW("hundredths")} place, so a zero holds the tenths place.</li><li>${fracH(2,100)} = 0.02, but ${fracH(2,10)} = 0.2</li></ul>`,t:"Single digit over 100? Put a zero first!"},
+ {n:"Say It to Write It",e:"🗣️",c:"#7c5cff",html:`<ul class="facts"><li>Read the fraction out loud: ${fracH(33,100)} is “${KW("thirty-three hundredths")}.”</li><li>0.33 is ALSO “thirty-three hundredths.”</li><li>Same words = ${KW("same number")}!</li></ul>`,t:"Fractions and decimals say the same thing!"},
+ {n:"Mixed Numbers",e:"🧁",c:"#1fb58f",html:`<ul class="facts"><li>The ${KW("whole number")} goes before the decimal point.</li><li>${fracH(3,10,3)} = ${KW("3.3")}</li><li>${fracH(85,100,1)} = ${KW("1.85")} and ${fracH(8,100,2)} = ${KW("2.08")}</li></ul>`,t:"Whole number . fraction part!"},
+ {n:"Equivalent Fractions",e:"🟰",c:"#d4a017",html:`<ul class="facts"><li>${fracH(9,10)} = ${fracH(90,100)} = ${KW("0.9")} = ${KW("0.90")}</li><li>Multiply the top and bottom by ${KW("10")} to change tenths into hundredths.</li><li>${fracH(7,10)} = ${fracH(70,100)} because 7 × 10 = 70 and 10 × 10 = 100.</li></ul>`,t:"Tenths × 10 = hundredths!"}
+];
+const V=[["Fraction","Part of a whole, like 3/10."],["Numerator","The top number of a fraction."],["Denominator","The bottom number — how many equal parts."],["Decimal","A number written with a decimal point, like 0.3."],["Mixed number","A whole number and a fraction together, like 3 3/10."],["Equivalent","Worth the same amount, like 9/10 and 90/100."]];
+function row(L){
+  const f=make(L);
+  const mode=L==='3'?pick(['f2d','d2f','eq']):(Math.random()<.75?'f2d':'d2f');
+  if(mode==='eq'&&!f.w&&f.d===10){return {q:`<span class="bigq">${fH(f)} = <span class="frac"><span>?</span><span>100</span></span></span>`,inputmode:'numeric',placeholder:'Top number',check:v=>{v=v.replace(/\s/g,'');return v===String(f.n*10)||v===`${f.n*10}/100`},answer:`${f.n*10}/100`,why:`Multiply top and bottom by 10.`}}
+  if(mode==='d2f')return {q:`<span class="bigq">${dec(f)} =</span>`,placeholder:'Fraction, like 3/10 or 2 5/100',check:v=>/\//.test(v)&&parseVal(v)===val(f),answer:fTxt(f),why:`Read it: ${dec(f)} → ${fTxt(f)}.`};
+  return {q:`<span class="bigq">${fH(f)} =</span>`,placeholder:'Decimal, like 0.3',check:v=>!/\//.test(v)&&parseVal(v)===val(f),answer:dec(f),why:f.d===100&&f.n<10?'Put a zero in the tenths place.':''};
+}
+makeGuide({id:"decimals-fractions",prefix:"df",color:"#1fb58f",h1:`Decimals and <span style="color:#1fb58f">Fractions</span> 🍕`,sub:"Write tenths and hundredths as decimals or fractions — they're the same numbers!",
+  intro:"Read the cards, then try the <b>Practice Sheet</b> — just like your homework, with new problems every time! 🚀",
+  cards:T,vocab:V,
+  levels:[['1','⭐ Tenths & Hundredths','like 21/100'],['2','⭐⭐ Mixed Numbers','like 3 3/10'],['3','⭐⭐⭐ Both Ways','decimal → fraction too']],
+  practice:{tip:"✏️ Type your answer, then tap <b>Check My Answers</b>. Write fractions with a slash like <b>3/10</b>, and mixed numbers with a space like <b>2 8/100</b>.",rows:L=>Array.from({length:12},()=>row(L))},
+  flash:L=>Array.from({length:12},()=>{const f=make(L);return Math.random()<.6?{tag:'🍕 Write it as a DECIMAL',q:`<span class="bigq">${fH(f)}</span>`,a:dec(f),x:''}:{tag:'💯 Write it as a FRACTION',q:`<span class="bigq">${dec(f)}</span>`,a:fH(f),x:''}}),
+  quiz:L=>Array.from({length:10},()=>{const f=make(L);
+    if(L!=='1'&&Math.random()<.35){const o=shuffle([f,...wrongFracs(f)]);return {p:`Which fraction equals <b>${dec(f)}</b>?`,opts:o.map(fH),ans:o.indexOf(f),why:`${dec(f)} = ${fH(f)}`}}
+    const o=shuffle([dec(f),...wrongDecs(f)]);return {p:`What is ${fH(f)} as a decimal?`,opts:o,ans:o.indexOf(dec(f)),why:f.d===100&&f.n<10?'A single digit over 100 needs a zero in the tenths place.':`${fH(f)} = ${dec(f)}`}}),
+  match:L=>{const out=[],seen=new Set();while(out.length<6){const f=make(L);if(seen.has(val(f)))continue;seen.add(val(f));out.push([fH(f),dec(f)])}return out},
+  matchPrompt:"Tap a fraction, then tap the decimal that's equal to it!",superstar:"WOW! Fraction & decimal whiz! 🏆"});
 })();
 
 /* ---------- start on the page in the address (or home) ---------- */
