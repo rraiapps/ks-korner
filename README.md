@@ -17,6 +17,5 @@ A kid-friendly study guide website (5th grade), hosted on GitHub Pages at https:
 9. Decimals and Fractions (Math) – Practice Sheet
 10. Matter (Science)
 11. Properties of Matter (Science)
-11. Properties of Matter (Science)
 
 New guides are built with the `makeGuide(cfg)` engine in index.html (see the 6 guides above for examples).
