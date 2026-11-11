@@ -466,6 +466,7 @@ const GUIDES = [
   { id:"comparing-decimals", subject:"Math", emoji:"🐊", color:"var(--c6)", title:"Comparing Decimals", desc:"" },
   { id:"decimals-fractions", subject:"Math", emoji:"🍕", color:"var(--c3)", title:"Decimals and Fractions", desc:"" },
   { id:"matter", subject:"Science", emoji:"🧪", color:"var(--c3)", title:"Matter", desc:"" },
+  { id:"properties-of-matter", subject:"Science", emoji:"⚡", color:"var(--c2)", title:"Properties of Matter", desc:"" },
 ];
 const SUBJECT_EMOJI = {"Reading & Writing":"📖","Math":"➗","Science":"🔬","Social Studies":"🌎"};
 
@@ -1645,6 +1646,75 @@ makeGuide({id:"decimals-fractions",prefix:"df",color:"#1fb58f",h1:`Decimals and 
     const o=shuffle([dec(f),...wrongDecs(f)]);return {p:`What is ${fH(f)} as a decimal?`,opts:o,ans:o.indexOf(dec(f)),why:f.d===100&&f.n<10?'A single digit over 100 needs a zero in the tenths place.':`${fH(f)} = ${dec(f)}`}}),
   match:L=>{const out=[],seen=new Set();while(out.length<6){const f=make(L);if(seen.has(val(f)))continue;seen.add(val(f));out.push([fH(f),dec(f)])}return out},
   matchPrompt:"Tap a fraction, then tap the decimal that's equal to it!",superstar:"WOW! Fraction & decimal whiz! 🏆"});
+})();
+
+/* =====================================================================
+   GUIDE: PROPERTIES OF MATTER (Science) — conductors, solubility,
+   magnetism, mixtures, solutions, alloys, evaporation
+   ===================================================================== */
+(function(){
+const T=[
+ {n:"Physical Properties",e:"🔎",c:"#9b59b6",facts:[`A ${KW("physical property")} is something you can observe or measure without changing what the object is.`,`Examples: ${KW("color, shape, hardness, shininess")}, size and mass.`,`An aluminum soup can is ${KW("shiny")}, ${KW("hard")} (keeps its shape) and ${KW("conducts heat")}. It is NOT squishy.`],t:"Observe it, measure it — don't change it!"},
+ {n:"Conductivity",e:"⚡",c:"#ffb400",facts:[`${KW("Conductivity")} is how easily ${KW("heat or electricity")} flows through a material.`,`${KW("Conductors")} let it flow: ${KW("metals")} like a paperclip, fork, copper wire or aluminum can.`,`${KW("Insulators")} block it: ${KW("wood, plastic, rubber, foam")} and cloth.`,`In a circuit, only a ${KW("conductor")} will light the bulb.`],t:"Metal = conductor! Wood, plastic, foam = insulators!"},
+ {n:"Reflectivity",e:"✨",c:"#2d9cdb",facts:[`${KW("Reflectivity")} is how light ${KW("bounces off")} an object's surface.`,`${KW("Shiny")} things reflect a lot of light: mirrors, foil, a new spoon.`,`${KW("Dull")} things reflect very little: a rock, cardboard, a sweater.`],t:"Shiny vs. dull!"},
+ {n:"Solubility",e:"🥄",c:"#1fb58f",facts:[`${KW("Solubility")} is the ability of a substance to ${KW("dissolve")} in a liquid.`,`${KW("Soluble:")} sugar, salt and drink mix dissolve in water and seem to disappear.`,`${KW("Not soluble:")} sand, rocks, pepper and oil don't dissolve.`,`To show solubility: ${KW("stir a spoonful of sugar into warm water")}.`],t:"Dissolves = soluble!"},
+ {n:"Magnetism",e:"🧲",c:"#ff4f8b",facts:[`${KW("Magnetism")} is the force of attraction between a ${KW("magnet")} and certain metals.`,`Magnets attract ${KW("iron")}, ${KW("steel")} and ${KW("nickel")} — like an iron nail or a steel paperclip.`,`NOT every metal is magnetic! ${KW("Aluminum")}, copper and gold are not attracted.`],t:"Magnets love iron and steel!"},
+ {n:"Mixtures",e:"🥗",c:"#ff7a59",facts:[`A ${KW("mixture")} is two or more things combined where each part ${KW("keeps its own properties")}.`,`You can usually ${KW("see the parts")} and ${KW("separate")} them easily.`,`Examples: ${KW("trail mix")}, ${KW("spaghetti and meatballs")}, salad, sand and rocks.`],t:"Mixture = you can still see the parts!"},
+ {n:"Solutions",e:"🧃",c:"#7c5cff",facts:[`A ${KW("solution")} is a special mixture where one substance ${KW("dissolves evenly")} into another.`,`You ${KW("can't see the separate parts")} anymore.`,`Examples: ${KW("salt water")}, ${KW("sugar water")}, ${KW("drink mix in water")}, lemonade.`,`Salt mixed into water is a ${KW("solution")}, not just a mixture you can see!`],t:"Solution = it dissolves and disappears!"},
+ {n:"Alloys",e:"🔩",c:"#8b5a2b",facts:[`An ${KW("alloy")} is a ${KW("solid mixture")} made when two or more ${KW("metals")} are melted and mixed together.`,`${KW("Brass")} = copper + zinc. ${KW("Bronze")} = copper + tin.`,`${KW("Steel")} is mostly iron mixed with a little carbon.`],t:"Melted metals mixed = alloy!"},
+ {n:"Evaporation",e:"☀️",c:"#d4a017",facts:[`${KW("Evaporation")} is when a ${KW("liquid turns into a gas")} (water → water vapor).`,`When the water in a solution evaporates, the ${KW("dissolved solid is left behind")}.`,`Leave salt water or lemonade in a sunny window → ${KW("salt or sugar crystals")} stay in the glass!`,`Evaporation is one way to ${KW("separate")} a solution.`],t:"Water leaves, the solid stays!"}
+];
+const V=[["Physical property","Something you can observe or measure without changing the object."],["Conductor","A material that lets heat or electricity flow easily (like metal)."],["Insulator","A material that blocks heat or electricity (like wood, plastic or foam)."],["Reflectivity","How much light bounces off a surface."],["Solubility","How well a substance dissolves in a liquid."],["Dissolve","To mix into a liquid so evenly that you can't see it anymore."],["Magnetism","The pull between a magnet and certain metals like iron."],["Mixture","Things combined that keep their own properties and can be separated."],["Solution","A mixture where one substance dissolves evenly into another."],["Alloy","A solid mixture of two or more melted metals."],["Evaporation","When a liquid turns into a gas."]];
+const F=[
+ [1,"What is conductivity?","How easily heat or electricity flows","Metals are great conductors."],
+ [1,"Which will light a bulb in a circuit: a wooden spoon or a metal fork?","The metal fork","Metal is a conductor."],
+ [1,"Name two insulators.","Plastic and wood","Also rubber, foam and cloth."],
+ [2,"What is reflectivity?","How light bounces off an object","Shiny vs. dull."],
+ [3,"What is solubility?","The ability to dissolve in a liquid","Sugar is soluble in water."],
+ [3,"Is sand soluble in water?","No","It sinks to the bottom."],
+ [4,"What is magnetism?","Attraction between a magnet and certain metals","Like iron and steel."],
+ [4,"Will a magnet pick up an aluminum can?","No","Aluminum is not magnetic."],
+ [5,"Is trail mix a mixture or a solution?","Mixture","You can see and separate the parts."],
+ [6,"Is salt water a mixture or a solution?","Solution","The salt dissolves evenly."],
+ [6,"What is a solution?","A mixture where one thing dissolves into another","Like drink mix in water."],
+ [7,"What is an alloy?","Metals melted and mixed together","Brass = copper + zinc."],
+ [7,"What two metals make brass?","Copper and zinc","Brass is an alloy."],
+ [8,"What is evaporation?","A liquid turning into a gas","Water → water vapor."],
+ [8,"Lemonade evaporates in a sunny window. What's left?","Sugar crystals","The dissolved solid stays behind."],
+ [0,"Name 3 physical properties of an aluminum can.","Shiny, hard, conducts heat","It's not squishy!"]
+];
+const Q=[
+ ["How easily heat or electricity flows through a material is called ____.","conductivity","reflectivity","solubility","magnetism","Conductors let heat and electricity flow."],
+ ["How light bounces off an object (shiny vs. dull) is called ____.","reflectivity","conductivity","solubility","evaporation","Reflectivity = light bouncing off."],
+ ["The ability of a substance to dissolve in a liquid is called ____.","solubility","magnetism","reflectivity","conductivity","Sugar has high solubility in water."],
+ ["The force of attraction between a magnet and certain metals is called ____.","magnetism","solubility","evaporation","reflectivity","Magnets attract iron and steel."],
+ ["Which object will let electricity flow and light up the bulb?","a metal paperclip","a wooden spoon","a plastic ruler","a foam cup","Metals are conductors."],
+ ["Which is an insulator?","a rubber glove","a copper wire","an iron nail","a steel fork","Rubber blocks electricity."],
+ ["Which is NOT a physical property of an aluminum soup can?","flexible and squishy","shiny and reflective","hard and keeps its shape","conducts heat","A metal can is hard, not squishy."],
+ ["Which experiment shows solubility?","stir sugar into warm water until it disappears","put a marble in a graduated cylinder","put a magnet next to an iron nail","weigh sand on a pan balance","Dissolving shows solubility."],
+ ["Which experiment shows magnetism?","put a magnet next to an iron nail","stir sugar into water","shine a light on a mirror","heat a pot of water","Magnetism is about magnets and metals."],
+ ["Which will a magnet attract?","an iron nail","an aluminum can","a plastic spoon","a wooden block","Iron is magnetic. Aluminum is not!"],
+ ["When two metals are melted and mixed (like copper + zinc), it's called an ____.","alloy","insulator","solution","evaporation","Brass is an alloy of copper and zinc."],
+ ["Lemonade powder is stirred into water until you can't see it. This is a ____.","solution","mixture you can separate by hand","alloy","gas","The powder dissolved evenly."],
+ ["A glass of lemonade sits in a sunny window until the water evaporates. What's left?","sugar crystals","nothing at all","more water","a magnet","The dissolved solid is left behind."],
+ ["Evaporation is when ____.","a liquid turns into a gas","a gas turns into a solid","a solid melts","metals mix together","Water becomes water vapor."],
+ ["Which is a mixture, NOT a solution?","spaghetti and meatballs","salt water","sugar water","drink mix in water","You can see and separate the spaghetti parts."],
+ ["Which is a solution?","salt mixed into water","trail mix","a salad","sand and rocks","The salt dissolves evenly."],
+ ["In a mixture, each part ____.","keeps its own properties","disappears forever","turns into metal","becomes a gas","You can still see and separate the parts."],
+ ["A shiny mirror has high ____.","reflectivity","solubility","magnetism","evaporation","Shiny things reflect a lot of light."]
+];
+const SORT=[["trail mix","mixture"],["salt water","solution"],["spaghetti and meatballs","mixture"],["drink mix in water","solution"],["a salad","mixture"],["sugar water","solution"],["cereal and milk","mixture"],["lemonade (stirred)","solution"],["sand and rocks","mixture"],["a fruit cup","mixture"]];
+const COND=[["a metal fork","conductor"],["a wooden spoon","insulator"],["a copper wire","conductor"],["a plastic ruler","insulator"],["a foam cup","insulator"],["an aluminum can","conductor"],["a rubber band","insulator"],["a steel paperclip","conductor"]];
+function quiz(){
+  const base=staticQuiz(Q,6);
+  const s=shuffle(SORT).slice(0,2).map(([it,a])=>{const o=['mixture','solution','alloy','gas'];return {p:`Is <b>${it}</b> a mixture or a solution?`,opts:o,ans:o.indexOf(a),why:a==='solution'?'Something dissolved evenly — you can’t see the parts.':'You can see the separate parts.'}});
+  const c=shuffle(COND).slice(0,2).map(([it,a])=>{const o=['conductor','insulator','alloy','solution'];return {p:`Is <b>${it}</b> a conductor or an insulator?`,opts:o,ans:o.indexOf(a),why:a==='conductor'?'Metals let heat and electricity flow.':'Wood, plastic, foam and rubber block heat and electricity.'}});
+  return shuffle([...base,...s,...c]);
+}
+const M=[["Conductivity","how easily heat or electricity flows"],["Reflectivity","how light bounces off a surface"],["Solubility","the ability to dissolve in a liquid"],["Magnetism","attraction between a magnet and certain metals"],["Conductor","a metal fork"],["Insulator","a foam cup"],["Mixture","trail mix"],["Solution","salt water"],["Alloy","brass (copper + zinc)"],["Evaporation","a liquid turning into a gas"]];
+makeGuide({id:"properties-of-matter",prefix:"pom",color:"#9b59b6",h1:`Properties of <span style="color:#9b59b6">Matter</span> ⚡`,sub:"Conductors, magnets, dissolving, mixtures, solutions and evaporation!",
+  cards:T,vocab:V,flash:()=>staticFlash(F,T),quiz,
+  match:()=>shuffle(M).slice(0,6),matchPrompt:"Tap a science word, then tap what matches it!",superstar:"WOW! Properties pro! 🏆"});
 })();
 
 /* ---------- start on the page in the address (or home) ---------- */
