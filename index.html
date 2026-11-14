@@ -2024,7 +2024,7 @@ function openBox(series){
 }
 
 /* ---------- earning ---------- */
-const BADGES={warmup:['🔥','Warm-Up','Finish 1 study guide today',0],onaroll:['🎢','On a Roll','Finish 3 study guides today',1],brainblast:['🧠','Brain Blast','Finish 5 study guides today',1],perfect:['💯','Perfect 10','Get a perfect quiz score',1],hopper:['🦘','Subject Hopper','Finish a guide from every subject today',1]};
+const BADGES={warmup:['🔥','Warm-Up','Finish 1 study guide today',0],onaroll:['🎢','On a Roll','Finish 3 study guides today',1],brainblast:['🧠','Brain Blast','Finish 5 study guides today',1],perfect:['💯','Perfect 10','Get a perfect quiz score',1],hopper:['🦘','Subject Hopper','Finish guides from 3 different subjects today',1]};
 function earn(guide,kind,score,total){
   const d=today();const pass=kind==='quiz'?score>=Math.ceil(total*0.7):score>=Math.ceil(total*10/12);
   const msgs=[];let boxes=0;
@@ -2035,7 +2035,7 @@ function earn(guide,kind,score,total){
     if(!d.rewarded.includes(guide)){d.rewarded.push(guide);boxes++;msgs.unshift(`🎁 <b>Mystery Box</b> for ${g?g.title:'your guide'}!`)}
     if(kind==='quiz'&&score===total)badge('perfect');
     if(d.done.length>=1)badge('warmup');if(d.done.length>=3)badge('onaroll');if(d.done.length>=5)badge('brainblast');
-    const subs=[...new Set(GUIDES.map(x=>x.subject))];if(subs.every(su=>d.done.some(id=>(GUIDES.find(x=>x.id===id)||{}).subject===su)))badge('hopper');
+    const subs=new Set(GUIDES.map(x=>x.subject)),doneSubs=new Set(d.done.map(id=>(GUIDES.find(x=>x.id===id)||{}).subject).filter(Boolean));if(doneSubs.size>=Math.min(3,subs.size))badge('hopper');
   }
   S.boxes+=boxes;if(boxes)S.dirty=true;save();hud();
   if(msgs.length){
