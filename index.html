@@ -209,6 +209,78 @@
   .guide .pch.on{background:#fff1b3}
   .guide .pfix{font-size:14px;color:#c2185b;margin-top:4px}
 
+  /* ============ REWARDS: boxes, shelf, shop, parent corner ============ */
+  #kk-hud{position:fixed;right:12px;bottom:12px;z-index:40;font-family:'Baloo 2';font-weight:700;font-size:16px;background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:999px;padding:6px 14px;box-shadow:0 4px 0 var(--ink);cursor:pointer}
+  #kk-hud.glow{background:#fff1b3;animation:hudbounce 1.6s ease-in-out infinite}
+  @keyframes hudbounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  .kk-modal{position:fixed;inset:0;background:rgba(43,35,64,.55);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;animation:pop .2s}
+  .kk-box{background:#fff;border:4px solid var(--ink);border-radius:24px;box-shadow:0 8px 0 var(--ink);padding:22px;max-width:440px;width:100%;text-align:center;max-height:90vh;overflow:auto}
+  .kk-box h3{font-family:'Baloo 2';font-size:26px;margin:8px 0 4px}
+  .kk-box .row{margin-top:12px}
+  .boxanim{font-size:110px;line-height:1;animation:shake .5s ease-in-out infinite}
+  .boxanim.still{animation:none;font-size:70px}
+  @keyframes shake{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-12deg) scale(1.05)}75%{transform:rotate(12deg) scale(1.05)}}
+  .kk-box.reveal{animation:burst .45s}
+  @keyframes burst{0%{transform:scale(.3)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
+  .kk-box.reveal.r-g{background:linear-gradient(160deg,#fff8d6,#ffe27a 60%,#fff8d6)}
+  .rarity{display:inline-block;font-family:'Baloo 2';font-weight:800;font-size:15px;letter-spacing:1px;text-transform:uppercase;border-radius:999px;padding:2px 14px;color:#fff;background:#9a92ad}
+  .rarity.r-r{background:#2d9cdb}.rarity.r-u{background:#9b59b6}.rarity.r-g{background:linear-gradient(90deg,#d4a017,#ffcf33,#d4a017);color:#2b2340}
+  .plush{position:relative;width:74px;height:74px;margin:0 auto;border-radius:22px;background:radial-gradient(circle at 35% 30%,#fff,color-mix(in srgb,var(--sc) 30%,#fff));border:3px solid #cfc6dd;display:flex;align-items:center;justify-content:center}
+  .plush .pe{font-size:42px;line-height:1}
+  .plush .pa{position:absolute;right:-6px;bottom:-6px;font-size:24px;background:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+  .plush.r-r{border-color:#2d9cdb}.plush.r-u{border-color:#9b59b6;box-shadow:0 0 0 3px #e8d5f3}
+  .plush.r-g{border-color:#d4a017;background:radial-gradient(circle at 35% 30%,#fff,#ffe27a);box-shadow:0 0 14px #ffcf33;animation:shimmer 2s ease-in-out infinite}
+  @keyframes shimmer{0%,100%{box-shadow:0 0 8px #ffcf33}50%{box-shadow:0 0 20px #ffcf33}}
+  .plush.big{width:130px;height:130px;border-radius:34px;margin:12px auto}
+  .plush.big .pe{font-size:78px}.plush.big .pa{width:52px;height:52px;font-size:38px;right:-10px;bottom:-10px}
+  .plush.ghost{background:#efeaf5;border:3px dashed #cfc6dd}
+  .plush.ghost .pe{filter:grayscale(1) brightness(0);opacity:.15}
+  .plush.ghost .pq{position:absolute;font-family:'Baloo 2';font-weight:800;font-size:28px;color:#9a92ad}
+  .bio{color:var(--muted);font-size:16px;margin:4px 0}
+  .series-tag{font-weight:800;font-size:15px}
+  .newtag,.duptag,.tickettag{margin:10px 0;border-radius:12px;padding:8px;font-weight:800}
+  .newtag{background:#e6f8f2;color:#127a5f}.duptag{background:#f6f3ff;color:#5b3fd1}.tickettag{background:#fff1b3;border:2px dashed #d4a017}
+  .earned{text-align:left;margin:10px 0;font-size:17px}.earned div{margin:6px 0}
+  .kk-toast{position:fixed;left:50%;bottom:70px;transform:translate(-50%,20px);opacity:0;transition:.3s;z-index:70;background:var(--ink);color:#fff;border-radius:14px;padding:10px 16px;font-weight:700;max-width:90vw;text-align:center}
+  .kk-toast.show{opacity:1;transform:translate(-50%,0)}
+  .kk-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 14px}
+  .kk-stats div{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:8px;text-align:center;box-shadow:0 4px 0 var(--ink)}
+  .kk-stats b{display:block;font-family:'Baloo 2';font-size:24px}.kk-stats span{font-size:13px;color:var(--muted);font-weight:700}
+  .bigbtn{font-size:22px;padding:10px 26px;animation:hudbounce 1.6s ease-in-out infinite}
+  .kk-warn{background:#fff1b3;border:2px dashed var(--ink);border-radius:14px;padding:8px 14px;margin:12px auto;max-width:620px;text-align:center}
+  .kk-tabs{margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:12px 0}
+  .kk-tabs button{font-family:'Baloo 2';font-weight:700;font-size:18px;border:3px solid var(--ink);background:#fff;color:var(--ink);padding:8px 18px;border-radius:999px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+  .kk-tabs button.on{background:var(--ink);color:#fff}
+  .kk-series{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:12px 14px;margin:14px 0;box-shadow:0 6px 0 var(--sc)}
+  .kk-series.special{background:linear-gradient(180deg,#fff,color-mix(in srgb,var(--sc) 10%,#fff));border-width:4px}
+  .kk-shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .kk-shead h3{font-family:'Baloo 2';font-size:24px;margin:0;flex:1}
+  .kk-shead .cnt{font-family:'Baloo 2';font-weight:800;font-size:20px;color:var(--sc)}
+  .ribbon{background:var(--sc);color:#fff;font-family:'Baloo 2';font-weight:800;border-radius:8px;padding:1px 10px;font-size:14px}
+  .kk-bar{height:10px;background:#eee;border-radius:999px;overflow:hidden;margin:6px 0 10px}.kk-bar i{display:block;height:100%;background:var(--sc)}
+  .kk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:12px 8px}
+  .slot{background:none;border:none;cursor:pointer;padding:4px;font:inherit;color:inherit}
+  .slot .sname{display:block;font-size:12px;font-weight:800;margin-top:8px;line-height:1.15}
+  .pasthdr{font-family:'Baloo 2';font-size:24px;margin:26px 0 0;text-align:center}
+  .kk-shop{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:14px 18px;box-shadow:0 6px 0 var(--ink)}
+  .kk-shop h3{font-family:'Baloo 2';font-size:22px;margin:14px 0 2px}
+  .kk-buyrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .buybox{border-color:var(--ink);box-shadow:0 4px 0 var(--sc)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .kk-badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:12px 0}
+  .kbadge{background:#fff;border:3px dashed #cfc6dd;border-radius:18px;padding:12px;text-align:center;opacity:.55}
+  .kbadge span{font-size:40px;display:block;filter:grayscale(1)}.kbadge b{font-family:'Baloo 2';font-size:19px;display:block}.kbadge small{color:var(--muted)}
+  .kbadge.got{opacity:1;border:3px solid var(--ink);box-shadow:0 4px 0 #ffb400}.kbadge.got span{filter:none}
+  .kk-code{font-family:ui-monospace,Menlo,monospace;font-size:20px;font-weight:800;letter-spacing:1px;background:#f6f3ff;border:2px dashed #7c5cff;border-radius:12px;padding:10px;margin:8px 0;word-break:break-all;user-select:all}
+  .pin{display:block;width:100%;font:inherit;font-size:20px;padding:10px 12px;border:2px solid #cfc6dd;border-radius:12px;margin:8px 0;text-align:center}
+  .kk-pbox{max-width:560px;margin:0 auto;background:#fff;border:3px solid var(--ink);border-radius:20px;padding:16px 20px;box-shadow:0 6px 0 var(--ink)}
+  .kk-pbox h3{font-family:'Baloo 2';font-size:22px;margin:14px 0 4px}
+  .kk-hist{padding-left:20px}.kk-hist li{margin:6px 0}.kk-hist code{font-weight:800;word-break:break-all}.kk-hist small{display:block;color:var(--muted)}
+  .homebtns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:center}
+  .shelfbtn{font-family:'Baloo 2';font-weight:800;font-size:clamp(20px,4vw,26px);background:#fff;border:4px solid var(--ink);border-radius:22px;padding:10px 26px;cursor:pointer;box-shadow:0 8px 0 var(--ink);color:var(--ink)}
+  .parentlink{display:block;margin:30px auto 0;background:none;border:none;color:var(--muted);font:inherit;font-size:14px;cursor:pointer;text-decoration:underline}
+  @media (max-width:520px){.kk-stats{grid-template-columns:repeat(2,1fr)}.kk-grid{grid-template-columns:repeat(3,1fr)}.plush{width:64px;height:64px}.plush .pe{font-size:36px}}
+
   #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
 </style>
 </head>
@@ -231,7 +303,7 @@
     <div class="title"><span class="k">K's</span> <span class="rn">Korner</span></div>
     <div class="tag">School Study Guides</div>
     <p class="welcome">Your secret hideout for learning, practicing and getting super smart! 🚀</p>
-    <button class="enter" onclick="go('contents')">ENTER ➜</button>
+    <div class="homebtns"><button class="enter" onclick="go('contents')">ENTER ➜</button><button class="shelfbtn" onclick="go('shelf')">🧸 My Prizes</button></div>
     <div class="count" id="count"></div>
   </div>
 </section>
@@ -241,11 +313,29 @@
   <div class="wrap">
     <div class="topbar">
       <div class="logo" onclick="go('home')"><span class="mini">K</span> K's Korner</div>
-      <button class="btn" onclick="go('home')">🏠 Home</button>
+      <div class="row"><button class="btn" onclick="go('shelf')">🧸 My Prizes</button><button class="btn" onclick="go('home')">🏠 Home</button></div>
     </div>
     <h2 class="toc-h">📚 Table of Contents</h2>
     <p class="toc-sub">Pick a study guide to get started!</p>
     <div id="toc" class="toc-list"></div>
+    <button class="parentlink" onclick="go('parent')">🔒 Parent Corner</button>
+  </div>
+</section>
+
+<!-- ============ PRIZE SHELF ============ -->
+<section id="shelf" class="page">
+  <div class="wrap">
+    <div class="topbar"><div class="logo" onclick="go('home')"><span class="mini">K</span> K's Korner</div><div class="row"><button class="btn" onclick="go('contents')">📚 Contents</button></div></div>
+    <h2 class="toc-h">🧸 My Prize Shelf</h2>
+    <p class="toc-sub">Earn Mystery Boxes by finishing study guides. Collect them all!</p>
+    <div id="kk-shelf"></div>
+  </div>
+</section>
+<!-- ============ PARENT CORNER ============ -->
+<section id="parent" class="page">
+  <div class="wrap">
+    <div class="topbar"><div class="logo" onclick="go('home')"><span class="mini">K</span> K's Korner</div><button class="btn" onclick="go('contents')">📚 Contents</button></div>
+    <div id="kk-parent"></div>
   </div>
 </section>
 
@@ -473,11 +563,12 @@ const SUBJECT_EMOJI = {"Reading & Writing":"📖","Math":"➗","Science":"🔬",
 /* ---------- shared helpers ---------- */
 const $=s=>document.querySelector(s);
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
-const PAGES=['home','contents',...GUIDES.map(g=>g.id)];
+const PAGES=['home','contents','shelf','parent',...GUIDES.map(g=>g.id)];
 function show(id){
   if(!PAGES.includes(id)) id='home';
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===id));
   window.scrollTo(0,0);
+  if(typeof KK!=='undefined')KK.onShow(id);
 }
 function go(id){ try{ if(location.hash!=='#'+id){ location.hash=id; return; } }catch(e){} show(id); }
 window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
@@ -590,7 +681,7 @@ function endQuiz(){
    <div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
    <div class="sentence">You got ${score} out of ${qs.length}!</div><p style="font-size:19px">${msg}</p>
    <button class="btn primary" id="fig-again">🔁 Play Again</button></div>`;
-  q('#fig-again').onclick=startQuiz; if(stars>=2)confetti();
+  KK.earn('figurative-language','quiz',score,qs.length);q('#fig-again').onclick=startQuiz; if(stars>=2)confetti();
 }
 
 let sel=null,matched=0;
@@ -748,7 +839,7 @@ function endQuiz(){
    <div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
    <div class="sentence">You got ${score} out of ${qs.length}!</div><p style="font-size:19px">${msg}</p>
    <button class="btn primary" id="ss1-again">🔁 Play Again</button></div>`;
-  q('#ss1-again').onclick=startQuiz; if(stars>=2)confetti();
+  KK.earn('early-americans','quiz',score,qs.length);q('#ss1-again').onclick=startQuiz; if(stars>=2)confetti();
 }
 
 // Match
@@ -909,7 +1000,7 @@ function endQuiz(){
    <div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
    <div class="sentence">You got ${score} out of ${qs.length}!</div><p style="font-size:19px">${msg}</p>
    <button class="btn primary" id="gov-again">🔁 Play Again</button></div>`;
-  q('#gov-again').onclick=startQuiz; if(stars>=2)confetti();
+  KK.earn('three-branches','quiz',score,qs.length);q('#gov-again').onclick=startQuiz; if(stars>=2)confetti();
 }
 
 // Match
@@ -1100,7 +1191,7 @@ function endQuiz(){
    <div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
    <div class="sentence">You got ${score} out of ${qs.length}!</div><p style="font-size:19px">${msg}</p>
    <button class="btn primary" id="dec-again">🔁 New Quiz</button></div>`;
-  q('#dec-again').onclick=startQuiz; if(stars>=2)confetti();
+  KK.earn('decimal-forms','quiz',score,qs.length);q('#dec-again').onclick=startQuiz; if(stars>=2)confetti();
 }
 
 /* ---------- Match (standard ↔ word form) ---------- */
@@ -1154,6 +1245,7 @@ q('#dec-check').onclick=()=>{
   });
   q('#dec-sMsg').innerHTML=right===total?`🎉 <b>Perfect! ${right} out of ${total}!</b>`:`You got <b>${right} out of ${total}</b>. Check the answers in pink, then try a new sheet! 💪`;
   if(right===total)confetti();
+  KK.earn('decimal-forms','practice',right,total);
 };
 q('#dec-new').onclick=newSheet;
 })();
@@ -1272,6 +1364,7 @@ function makeGuide(cfg){
       <div class="sentence">You got ${score} out of ${qs.length}!</div><p style="font-size:19px">${msg}</p>
       <button class="btn primary qAgain">🔁 Play Again</button></div>`;
     q('.qAgain').onclick=startQuiz; if(stars>=2)confetti();
+    KK.earn(cfg.id,'quiz',score,qs.length);
   }
 
   // match
@@ -1316,7 +1409,8 @@ function makeGuide(cfg){
         el.parentElement.querySelector('.pfix').innerHTML=ok?'':`Answer: <b>${r.answer}</b>${r.why?` — ${r.why}`:''}`;
         if(ok)right++;});
       q('.sMsg').innerHTML=right===rows.length?`🎉 <b>Perfect! ${right} out of ${rows.length}!</b>`:`You got <b>${right} out of ${rows.length}</b>. Check the answers in pink, then try a new sheet! 💪`;
-      if(right===rows.length)confetti();};
+      if(right===rows.length)confetti();
+      KK.earn(cfg.id,'practice',right,rows.length);};
   }
 }
 
@@ -1715,6 +1809,355 @@ const M=[["Conductivity","how easily heat or electricity flows"],["Reflectivity"
 makeGuide({id:"properties-of-matter",prefix:"pom",color:"#9b59b6",h1:`Properties of <span style="color:#9b59b6">Matter</span> ⚡`,sub:"Conductors, magnets, dissolving, mixtures, solutions and evaporation!",
   cards:T,vocab:V,flash:()=>staticFlash(F,T),quiz,
   match:()=>shuffle(M).slice(0,6),matchPrompt:"Tap a science word, then tap what matches it!",superstar:"WOW! Properties pro! 🏆"});
+})();
+
+/* =====================================================================
+   PRIZES — every plushie has a PERMANENT id. Never reuse or renumber ids
+   (save codes depend on them). To add a new special series: add items with
+   NEW ids at the end, set its status:'special', and change the old special's
+   status to 'past'.  Rarity: C common, R rare, U ultra-rare, G golden.
+   ===================================================================== */
+const PRIZE_SERIES=[
+ {key:'holiday',name:'Holiday Cheer',icon:'🎄',color:'#e53935',status:'special',items:`
+1|Jingle Bear|🐻|🔔|C|Jingles every time she giggles.
+2|Cocoa Bunny|🐰|☕|C|Extra marshmallows, please!
+3|Gingerbread Squish|🍪|🎀|C|Smells like cinnamon and fun.
+4|Peppermint Penguin|🐧|🍬|C|Slides around on candy-cane ice.
+5|Snowball Seal|🦭|❄️|C|Has never lost a snowball fight.
+6|Reindeer Mochi|🦌|🍡|C|Soft, squishy and ready to fly.
+7|Candy Cane Kitty|🐱|🍭|C|Purrs in red and white stripes.
+8|Mitten Mouse|🐭|🧤|C|Sleeps inside a cozy mitten.
+9|Cozy Sock Fox|🦊|🧦|C|Collects fuzzy socks — never matching!
+10|Tinsel Turtle|🐢|✨|C|Sparkles a little slower than everyone else.
+11|Frosty Hamster|🐹|⛄|C|Builds the world's tiniest snowmen.
+12|Twinkle Star Owl|🦉|⭐|R|Stays up late to watch the stars.
+13|Sleigh Bell Pup|🐶|🛷|R|Fastest sledder on the hill.
+14|Holly Hedgehog|🦔|🎄|R|Decorates her spikes for the holidays.
+15|Present Panda|🐼|🎁|R|Can't stop peeking at presents.
+16|Northern Lights Whale|🐳|🌌|R|Glows green and purple at night.
+17|Snowglobe Squirrel|🐿️|🔮|U|Lives in a tiny snowy world.
+18|Midnight Cocoa Dragon|🐉|☕|U|Breathes warm hot cocoa, not fire.
+19|Ice Crystal Polar Bear|🐻‍❄️|💎|U|Her fur sparkles like fresh snow.
+20|Golden Snowflake Unicorn|🦄|❄️|G|Only appears on the snowiest of nights.`},
+ {key:'snack',name:'Snack Squad',icon:'🍡',color:'#ff7a59',status:'core',items:`
+21|Mochi Bun|🍡|💗|C|Loves naps and strawberry milk.
+22|Taco Cat|🌮|🐱|C|Spell it backwards — still Taco Cat!
+23|Boba Bear|🧋|🐻|C|Bubble tea is life.
+24|Dumpling Duck|🥟|🦆|C|Waddles around wrapped in dough.
+25|Waffle Koala|🧇|🐨|C|Sleeps in the little waffle squares.
+26|Sushi Seal|🍣|🦭|C|Rolls everywhere instead of walking.
+27|Pancake Pig|🥞|🐷|C|Stacks up to 10 pancakes tall.
+28|Cupcake Chick|🧁|🐤|C|Wears sprinkles as a hat.
+29|Pretzel Pup|🥨|🐶|C|Can twist into any shape.
+30|Donut Dino|🍩|🦕|R|Has a hole in the middle of her tummy.
+31|Popcorn Panda|🍿|🐼|R|Pops with excitement at movie time.
+32|Ramen Raccoon|🍜|🦝|R|Slurps the loudest in the forest.
+33|Cookie Monkey|🍪|🐵|R|Always shares the last cookie.
+34|Rainbow Sprinkle Cake|🎂|🌈|U|Every slice is a different color.
+35|Berry Cake Bunny|🍰|🐰|U|Hops around in a strawberry hat.
+36|Golden Honey Toast|🍯|👑|G|The royal breakfast of the Snack Squad.`},
+ {key:'ocean',name:'Ocean Squish',icon:'🌊',color:'#2d9cdb',status:'core',items:`
+37|Squishy Squid|🦑|💧|C|Squeezes into the tiniest shells.
+38|Puff the Pufferfish|🐡|🫧|C|Puffs up when she's surprised.
+39|Coral Crab|🦀|🪸|C|Walks sideways to every party.
+40|Bubbles the Fish|🐠|🫧|C|Blows heart-shaped bubbles.
+41|Sandy Star|🌟|🏖️|C|Fell from the sky and landed on the beach.
+42|Shelly Snail|🐌|🐚|C|Carries her seashell house everywhere.
+43|Wavy Whale|🐋|🌊|C|Sings songs to the waves.
+44|Tidepool Turtle|🐢|🌊|C|Explores every tiny tidepool.
+45|Lobster Lou|🦞|⚓|C|Captain of the ocean floor.
+46|Dolphin Dash|🐬|💨|R|Can jump over rainbows.
+47|Jelly Jiggle|🪼|💜|R|Glows in the deep dark sea.
+48|Otter Pop|🦦|🐚|R|Holds hands with friends while napping.
+49|Shark Snuggles|🦈|💗|R|Looks scary, but just wants hugs.
+50|Octo Hugs|🐙|🤗|U|Can give eight hugs at once!
+51|Pearl Mermaid|🧜‍♀️|🐚|U|Guards a secret pearl collection.
+52|Golden Treasure Turtle|🐢|🪙|G|Swims with a shell full of gold.`},
+ {key:'dream',name:'Dream Fluffs',icon:'🌙',color:'#7c5cff',status:'core',items:`
+53|Cloud Bunny|🐰|☁️|C|Bounces from cloud to cloud.
+54|Starry Sloth|🦥|⭐|C|Takes very slow, very sparkly naps.
+55|Moonbeam Mouse|🐭|🌙|C|Rides moonbeams to bed.
+56|Sleepy Koala|🐨|💤|C|Can fall asleep anywhere.
+57|Pillow Puppy|🐶|🛏️|C|The softest pillow you'll ever hug.
+58|Lullaby Lamb|🐑|🎵|C|Hums you to sleep.
+59|Dreamy Duckling|🐥|💭|C|Dreams about flying to the moon.
+60|Comet Kitten|🐱|☄️|C|Zooms across the night sky.
+61|Nightlight Firefly|🐛|💡|C|Keeps the dark from being scary.
+62|Rainbow Pegasus|🐴|🌈|R|Paints rainbows with her wings.
+63|Stardust Fox|🦊|✨|R|Leaves a trail of glitter.
+64|Crystal Owl|🦉|🔮|R|Can see your happiest dreams.
+65|Bubble Bear|🐻|🫧|R|Floats around in a giant bubble.
+66|Galaxy Whale|🐋|🌌|U|Swims through the stars.
+67|Aurora Dragon|🐲|🌈|U|Her scales shine every color.
+68|Golden Moon Kitty|🐱|🌙|G|Only wakes up during a full moon.`},
+ {key:'dino',name:'Dino Snugglers',icon:'🦖',color:'#1fb58f',status:'core',items:`
+69|Rex Marshmallow|🦖|☁️|C|Tiny arms, giant hugs.
+70|Tri-Squishtops|🦕|💚|C|Uses her horns to tickle.
+71|Stego Snooze|🦕|💤|C|Naps on a pile of leaves.
+72|Egg Hatchling|🥚|🐣|C|Just hatched — and already curious!
+73|Raptor Roo|🦖|💨|C|The fastest snuggler around.
+74|Ptera Puff|🐦|☁️|C|Glides on fluffy clouds.
+75|Bronto Bubbles|🦕|🫧|C|Blows bubbles with her long neck.
+76|Dino Nugget|🦖|🍗|C|Shaped like everyone's favorite snack.
+77|Volcano Vinnie|🦖|🌋|C|Loves warm, toasty places.
+78|Spike the Ankylo|🦕|🛡️|R|Has a club tail for high-fives.
+79|Fossil Friend|🦴|🔍|R|Digs up treasures from long ago.
+80|Jungle Rex|🦖|🌴|R|King of the leafy jungle.
+81|Crystal Egg|🥚|💎|R|Nobody knows what will hatch!
+82|Rainbow Raptor|🦖|🌈|U|Changes color with her mood.
+83|Lava Dragon Dino|🐉|🔥|U|Warm and glowy on the inside.
+84|Golden T-Rex|🦖|👑|G|Ruler of all the Dino Snugglers.`},
+ {key:'pets',name:'Pet Pals',icon:'🐾',color:'#ffb400',status:'core',items:`
+85|Biscuit Puppy|🐶|🦴|C|Will do any trick for a treat.
+86|Whiskers Kitty|🐱|🧶|C|Never met a yarn ball she didn't love.
+87|Hammy Hamster|🐹|🌻|C|Stuffs his cheeks with sunflower seeds.
+88|Bunbun|🐰|🥕|C|Does happy hops called binkies.
+89|Goldie Fish|🐟|💧|C|Swims in circles of joy.
+90|Pip the Parakeet|🦜|🎶|C|Whistles your favorite song.
+91|Guinea Pig Gus|🐹|🥬|C|Squeaks when it's snack time.
+92|Turtle Tumble|🐢|🍓|C|Loves strawberries more than anything.
+93|Ferret Flash|🦦|⚡|C|Zooms around the house at top speed.
+94|Pony Pal|🐴|🎀|R|Wears a bow in her mane.
+95|Hedgie Hugs|🦔|💗|R|Spiky outside, soft inside.
+96|Lizard Lou|🦎|☀️|R|Sunbathes all day long.
+97|Chinchilla Cloud|🐭|☁️|R|The fluffiest fur in the world.
+98|Rainbow Corgi|🐕|🌈|U|Wiggles her fluffy rainbow tail.
+99|Fluffy Cloud Cat|🐈|☁️|U|Made of the softest cloud fluff.
+100|Golden Puppy|🐶|👑|G|The most loyal friend of all.`}
+];
+
+/* =====================================================================
+   REWARDS — Mystery Boxes, Prize Shelf, Swap Shop, Session Badges,
+   Golden Tickets, Save My Stash codes and Parent Corner.
+   Everything is saved in this browser (localStorage) + the stash code.
+   ===================================================================== */
+const KK=(function(){
+const RAR={C:{name:'Common',odds:60,dup:1,price:10,cls:'r-c'},R:{name:'Rare',odds:28,dup:3,price:25,cls:'r-r'},U:{name:'Ultra-Rare',odds:10,dup:8,price:60,cls:'r-u'},G:{name:'Golden',odds:2,dup:20,price:0,cls:'r-g'}};
+const SPECIAL_CHANCE=1/3, BOX_PRICE=5, PAST_MULT=1.5;
+// parse series
+const ITEMS={};let MAXID=0;
+PRIZE_SERIES.forEach(s=>{s.list=s.items.trim().split('\n').map(l=>{const [id,name,e,a,r,bio]=l.split('|');const it={id:+id,name,e,a,r,bio,series:s};ITEMS[it.id]=it;MAXID=Math.max(MAXID,+id);return it})});
+const ORDER=()=>[...PRIZE_SERIES.filter(s=>s.status==='special'),...PRIZE_SERIES.filter(s=>s.status==='core'),...PRIZE_SERIES.filter(s=>s.status==='past').reverse()];
+
+/* ---------- state ---------- */
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const blank=()=>({owned:[],points:0,boxes:0,redeemed:0,dirty:false,day:null});
+let S=Object.assign(blank(),store.get('kk_state',{}));
+const save=()=>store.set('kk_state',S);
+const today=()=>{const d=new Date().toDateString();if(!S.day||S.day.date!==d)S.day={date:d,done:[],rewarded:[],badges:[],correct:0};return S.day};
+const has=id=>S.owned.includes(id);
+const seriesDone=s=>s.list.every(i=>has(i.id));
+const ticketsEarned=()=>PRIZE_SERIES.filter(seriesDone).length;
+const ticketsLeft=()=>Math.max(0,ticketsEarned()-S.redeemed);
+
+/* ---------- save codes ---------- */
+const ALPH='23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+const NB=Math.ceil(MAXID/8);
+function keyByte(i){return (i*73+41)&255}
+function chk(bytes){let a=7,b=13;for(const x of bytes){a=(a+x)%251;b=(b+a)%251}return [a,b]}
+function makeCode(){
+  const bytes=[1];const bits=new Array(NB).fill(0);
+  S.owned.forEach(id=>{bits[(id-1)>>3]|=1<<((id-1)&7)});
+  bytes.push(...bits,(S.points>>8)&255,S.points&255,Math.min(255,S.boxes),Math.min(255,S.redeemed));
+  bytes.push(...chk(bytes));
+  const enc=bytes.map((x,i)=>x^keyByte(i));
+  let bitstr=enc.map(x=>x.toString(2).padStart(8,'0')).join('');while(bitstr.length%5)bitstr+='0';
+  let out='';for(let i=0;i<bitstr.length;i+=5)out+=ALPH[parseInt(bitstr.slice(i,i+5),2)];
+  return out.match(/.{1,4}/g).join('-');
+}
+function readCode(code){
+  const clean=String(code).toUpperCase().replace(/[^A-Z0-9]/g,'').replace(/O/g,'0').replace(/I/g,'1');
+  let bitstr='';for(const ch of clean){const v=ALPH.indexOf(ch);if(v<0)return null;bitstr+=v.toString(2).padStart(5,'0')}
+  const n=Math.floor(bitstr.length/8);if(n<7)return null;
+  const bytes=[];for(let i=0;i<n;i++)bytes.push(parseInt(bitstr.slice(i*8,i*8+8),2)^keyByte(i));
+  if(bytes[0]!==1)return null;
+  const nb=n-7;if(nb<1)return null;
+  const body=bytes.slice(0,n-2),[c1,c2]=chk(body);if(c1!==bytes[n-2]||c2!==bytes[n-1])return null;
+  const owned=[];for(let i=0;i<nb*8;i++)if(bytes[1+(i>>3)]&(1<<(i&7)))owned.push(i+1);
+  const o=1+nb;
+  return {owned:owned.filter(id=>ITEMS[id]),points:(bytes[o]<<8)|bytes[o+1],boxes:bytes[o+2],redeemed:bytes[o+3]};
+}
+function remember(code){const h=store.get('kk_codes',[]);if(!h.length||h[0].code!==code){h.unshift({code,date:new Date().toLocaleString()});store.set('kk_codes',h.slice(0,5))}}
+
+/* ---------- UI helpers ---------- */
+const $k=s=>document.querySelector(s);
+function card(it,big){const r=RAR[it.r];return `<div class="plush ${r.cls}${big?' big':''}" style="--sc:${it.series.color}"><span class="pe">${it.e}</span><span class="pa">${it.a}</span></div>`}
+function ghost(it){return `<div class="plush ghost" style="--sc:${it.series.color}"><span class="pe">${it.e}</span><span class="pq">?</span></div>`}
+function modal(html,cls){closeModal();const m=document.createElement('div');m.className='kk-modal';m.innerHTML=`<div class="kk-box ${cls||''}">${html}</div>`;m.onclick=e=>{if(e.target===m&&!m.dataset.lock)closeModal()};document.body.appendChild(m);return m}
+function closeModal(){document.querySelectorAll('.kk-modal').forEach(m=>m.remove())}
+function toast(msg){const t=document.createElement('div');t.className='kk-toast';t.innerHTML=msg;document.body.appendChild(t);setTimeout(()=>t.classList.add('show'),20);setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400)},3200)}
+function hud(){let h=$k('#kk-hud');if(!h){h=document.createElement('button');h.id='kk-hud';h.onclick=()=>go('shelf');document.body.appendChild(h)}
+  h.innerHTML=`🧸 <b>${S.owned.length}</b>/${Object.keys(ITEMS).length} · 🎁 <b>${S.boxes}</b> · 🧶 <b>${S.points}</b>`;h.classList.toggle('glow',S.boxes>0)}
+
+/* ---------- boxes ---------- */
+function rollRarity(){let x=Math.random()*100;for(const k of ['G','U','R','C']){if(x<RAR[k].odds)return k;x-=RAR[k].odds}return 'C'}
+function rollItem(series){
+  if(!series){const sp=PRIZE_SERIES.filter(s=>s.status==='special'),core=PRIZE_SERIES.filter(s=>s.status==='core');
+    series=sp.length&&Math.random()<SPECIAL_CHANCE?pick(sp):pick(core)}
+  const r=rollRarity();const pool=series.list.filter(i=>i.r===r);return pick(pool.length?pool:series.list);
+}
+function give(it){
+  const before=ticketsEarned(),isNew=!has(it.id);
+  if(isNew)S.owned.push(it.id);else S.points+=RAR[it.r].dup;
+  S.dirty=true;save();hud();
+  return {isNew,ticket:ticketsEarned()>before};
+}
+function openBox(series){
+  const it=rollItem(series),res=give(it),s=it.series,got=s.list.filter(i=>has(i.id)).length;
+  const m=modal(`<div class="boxanim">🎁</div><p class="hint">Shake, shake, shake…</p>`,'opening');m.dataset.lock=1;
+  setTimeout(()=>{
+    m.querySelector('.kk-box').className='kk-box reveal '+RAR[it.r].cls;
+    m.querySelector('.kk-box').innerHTML=`
+      <div class="rarity ${RAR[it.r].cls}">${RAR[it.r].name}${it.r==='G'?' ✨':''}</div>
+      ${card(it,true)}
+      <h3>${it.name}</h3><p class="bio">${it.bio}</p>
+      <p class="series-tag">${s.icon} ${s.name} · ${got}/${s.list.length}</p>
+      ${res.isNew?'<div class="newtag">✨ NEW for your shelf! ✨</div>':`<div class="duptag">Duplicate! +${RAR[it.r].dup} 🧶 Fluff Points</div>`}
+      ${res.ticket?`<div class="tickettag">🎟️ You finished the whole ${s.name} series! You earned a GOLDEN TICKET! Show a grown-up! 🎉</div>`:''}
+      <div class="row center">${S.boxes>0?`<button class="btn primary" id="kk-next">🎁 Open Another (${S.boxes})</button>`:''}<button class="btn" id="kk-done">${S.boxes>0?'Later':'Yay! 🎉'}</button></div>
+      ${S.dirty?'<p class="hint">💾 Don\'t forget to <b>Save My Stash</b> before you go!</p>':''}`;
+    delete m.dataset.lock;
+    if(res.isNew&&(it.r!=='C')||res.ticket)confetti();
+    const n=m.querySelector('#kk-next');if(n)n.onclick=()=>{S.boxes--;save();openBox()};
+    m.querySelector('#kk-done').onclick=()=>{closeModal();if($k('#shelf.on'))renderShelf()};
+  },1500);
+}
+
+/* ---------- earning ---------- */
+const BADGES={warmup:['🔥','Warm-Up','Finish 1 study guide today',0],onaroll:['🎢','On a Roll','Finish 3 study guides today',1],brainblast:['🧠','Brain Blast','Finish 5 study guides today',1],perfect:['💯','Perfect 10','Get a perfect quiz score',1],hopper:['🦘','Subject Hopper','Finish a guide from every subject today',1]};
+function earn(guide,kind,score,total){
+  const d=today();const pass=kind==='quiz'?score>=Math.ceil(total*0.7):score>=Math.ceil(total*10/12);
+  const msgs=[];let boxes=0;
+  const badge=k=>{if(!d.badges.includes(k)){d.badges.push(k);const b=BADGES[k];boxes+=b[3];msgs.push(`${b[0]} <b>Badge: ${b[1]}!</b>${b[3]?' +1 bonus box':''}`)}};
+  if(pass){
+    const g=GUIDES.find(x=>x.id===guide);
+    if(!d.done.includes(guide))d.done.push(guide);
+    if(!d.rewarded.includes(guide)){d.rewarded.push(guide);boxes++;msgs.unshift(`🎁 <b>Mystery Box</b> for ${g?g.title:'your guide'}!`)}
+    if(kind==='quiz'&&score===total)badge('perfect');
+    if(d.done.length>=1)badge('warmup');if(d.done.length>=3)badge('onaroll');if(d.done.length>=5)badge('brainblast');
+    const subs=[...new Set(GUIDES.map(x=>x.subject))];if(subs.every(su=>d.done.some(id=>(GUIDES.find(x=>x.id===id)||{}).subject===su)))badge('hopper');
+  }
+  S.boxes+=boxes;if(boxes)S.dirty=true;save();hud();
+  if(msgs.length){
+    const m=modal(`<div class="boxanim still">🎁</div><h3>Great work!</h3><div class="earned">${msgs.map(x=>`<div>${x}</div>`).join('')}</div>
+      <div class="row center">${S.boxes?`<button class="btn primary" id="kk-open">Open Now! (${S.boxes})</button>`:''}<button class="btn" id="kk-later">Save for Later</button></div>
+      <p class="hint">Unopened boxes wait on your Prize Shelf 🧸</p>`);
+    const o=m.querySelector('#kk-open');if(o)o.onclick=()=>{S.boxes--;save();openBox()};
+    m.querySelector('#kk-later').onclick=closeModal;
+  } else if(!pass) toast(`🎁 Score ${kind==='quiz'?Math.ceil(total*0.7)+'/'+total:Math.ceil(total*10/12)+'/'+total} or better to earn a Mystery Box!`);
+  else toast('✅ Nice! You already earned today\'s box for this guide — try a different guide for another one!');
+}
+
+/* ---------- shelf page ---------- */
+let tab='shelf';
+function renderShelf(){
+  const el=$k('#kk-shelf');if(!el)return;today();
+  const total=Object.keys(ITEMS).length;
+  el.innerHTML=`
+    <div class="kk-stats">
+      <div><b>${S.owned.length}</b><span>of ${total} collected</span></div>
+      <div><b>🎁 ${S.boxes}</b><span>boxes to open</span></div>
+      <div><b>🧶 ${S.points}</b><span>Fluff Points</span></div>
+      <div><b>🎟️ ${ticketsLeft()}</b><span>Golden Tickets</span></div>
+    </div>
+    ${S.boxes?`<div class="center"><button class="btn primary bigbtn" id="kk-openbox">🎁 Open a Mystery Box! (${S.boxes})</button></div>`:''}
+    ${S.dirty?`<div class="kk-warn">⚠️ You have new prizes! Tap <b>💾 Save My Stash</b> to get your new secret code.</div>`:''}
+    <div class="center row"><button class="btn" id="kk-save">💾 Save My Stash</button><button class="btn" id="kk-load">📂 Load My Stash</button></div>
+    <div class="gnav kk-tabs">${[['shelf','🧸 Shelf'],['shop','🔁 Swap Shop'],['badges','🏅 Today\'s Badges']].map(([k,l])=>`<button data-t="${k}" class="${tab===k?'on':''}">${l}</button>`).join('')}</div>
+    <div id="kk-tab"></div>`;
+  el.querySelectorAll('.kk-tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;renderShelf()});
+  const ob=$k('#kk-openbox');if(ob)ob.onclick=()=>{S.boxes--;save();openBox()};
+  $k('#kk-save').onclick=saveStash;$k('#kk-load').onclick=loadStash;
+  const t=$k('#kk-tab');
+  if(tab==='shelf'){
+    let pastHdr=false;
+    t.innerHTML=ORDER().map(s=>{
+      const got=s.list.filter(i=>has(i.id)).length,done=got===s.list.length;
+      let hdr='';if(s.status==='past'&&!pastHdr){pastHdr=true;hdr='<h3 class="pasthdr">🗄️ Past Specials</h3>'}
+      return `${hdr}<div class="kk-series ${s.status}" style="--sc:${s.color}">
+        <div class="kk-shead">${s.status==='special'?'<span class="ribbon">⭐ SPECIAL</span>':''}<h3>${s.icon} ${s.name}</h3><span class="cnt">${got}/${s.list.length}${done?' 🎟️':''}</span></div>
+        <div class="kk-bar"><i style="width:${got/s.list.length*100}%"></i></div>
+        <div class="kk-grid">${s.list.map(i=>`<button class="slot" data-id="${i.id}">${has(i.id)?card(i):ghost(i)}<span class="sname">${has(i.id)?i.name:'???'}</span></button>`).join('')}</div>
+      </div>`}).join('')+(pastHdr?'':'<p class="hint center">🗄️ Past special series will show up down here.</p>');
+    t.querySelectorAll('.slot').forEach(b=>b.onclick=()=>slotInfo(ITEMS[+b.dataset.id]));
+  } else if(tab==='shop'){
+    const buyable=PRIZE_SERIES.filter(s=>s.status!=='past');
+    t.innerHTML=`<div class="kk-shop">
+      <p class="center">Every duplicate turns into <b>🧶 Fluff Points</b>: ⚪ Common = 1 · 🔵 Rare = 3 · 🟣 Ultra-Rare = 8 · ✨ Golden = 20</p>
+      <h3>🎁 Buy a Mystery Box — ${BOX_PRICE} 🧶 each</h3><p class="hint">Pick which series it comes from!</p>
+      <div class="kk-buyrow">${buyable.map(s=>`<button class="btn buybox" data-k="${s.key}" ${S.points<BOX_PRICE?'disabled':''} style="--sc:${s.color}">${s.icon} ${s.name}</button>`).join('')}</div>
+      <h3>🎯 Buy a plushie you're missing</h3>
+      <p>Tap any <b>???</b> on your Shelf to buy it: ⚪ ${RAR.C.price} · 🔵 ${RAR.R.price} · 🟣 ${RAR.U.price} 🧶. Past Specials cost 1.5×. ✨ Goldens can only be found in Mystery Boxes!</p>
+      <p class="center"><b>You have 🧶 ${S.points} Fluff Points.</b></p></div>`;
+    t.querySelectorAll('.buybox').forEach(b=>b.onclick=()=>{if(S.points<BOX_PRICE)return;S.points-=BOX_PRICE;save();openBox(PRIZE_SERIES.find(s=>s.key===b.dataset.k))});
+  } else {
+    const d=today();
+    t.innerHTML=`<p class="center">Badges reset every day — collect them all again tomorrow! You've finished <b>${d.done.length}</b> guide${d.done.length===1?'':'s'} today.</p>
+      <div class="kk-badges">${Object.entries(BADGES).map(([k,b])=>`<div class="kbadge ${d.badges.includes(k)?'got':''}"><span>${b[0]}</span><b>${b[1]}</b><small>${b[2]}${b[3]?' · +1 box':''}</small></div>`).join('')}</div>
+      <p class="hint center">🎁 You earn one Mystery Box per guide each day by scoring 7/10+ on a quiz or 10/12+ on a Practice Sheet.</p>`;
+  }
+}
+function priceOf(it){if(it.r==='G')return 0;return Math.round(RAR[it.r].price*(it.series.status==='past'?PAST_MULT:1))}
+function slotInfo(it){
+  if(has(it.id)){modal(`<div class="rarity ${RAR[it.r].cls}">${RAR[it.r].name}</div>${card(it,true)}<h3>${it.name}</h3><p class="bio">${it.bio}</p><p class="series-tag">${it.series.icon} ${it.series.name}</p><button class="btn" onclick="KK.close()">Close</button>`);return}
+  if(it.r==='G'){modal(`${ghost(it)}<h3>A secret Golden plushie! ✨</h3><p>Goldens can only be found in Mystery Boxes. Keep studying — maybe the next box!</p><button class="btn" onclick="KK.close()">OK</button>`);return}
+  const p=priceOf(it),can=S.points>=p;
+  const m=modal(`${ghost(it)}<div class="rarity ${RAR[it.r].cls}">${RAR[it.r].name}</div><h3>Mystery ${it.series.name} plushie</h3>
+    <p>Buy it for <b>${p} 🧶</b>?${it.series.status==='past'?' (Past Special)':''}</p>
+    ${can?'':`<p class="hint">You need ${p-S.points} more Fluff Points. Duplicates from Mystery Boxes give you points!</p>`}
+    <div class="row center"><button class="btn primary" id="kk-buy" ${can?'':'disabled'}>Buy it!</button><button class="btn" onclick="KK.close()">Not now</button></div>`);
+  m.querySelector('#kk-buy').onclick=()=>{if(S.points<p)return;S.points-=p;const res=give(it);closeModal();
+    modal(`<div class="rarity ${RAR[it.r].cls}">${RAR[it.r].name}</div>${card(it,true)}<h3>${it.name}</h3><p class="bio">${it.bio}</p><div class="newtag">✨ Added to your shelf! ✨</div>${res.ticket?`<div class="tickettag">🎟️ Series complete! You earned a GOLDEN TICKET!</div>`:''}<button class="btn" id="kk-ok">Yay! 🎉</button>`);
+    confetti();$k('#kk-ok').onclick=()=>{closeModal();renderShelf()}};
+}
+function saveStash(){
+  const code=makeCode();S.dirty=false;save();remember(code);
+  const m=modal(`<div class="boxanim still">💾</div><h3>Your stash is saved! 🎉</h3>
+    <p>Your secret code:</p><div class="kk-code">${code}</div>
+    <p>✏️ <b>Write it down somewhere safe</b> — you'll need it to get your plushies back on a new device!</p>
+    <div class="row center"><button class="btn" id="kk-copy">📋 Copy</button><button class="btn primary" id="kk-wrote">I wrote it down! ✅</button></div>`);
+  m.querySelector('#kk-copy').onclick=async()=>{try{await navigator.clipboard.writeText(code);toast('📋 Copied!')}catch(e){toast('Copy didn\'t work — please write it down!')}};
+  m.querySelector('#kk-wrote').onclick=()=>{closeModal();renderShelf()};
+}
+function loadStash(){
+  const m=modal(`<h3>📂 Load My Stash</h3><p>Type your secret code:</p><input class="pin kk-codein" placeholder="XXXX-XXXX-XXXX-…" autocapitalize="characters" autocomplete="off" spellcheck="false">
+    <p class="hint kk-err"></p><div class="row center"><button class="btn primary" id="kk-go">Load it!</button><button class="btn" onclick="KK.close()">Cancel</button></div>`);
+  m.querySelector('#kk-go').onclick=()=>{const st=readCode(m.querySelector('.kk-codein').value);
+    if(!st){m.querySelector('.kk-err').textContent='🤔 That code doesn\'t look right. Check each letter and try again!';return}
+    S.owned=st.owned;S.points=st.points;S.boxes=st.boxes;S.redeemed=st.redeemed;S.dirty=false;save();remember(makeCode());hud();closeModal();renderShelf();
+    toast(`🎉 Stash loaded! ${S.owned.length} plushies are back on your shelf!`)};
+}
+
+/* ---------- parent corner ---------- */
+const hashPin=p=>{let h=2166136261;for(const c of 'kk-salt-'+p){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0}return h.toString(36)};
+let parentOpen=false;
+function renderParent(){
+  const el=$k('#kk-parent');if(!el)return;const pin=store.get('kk_pin',null);
+  if(!pin){el.innerHTML=`<div class="kk-pbox"><h3>👋 Set up the Parent Corner</h3><p>Create a 4-digit PIN. It's saved only on this device.</p>
+      <input class="pin" id="p1" inputmode="numeric" maxlength="4" placeholder="New PIN" type="password"><input class="pin" id="p2" inputmode="numeric" maxlength="4" placeholder="Type it again" type="password">
+      <p class="hint kk-err"></p><button class="btn primary" id="pset">Save PIN</button></div>`;
+    $k('#pset').onclick=()=>{const a=$k('#p1').value,b=$k('#p2').value;if(!/^\d{4}$/.test(a)){$k('.kk-err').textContent='PIN must be 4 digits.';return}if(a!==b){$k('.kk-err').textContent='PINs don\'t match.';return}store.set('kk_pin',hashPin(a));parentOpen=true;renderParent()};return}
+  if(!parentOpen){el.innerHTML=`<div class="kk-pbox"><h3>🔒 Parent Corner</h3><input class="pin" id="pp" inputmode="numeric" maxlength="4" placeholder="Enter PIN" type="password"><p class="hint kk-err"></p><button class="btn primary" id="pgo">Unlock</button>
+      <p class="hint">Forgot the PIN? Clearing this site's data resets it (her prizes come back with her latest code).</p></div>`;
+    $k('#pgo').onclick=()=>{if(hashPin($k('#pp').value)===pin){parentOpen=true;renderParent()}else $k('.kk-err').textContent='Wrong PIN.'};return}
+  const hist=store.get('kk_codes',[]),code=makeCode();
+  el.innerHTML=`<div class="kk-pbox">
+    <h3>🔓 Parent Corner</h3>
+    <p><b>Current stash code</b> (right now, even if she hasn't saved):</p><div class="kk-code">${code}</div><button class="btn" id="pcopy">📋 Copy code</button>
+    <h3>📜 Last saved codes</h3>${hist.length?`<ol class="kk-hist">${hist.map(h=>`<li><code>${h.code}</code><small>${h.date}</small></li>`).join('')}</ol>`:'<p class="hint">No saved codes yet.</p>'}
+    <h3>🎟️ Golden Tickets</h3><p>Earned: <b>${ticketsEarned()}</b> · Redeemed: <b>${S.redeemed}</b> · Available: <b>${ticketsLeft()}</b></p>
+    <button class="btn primary" id="predeem" ${ticketsLeft()?'':'disabled'}>Redeem 1 ticket (she got her real prize!)</button>
+    <h3>📊 Today</h3><p>Guides finished: <b>${today().done.length}</b> · Badges: <b>${today().badges.length}</b> · Plushies: <b>${S.owned.length}</b> · Fluff Points: <b>${S.points}</b></p>
+    <div class="row center"><button class="btn" id="pchange">Change PIN</button><button class="btn" id="plock">🔒 Lock</button></div></div>`;
+  $k('#pcopy').onclick=async()=>{try{await navigator.clipboard.writeText(code);toast('📋 Copied!')}catch(e){toast('Select and copy the code manually.')}};
+  $k('#predeem').onclick=()=>{if(!ticketsLeft())return;S.redeemed++;S.dirty=true;save();toast('🎟️ Ticket redeemed!');renderParent()};
+  $k('#pchange').onclick=()=>{try{localStorage.removeItem('kk_pin')}catch(e){}parentOpen=false;renderParent()};
+  $k('#plock').onclick=()=>{parentOpen=false;go('home')};
+}
+
+function onShow(id){if(id==='shelf')renderShelf();if(id==='parent')renderParent();else parentOpen=false;hud();const h=$k('#kk-hud');if(h)h.style.display=(id==='shelf'||id==='parent')?'none':''}
+setTimeout(hud,0);
+return {earn,onShow,close:closeModal,renderShelf,_state:()=>S,_makeCode:makeCode,_readCode:readCode,_rollItem:rollItem,ITEMS};
 })();
 
 /* ---------- start on the page in the address (or home) ---------- */

@@ -19,3 +19,6 @@ A kid-friendly study guide website (5th grade), hosted on GitHub Pages at https:
 11. Properties of Matter (Science)
 
 New guides are built with the `makeGuide(cfg)` engine in index.html (see the 6 guides above for examples).
+
+## Prizes
+Mystery boxes, a 100-plushie Prize Shelf (special series on top), Swap Shop, daily badges, Golden Tickets, Save My Stash codes and a PIN-protected Parent Corner. Progress is saved in the browser plus the stash code.
