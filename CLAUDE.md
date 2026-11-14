@@ -19,4 +19,5 @@
 - Rotating the special (only when the user asks): add a new series with NEW ids at the end and status:'special' (20 items: 11 C, 5 R, 3 U, 1 G); change the old special to status:'past'. Past specials drop to the bottom shelf, are no longer in boxes, and can only be bought in the Swap Shop at 1.5x (Goldens never for sale).
 - Earning: one Mystery Box per guide per day for quiz >= 70% or Practice Sheet >= 10/12; daily badges (On a Roll 3, Brain Blast 5, Perfect 10, Subject Hopper = guides from 3 different subjects) give +1 box. Every guide calls KK.earn(id, 'quiz'|'practice', score, total) — new engine guides get this automatically.
 - Odds: C 60 / R 28 / U 10 / G 2; 1/3 of boxes come from the special series. Duplicates -> Fluff Points (1/3/8/20).
-- Save My Stash code encodes owned items, points, unopened boxes and redeemed tickets with a checksum. Parent Corner PIN is set on the device (hashed in localStorage) — never put a PIN in the code.
+- Save My Stash code encodes owned items, points and unopened boxes with a checksum (the last data byte is an unused legacy field, always 0 — keep it for code compatibility).
+- REMOVED at the user's request: Golden Tickets, Parent Corner and PIN. Completing a series shows a 🏆 'Series Complete' celebration and trophy instead. Don't re-add these unless asked.

@@ -273,12 +273,8 @@
   .kbadge.got{opacity:1;border:3px solid var(--ink);box-shadow:0 4px 0 #ffb400}.kbadge.got span{filter:none}
   .kk-code{font-family:ui-monospace,Menlo,monospace;font-size:20px;font-weight:800;letter-spacing:1px;background:#f6f3ff;border:2px dashed #7c5cff;border-radius:12px;padding:10px;margin:8px 0;word-break:break-all;user-select:all}
   .pin{display:block;width:100%;font:inherit;font-size:20px;padding:10px 12px;border:2px solid #cfc6dd;border-radius:12px;margin:8px 0;text-align:center}
-  .kk-pbox{max-width:560px;margin:0 auto;background:#fff;border:3px solid var(--ink);border-radius:20px;padding:16px 20px;box-shadow:0 6px 0 var(--ink)}
-  .kk-pbox h3{font-family:'Baloo 2';font-size:22px;margin:14px 0 4px}
-  .kk-hist{padding-left:20px}.kk-hist li{margin:6px 0}.kk-hist code{font-weight:800;word-break:break-all}.kk-hist small{display:block;color:var(--muted)}
   .homebtns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:center}
   .shelfbtn{font-family:'Baloo 2';font-weight:800;font-size:clamp(20px,4vw,26px);background:#fff;border:4px solid var(--ink);border-radius:22px;padding:10px 26px;cursor:pointer;box-shadow:0 8px 0 var(--ink);color:var(--ink)}
-  .parentlink{display:block;margin:30px auto 0;background:none;border:none;color:var(--muted);font:inherit;font-size:14px;cursor:pointer;text-decoration:underline}
   @media (max-width:520px){.kk-stats{grid-template-columns:repeat(2,1fr)}.kk-grid{grid-template-columns:repeat(3,1fr)}.plush{width:64px;height:64px}.plush .pe{font-size:36px}}
 
   #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
@@ -318,7 +314,6 @@
     <h2 class="toc-h">📚 Table of Contents</h2>
     <p class="toc-sub">Pick a study guide to get started!</p>
     <div id="toc" class="toc-list"></div>
-    <button class="parentlink" onclick="go('parent')">🔒 Parent Corner</button>
   </div>
 </section>
 
@@ -329,13 +324,6 @@
     <h2 class="toc-h">🧸 My Prize Shelf</h2>
     <p class="toc-sub">Earn Mystery Boxes by finishing study guides. Collect them all!</p>
     <div id="kk-shelf"></div>
-  </div>
-</section>
-<!-- ============ PARENT CORNER ============ -->
-<section id="parent" class="page">
-  <div class="wrap">
-    <div class="topbar"><div class="logo" onclick="go('home')"><span class="mini">K</span> K's Korner</div><button class="btn" onclick="go('contents')">📚 Contents</button></div>
-    <div id="kk-parent"></div>
   </div>
 </section>
 
@@ -563,7 +551,7 @@ const SUBJECT_EMOJI = {"Reading & Writing":"📖","Math":"➗","Science":"🔬",
 /* ---------- shared helpers ---------- */
 const $=s=>document.querySelector(s);
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
-const PAGES=['home','contents','shelf','parent',...GUIDES.map(g=>g.id)];
+const PAGES=['home','contents','shelf',...GUIDES.map(g=>g.id)];
 function show(id){
   if(!PAGES.includes(id)) id='home';
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===id));
@@ -1928,7 +1916,7 @@ const PRIZE_SERIES=[
 
 /* =====================================================================
    REWARDS — Mystery Boxes, Prize Shelf, Swap Shop, Session Badges,
-   Golden Tickets, Save My Stash codes and Parent Corner.
+   series-complete trophies and Save My Stash codes.
    Everything is saved in this browser (localStorage) + the stash code.
    ===================================================================== */
 const KK=(function(){
@@ -1947,8 +1935,7 @@ const save=()=>store.set('kk_state',S);
 const today=()=>{const d=new Date().toDateString();if(!S.day||S.day.date!==d)S.day={date:d,done:[],rewarded:[],badges:[],correct:0};return S.day};
 const has=id=>S.owned.includes(id);
 const seriesDone=s=>s.list.every(i=>has(i.id));
-const ticketsEarned=()=>PRIZE_SERIES.filter(seriesDone).length;
-const ticketsLeft=()=>Math.max(0,ticketsEarned()-S.redeemed);
+const seriesCompleted=()=>PRIZE_SERIES.filter(seriesDone).length;
 
 /* ---------- save codes ---------- */
 const ALPH='23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
@@ -1977,7 +1964,6 @@ function readCode(code){
   const o=1+nb;
   return {owned:owned.filter(id=>ITEMS[id]),points:(bytes[o]<<8)|bytes[o+1],boxes:bytes[o+2],redeemed:bytes[o+3]};
 }
-function remember(code){const h=store.get('kk_codes',[]);if(!h.length||h[0].code!==code){h.unshift({code,date:new Date().toLocaleString()});store.set('kk_codes',h.slice(0,5))}}
 
 /* ---------- UI helpers ---------- */
 const $k=s=>document.querySelector(s);
@@ -1997,10 +1983,10 @@ function rollItem(series){
   const r=rollRarity();const pool=series.list.filter(i=>i.r===r);return pick(pool.length?pool:series.list);
 }
 function give(it){
-  const before=ticketsEarned(),isNew=!has(it.id);
+  const before=seriesCompleted(),isNew=!has(it.id);
   if(isNew)S.owned.push(it.id);else S.points+=RAR[it.r].dup;
   S.dirty=true;save();hud();
-  return {isNew,ticket:ticketsEarned()>before};
+  return {isNew,complete:seriesCompleted()>before};
 }
 function openBox(series){
   const it=rollItem(series),res=give(it),s=it.series,got=s.list.filter(i=>has(i.id)).length;
@@ -2013,11 +1999,11 @@ function openBox(series){
       <h3>${it.name}</h3><p class="bio">${it.bio}</p>
       <p class="series-tag">${s.icon} ${s.name} · ${got}/${s.list.length}</p>
       ${res.isNew?'<div class="newtag">✨ NEW for your shelf! ✨</div>':`<div class="duptag">Duplicate! +${RAR[it.r].dup} 🧶 Fluff Points</div>`}
-      ${res.ticket?`<div class="tickettag">🎟️ You finished the whole ${s.name} series! You earned a GOLDEN TICKET! Show a grown-up! 🎉</div>`:''}
+      ${res.complete?`<div class="tickettag">🏆 SERIES COMPLETE! You collected every ${s.name} plushie! 🎉</div>`:''}
       <div class="row center">${S.boxes>0?`<button class="btn primary" id="kk-next">🎁 Open Another (${S.boxes})</button>`:''}<button class="btn" id="kk-done">${S.boxes>0?'Later':'Yay! 🎉'}</button></div>
       ${S.dirty?'<p class="hint">💾 Don\'t forget to <b>Save My Stash</b> before you go!</p>':''}`;
     delete m.dataset.lock;
-    if(res.isNew&&(it.r!=='C')||res.ticket)confetti();
+    if(res.isNew&&(it.r!=='C')||res.complete)confetti();
     const n=m.querySelector('#kk-next');if(n)n.onclick=()=>{S.boxes--;save();openBox()};
     m.querySelector('#kk-done').onclick=()=>{closeModal();if($k('#shelf.on'))renderShelf()};
   },1500);
@@ -2058,7 +2044,7 @@ function renderShelf(){
       <div><b>${S.owned.length}</b><span>of ${total} collected</span></div>
       <div><b>🎁 ${S.boxes}</b><span>boxes to open</span></div>
       <div><b>🧶 ${S.points}</b><span>Fluff Points</span></div>
-      <div><b>🎟️ ${ticketsLeft()}</b><span>Golden Tickets</span></div>
+      <div><b>🏆 ${seriesCompleted()}</b><span>series complete</span></div>
     </div>
     ${S.boxes?`<div class="center"><button class="btn primary bigbtn" id="kk-openbox">🎁 Open a Mystery Box! (${S.boxes})</button></div>`:''}
     ${S.dirty?`<div class="kk-warn">⚠️ You have new prizes! Tap <b>💾 Save My Stash</b> to get your new secret code.</div>`:''}
@@ -2075,7 +2061,7 @@ function renderShelf(){
       const got=s.list.filter(i=>has(i.id)).length,done=got===s.list.length;
       let hdr='';if(s.status==='past'&&!pastHdr){pastHdr=true;hdr='<h3 class="pasthdr">🗄️ Past Specials</h3>'}
       return `${hdr}<div class="kk-series ${s.status}" style="--sc:${s.color}">
-        <div class="kk-shead">${s.status==='special'?'<span class="ribbon">⭐ SPECIAL</span>':''}<h3>${s.icon} ${s.name}</h3><span class="cnt">${got}/${s.list.length}${done?' 🎟️':''}</span></div>
+        <div class="kk-shead">${s.status==='special'?'<span class="ribbon">⭐ SPECIAL</span>':''}<h3>${s.icon} ${s.name}</h3><span class="cnt">${got}/${s.list.length}${done?' 🏆':''}</span></div>
         <div class="kk-bar"><i style="width:${got/s.list.length*100}%"></i></div>
         <div class="kk-grid">${s.list.map(i=>`<button class="slot" data-id="${i.id}">${has(i.id)?card(i):ghost(i)}<span class="sname">${has(i.id)?i.name:'???'}</span></button>`).join('')}</div>
       </div>`}).join('')+(pastHdr?'':'<p class="hint center">🗄️ Past special series will show up down here.</p>');
@@ -2107,11 +2093,11 @@ function slotInfo(it){
     ${can?'':`<p class="hint">You need ${p-S.points} more Fluff Points. Duplicates from Mystery Boxes give you points!</p>`}
     <div class="row center"><button class="btn primary" id="kk-buy" ${can?'':'disabled'}>Buy it!</button><button class="btn" onclick="KK.close()">Not now</button></div>`);
   m.querySelector('#kk-buy').onclick=()=>{if(S.points<p)return;S.points-=p;const res=give(it);closeModal();
-    modal(`<div class="rarity ${RAR[it.r].cls}">${RAR[it.r].name}</div>${card(it,true)}<h3>${it.name}</h3><p class="bio">${it.bio}</p><div class="newtag">✨ Added to your shelf! ✨</div>${res.ticket?`<div class="tickettag">🎟️ Series complete! You earned a GOLDEN TICKET!</div>`:''}<button class="btn" id="kk-ok">Yay! 🎉</button>`);
+    modal(`<div class="rarity ${RAR[it.r].cls}">${RAR[it.r].name}</div>${card(it,true)}<h3>${it.name}</h3><p class="bio">${it.bio}</p><div class="newtag">✨ Added to your shelf! ✨</div>${res.complete?`<div class="tickettag">🏆 SERIES COMPLETE! You collected every ${it.series.name} plushie! 🎉</div>`:''}<button class="btn" id="kk-ok">Yay! 🎉</button>`);
     confetti();$k('#kk-ok').onclick=()=>{closeModal();renderShelf()}};
 }
 function saveStash(){
-  const code=makeCode();S.dirty=false;save();remember(code);
+  const code=makeCode();S.dirty=false;save();
   const m=modal(`<div class="boxanim still">💾</div><h3>Your stash is saved! 🎉</h3>
     <p>Your secret code:</p><div class="kk-code">${code}</div>
     <p>✏️ <b>Write it down somewhere safe</b> — you'll need it to get your plushies back on a new device!</p>
@@ -2124,38 +2110,11 @@ function loadStash(){
     <p class="hint kk-err"></p><div class="row center"><button class="btn primary" id="kk-go">Load it!</button><button class="btn" onclick="KK.close()">Cancel</button></div>`);
   m.querySelector('#kk-go').onclick=()=>{const st=readCode(m.querySelector('.kk-codein').value);
     if(!st){m.querySelector('.kk-err').textContent='🤔 That code doesn\'t look right. Check each letter and try again!';return}
-    S.owned=st.owned;S.points=st.points;S.boxes=st.boxes;S.redeemed=st.redeemed;S.dirty=false;save();remember(makeCode());hud();closeModal();renderShelf();
+    S.owned=st.owned;S.points=st.points;S.boxes=st.boxes;S.redeemed=st.redeemed;S.dirty=false;save();hud();closeModal();renderShelf();
     toast(`🎉 Stash loaded! ${S.owned.length} plushies are back on your shelf!`)};
 }
 
-/* ---------- parent corner ---------- */
-const hashPin=p=>{let h=2166136261;for(const c of 'kk-salt-'+p){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0}return h.toString(36)};
-let parentOpen=false;
-function renderParent(){
-  const el=$k('#kk-parent');if(!el)return;const pin=store.get('kk_pin',null);
-  if(!pin){el.innerHTML=`<div class="kk-pbox"><h3>👋 Set up the Parent Corner</h3><p>Create a 4-digit PIN. It's saved only on this device.</p>
-      <input class="pin" id="p1" inputmode="numeric" maxlength="4" placeholder="New PIN" type="password"><input class="pin" id="p2" inputmode="numeric" maxlength="4" placeholder="Type it again" type="password">
-      <p class="hint kk-err"></p><button class="btn primary" id="pset">Save PIN</button></div>`;
-    $k('#pset').onclick=()=>{const a=$k('#p1').value,b=$k('#p2').value;if(!/^\d{4}$/.test(a)){$k('.kk-err').textContent='PIN must be 4 digits.';return}if(a!==b){$k('.kk-err').textContent='PINs don\'t match.';return}store.set('kk_pin',hashPin(a));parentOpen=true;renderParent()};return}
-  if(!parentOpen){el.innerHTML=`<div class="kk-pbox"><h3>🔒 Parent Corner</h3><input class="pin" id="pp" inputmode="numeric" maxlength="4" placeholder="Enter PIN" type="password"><p class="hint kk-err"></p><button class="btn primary" id="pgo">Unlock</button>
-      <p class="hint">Forgot the PIN? Clearing this site's data resets it (her prizes come back with her latest code).</p></div>`;
-    $k('#pgo').onclick=()=>{if(hashPin($k('#pp').value)===pin){parentOpen=true;renderParent()}else $k('.kk-err').textContent='Wrong PIN.'};return}
-  const hist=store.get('kk_codes',[]),code=makeCode();
-  el.innerHTML=`<div class="kk-pbox">
-    <h3>🔓 Parent Corner</h3>
-    <p><b>Current stash code</b> (right now, even if she hasn't saved):</p><div class="kk-code">${code}</div><button class="btn" id="pcopy">📋 Copy code</button>
-    <h3>📜 Last saved codes</h3>${hist.length?`<ol class="kk-hist">${hist.map(h=>`<li><code>${h.code}</code><small>${h.date}</small></li>`).join('')}</ol>`:'<p class="hint">No saved codes yet.</p>'}
-    <h3>🎟️ Golden Tickets</h3><p>Earned: <b>${ticketsEarned()}</b> · Redeemed: <b>${S.redeemed}</b> · Available: <b>${ticketsLeft()}</b></p>
-    <button class="btn primary" id="predeem" ${ticketsLeft()?'':'disabled'}>Redeem 1 ticket (she got her real prize!)</button>
-    <h3>📊 Today</h3><p>Guides finished: <b>${today().done.length}</b> · Badges: <b>${today().badges.length}</b> · Plushies: <b>${S.owned.length}</b> · Fluff Points: <b>${S.points}</b></p>
-    <div class="row center"><button class="btn" id="pchange">Change PIN</button><button class="btn" id="plock">🔒 Lock</button></div></div>`;
-  $k('#pcopy').onclick=async()=>{try{await navigator.clipboard.writeText(code);toast('📋 Copied!')}catch(e){toast('Select and copy the code manually.')}};
-  $k('#predeem').onclick=()=>{if(!ticketsLeft())return;S.redeemed++;S.dirty=true;save();toast('🎟️ Ticket redeemed!');renderParent()};
-  $k('#pchange').onclick=()=>{try{localStorage.removeItem('kk_pin')}catch(e){}parentOpen=false;renderParent()};
-  $k('#plock').onclick=()=>{parentOpen=false;go('home')};
-}
-
-function onShow(id){if(id==='shelf')renderShelf();if(id==='parent')renderParent();else parentOpen=false;hud();const h=$k('#kk-hud');if(h)h.style.display=(id==='shelf'||id==='parent')?'none':''}
+function onShow(id){if(id==='shelf')renderShelf();hud();const h=$k('#kk-hud');if(h)h.style.display=id==='shelf'?'none':''}
 setTimeout(hud,0);
 return {earn,onShow,close:closeModal,renderShelf,_state:()=>S,_makeCode:makeCode,_readCode:readCode,_rollItem:rollItem,ITEMS};
 })();
