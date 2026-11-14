@@ -59,7 +59,7 @@
   .toc-subj li a::after{content:" ➜";color:var(--c2);opacity:0;transition:opacity .15s}
   .toc-subj li a:hover{color:var(--c2)}
   .toc-subj li a{display:flex!important;align-items:flex-start;gap:8px}
-  .toc-subj .tocb{flex:0 0 1.6em;text-align:center}
+  .toc-subj .tocb{flex:0 0 8px;width:8px;height:8px;border-radius:50%;background:#7c5cff;margin:0.6em 4px 0 6px}
   .toc-subj li a::after{flex:0 0 auto}
   .wrap{padding-bottom:90px!important}
   .toc-subj li a:hover::after{opacity:1}
@@ -573,7 +573,7 @@ $('#count').textContent = `📚 ${GUIDES.length} study guide${GUIDES.length===1?
   $('#toc').innerHTML=Object.entries(bySubject).map(([subj,list])=>`
     <div class="toc-subj">
       <h3>${SUBJECT_EMOJI[subj]||'📘'} ${subj.toUpperCase()}</h3>
-      <ul>${[...list].sort((a,b)=>a.title.replace(/^The /,'').localeCompare(b.title.replace(/^The /,''))).map(g=>`<li><a href="#${g.id}" onclick="go('${g.id}');return false;"><span class="tocb">${g.emoji}</span>${g.title}</a></li>`).join('')}</ul>
+      <ul>${[...list].sort((a,b)=>a.title.replace(/^The /,'').localeCompare(b.title.replace(/^The /,''))).map(g=>`<li><a href="#${g.id}" onclick="go('${g.id}');return false;"><span class="tocb"></span>${g.title}</a></li>`).join('')}</ul>
     </div>`).join('');
 })();
 
