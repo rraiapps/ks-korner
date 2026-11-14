@@ -5,7 +5,7 @@
 - Pages: `#home` → `#contents` → one `<section id="guide-id" class="page g-xxx">` per guide.
 - Adding a guide:
   1. Add its `<section class="page guide g-xxx">` (with the topbar: logo → home, "📚 Contents" button). Shared look comes from `.guide` styles (tabs, learn cards, flashcards, quiz, match); put only guide-specific colors/CSS under `.g-xxx`. Prefix element ids (e.g. `ss1-`) and put its JS in its own IIFE.
-  2. Add an entry to the `GUIDES` array (id, subject, emoji, color, title, desc). TOC (simple list: SUBJECT heading, then topic links sorted A–Z (ignoring a leading "The"), each with a simple purple dot bullet — user found emoji bullets distracting) + homepage count build from it. Name each guide after its topic only (no "Unit 1" etc.).
+  2. Add an entry to the `GUIDES` array (id, subject, emoji, color, title, desc). TOC (subjects A–Z; simple list: SUBJECT heading, then topic links sorted A–Z (ignoring a leading "The"), each with a simple purple dot bullet — user found emoji bullets distracting) + homepage count build from it. Name each guide after its topic only (no "Unit 1" etc.).
   3. Update the Guides list in README.md.
   4. Test in headless Chromium (no page errors; enter → contents → guide → back), then commit and push to `main`.
 - Guides so far: `figurative-language`, `early-americans` (Social Studies), `three-branches` (Social Studies), `decimal-forms` (Math), `appositives`, `sentence-combining` (Reading & Writing), `multiplication`, `comparing-decimals`, `decimals-fractions` (Math), `matter`, `properties-of-matter` (Science).

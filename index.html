@@ -570,7 +570,7 @@ $('#count').textContent = `📚 ${GUIDES.length} study guide${GUIDES.length===1?
 (function buildTOC(){
   const bySubject={};
   GUIDES.forEach(g=>(bySubject[g.subject]=bySubject[g.subject]||[]).push(g));
-  $('#toc').innerHTML=Object.entries(bySubject).map(([subj,list])=>`
+  $('#toc').innerHTML=Object.entries(bySubject).sort((a,b)=>a[0].localeCompare(b[0])).map(([subj,list])=>`
     <div class="toc-subj">
       <h3>${SUBJECT_EMOJI[subj]||'📘'} ${subj.toUpperCase()}</h3>
       <ul>${[...list].sort((a,b)=>a.title.replace(/^The /,'').localeCompare(b.title.replace(/^The /,''))).map(g=>`<li><a href="#${g.id}" onclick="go('${g.id}');return false;"><span class="tocb"></span>${g.title}</a></li>`).join('')}</ul>
