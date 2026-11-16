@@ -547,6 +547,8 @@ const GUIDES = [
   { id:"multiplication", subject:"Math", emoji:"✖️", color:"var(--c1)", title:"Multiplication Facts", desc:"" },
   { id:"comparing-decimals", subject:"Math", emoji:"🐊", color:"var(--c6)", title:"Comparing Decimals", desc:"" },
   { id:"decimals-fractions", subject:"Math", emoji:"🍕", color:"var(--c3)", title:"Decimals and Fractions", desc:"" },
+  { id:"powers-of-10", subject:"Math", emoji:"🚀", color:"var(--c2)", title:"Powers of 10", desc:"" },
+  { id:"rounding-decimals", subject:"Math", emoji:"🎯", color:"var(--c1)", title:"Rounding Decimals", desc:"" },
   { id:"matter", subject:"Science", emoji:"🧪", color:"var(--c3)", title:"Matter", desc:"" },
   { id:"properties-of-matter", subject:"Science", emoji:"⚡", color:"var(--c2)", title:"Properties of Matter", desc:"" },
 ];
@@ -1613,14 +1615,37 @@ makeGuide({id:"multiplication",prefix:"mul",color:"#ff7a59",h1:`Multiplication <
 })();
 
 /* =====================================================================
-   GUIDE: COMPARING DECIMALS (Math) — tenths & hundredths, <, >, =
-   Values are kept as whole hundredths (integers) so comparisons are exact.
+   GUIDE: COMPARING DECIMALS (Math) — tenths, hundredths & thousandths, <, >, =, ordering
+   Levels 1–3 keep values as whole hundredths; level 4 as whole thousandths (integers) so comparisons are exact.
    ===================================================================== */
 (function(){
 const pad2=n=>String(n).padStart(2,'0');
 function fmt(h,len){const w=Math.floor(h/100),r=h%100;return len===1?`${w}.${r/10}`:`${w}.${pad2(r)}`}
 const sym=(a,b)=>a<b?'<':a>b?'>':'=';
-function pair(L){for(let g=0;g<50;g++){const p=pair0(L);if(!/\.0+$/.test(p.A)&&!/\.0+$/.test(p.B))return p}return pair0('1')}
+const decs=x=>(x.split('.')[1]||'').length;
+const padTo=(x,n)=>{const [w,f='']=x.split('.');return `${w}.${f.padEnd(n,'0')}`};
+function fmtT(v,minDec){const w=Math.floor(v/1000);let f=String(v%1000).padStart(3,'0').replace(/0+$/,'');if(minDec&&f.length<minDec)f=f.padEnd(minDec,'0');return `${String(w).replace(/\B(?=(\d{3})+(?!\d))/g,',')}.${f}`}
+function pair4(){
+  const w=pick([0,rnd(1,9),rnd(10,99),rnd(100,999)]),k=rnd(1,5);let fa,fb,A,B;
+  const nz=()=>rnd(1,9);
+  if(k===1){fa=rnd(1,999);fb=fa}
+  else if(k===2){const x=nz(),y=nz();fa=x*10+y;fb=x*100+y}            // 0.064 vs 0.604
+  else if(k===3){const t=nz(),u=nz();fa=t*100+u;fb=t*100+u*10}        // 3.108 vs 3.18
+  else if(k===4){fa=rnd(1,999);fb=Math.min(999,Math.max(1,fa+pick([-9,-5,-2,-1,1,2,5,9])))}
+  else {const t=nz(),h=rnd(0,9);fa=t*100;fb=h*100+rnd(10,99)}          // 41.9 vs 41.39
+  let a=w*1000+fa,b=w*1000+fb;A=fmtT(a);B=k===1?fmtT(b,Math.min(4,decs(fmtT(b))+rnd(1,2))):fmtT(b);
+  if(k===1&&B.length>12)B=fmtT(b);
+  if(Math.random()<.5)[a,b,A,B]=[b,a,B,A];
+  return {a,b,A,B,s:sym(a,b)};
+}
+function sameWholeList(L){
+  const w=rnd(0,15),t=rnd(1,9);let u;do{u=rnd(1,9)}while(u===t);
+  const pool=L==='4'?[t*100,t*10,t,t*100+u*10,t*10+u,t*100+u,u*100,t*100+u*10+rnd(1,9)]:[t*100,t*10,t*100+u*10,u*100,u*10,t*100+10*rnd(1,9),u*100+t*10];
+  const seen=new Set(),list=[];for(const f of shuffle(pool)){if(f<=0||f>=1000||seen.has(f))continue;seen.add(f);list.push(f);if(list.length===4)break}
+  // values in thousandths for L4, convert to hundredths scale for L3 so all levels compare the same way
+  return list.map(f=>{const v=w*1000+f;return [L==='4'?v:Math.round(v/10),fmtT(v)]});
+}
+function pair(L){if(L==='4')return pair4();for(let g=0;g<50;g++){const p=pair0(L);if(!/\.0+$/.test(p.A)&&!/\.0+$/.test(p.B))return p}return pair0('1')}
 function pair0(L){
   let a,b,la,lb;
   if(L==='1'){ // both hundredths
@@ -1639,29 +1664,37 @@ function pair0(L){
   if(Math.random()<.5)[a,b,la,lb]=[b,a,lb,la];
   return {a,b,A:fmt(a,la),B:fmt(b,lb),s:sym(a,b)};
 }
-const explain=p=>`Add zeros so they line up: ${fmt(p.a,2)} ${p.s} ${fmt(p.b,2)}.`;
+const explain=p=>{const n=Math.max(decs(p.A),decs(p.B),2);return `Add zeros so they line up: ${padTo(p.A,n)} ${p.s} ${padTo(p.B,n)}.`};
+const lineUp=list=>{const n=Math.max(2,...list.map(decs));return list.map(x=>padTo(x,n)).join(', ')};
 const T=[
  {n:"Line Up the Decimal Points",e:"📐",c:"#2d9cdb",facts:[`Write the numbers ${KW("on top of each other")} with the decimal points lined up.`,`Then compare ${KW("place by place")}, starting from the left.`],t:"Line up the dots first!"},
  {n:"Add a Zero",e:"0️⃣",c:"#1fb58f",facts:[`A zero at the ${KW("end")} of a decimal doesn't change its value.`,`0.4 = ${KW("0.40")} (4 tenths = 40 hundredths)`,`Add a zero so both numbers have the ${KW("same number of digits")}. Then compare like whole numbers: 0.40 vs 0.39 → 40 > 39.`],t:"0.4 and 0.40 are the same!"},
  {n:"Tenths First",e:"🥇",c:"#7c5cff",facts:[`The ${KW("tenths")} place is worth more than the hundredths place.`,`Compare the tenths digits first. If they're the same, compare the ${KW("hundredths")}.`,`0.72 vs 0.73 → tenths are both 7, hundredths 2 < 3, so ${KW("0.72 < 0.73")}.`],t:"Tenths beat hundredths!"},
  {n:"The Symbols",e:"🐊",c:"#ff7a59",facts:[`${KW("<")} means “is less than.” ${KW(">")} means “is greater than.” ${KW("=")} means “is equal to.”`,`The open mouth ${KW("eats the bigger number")}: 0.9 > 0.29`],t:"The alligator eats the bigger number!"},
  {n:"Longer Isn't Bigger",e:"⚠️",c:"#ff4f8b",facts:[`More digits does ${KW("NOT")} mean a bigger number.`,`0.29 vs 0.9 → think 0.29 vs ${KW("0.90")}. 29 < 90, so ${KW("0.29 < 0.9")}.`,`0.7 is greater than 0.07: 70 hundredths vs 7 hundredths.`],t:"Add the zero before you decide!"},
+ {n:"Thousandths Too",e:"🔬",c:"#9b59b6",facts:[`The ${KW("thousandths")} place is the third place after the decimal point.`,`3.108 vs 3.18 → add a zero: 3.108 vs ${KW("3.180")}. 108 < 180, so ${KW("3.108 < 3.18")}.`,`273.064 vs 273.604 → the ${KW("tenths")} are different first (0 vs 6), so ${KW("273.064 < 273.604")}.`],t:"Find the FIRST place where the digits are different!"},
+ {n:"Extra Zeros Don't Count",e:"🟰",c:"#1fb58f",facts:[`Zeros at the ${KW("end")} of a decimal never change its value.`,`${KW("0.600 = 0.6")} — 600 thousandths is the same as 6 tenths!`,`${KW("0.007 = 0.0070")} and 4.090 = 4.09`,`But a zero in the ${KW("middle")} matters: 0.070 is NOT the same as 0.007.`],t:"End zeros don't count — middle zeros do!"},
+ {n:"Putting in Order",e:"🪜",c:"#ff7a59",facts:[`${KW("Line up")} the decimal points and ${KW("add zeros")} so every number has the same number of digits.`,`7.08, 7.8, 7.008, 7.081, 7.18 → 7.080, 7.800, 7.008, 7.081, 7.180`,`Least to greatest: ${KW("7.008 < 7.08 < 7.081 < 7.18 < 7.8")}`,`The ${KW("heaviest")} is the greatest number. The ${KW("lightest")} is the least.`],t:"Line up, add zeros, then compare!"},
  {n:"Think Money",e:"💵",c:"#d4a017",facts:[`Decimals are like ${KW("dollars and cents")}.`,`0.4 = ${KW("40 cents")} and 0.39 = ${KW("39 cents")} → 0.4 > 0.39.`,`0.10 = 10 cents and 0.01 = 1 cent → 0.10 > 0.01.`],t:"Would you rather have the money? That's the bigger one!"}
 ];
-const V=[["Decimal","A number with a decimal point, like 0.45."],["Tenths","The first place after the decimal point (0.1)."],["Hundredths","The second place after the decimal point (0.01)."],["Less than ( < )","The first number is smaller."],["Greater than ( > )","The first number is bigger."],["Equal to ( = )","Both numbers have the same value."],["Equivalent","Worth the same amount, like 0.4 and 0.40."]];
+const V=[["Decimal","A number with a decimal point, like 0.45."],["Tenths","The first place after the decimal point (0.1)."],["Hundredths","The second place after the decimal point (0.01)."],["Less than ( < )","The first number is smaller."],["Greater than ( > )","The first number is bigger."],["Equal to ( = )","Both numbers have the same value."],["Equivalent","Worth the same amount, like 0.4 and 0.40."],["Thousandths","The third place after the decimal point (0.001)."],["Least to greatest","Smallest number first, biggest number last."]];
 const WORDS=['zero','one','two','three','four','five','six','seven','eight','nine'];
-makeGuide({id:"comparing-decimals",prefix:"cmp",color:"#2d9cdb",h1:`Comparing <span style="color:#2d9cdb">Decimals</span> 🐊`,sub:"Tenths and hundredths — which is bigger? Use <, > or =.",
+makeGuide({id:"comparing-decimals",prefix:"cmp",color:"#2d9cdb",h1:`Comparing <span style="color:#2d9cdb">Decimals</span> 🐊`,sub:"Tenths, hundredths and thousandths — which is bigger? Use <, > or = and put numbers in order.",
   intro:"Read the cards, then try the <b>Practice Sheet</b> — it's just like your homework, with new problems every time! 🚀",
   cards:T,vocab:V,
-  levels:[['1','⭐ Hundredths','like 0.27 vs 0.72'],['2','⭐⭐ Tenths vs Hundredths','like 0.4 vs 0.39'],['3','⭐⭐⭐ With Whole Numbers','like 2.5 vs 2.49']],
+  levels:[['1','⭐ Hundredths','like 0.27 vs 0.72'],['2','⭐⭐ Tenths vs Hundredths','like 0.4 vs 0.39'],['3','⭐⭐⭐ With Whole Numbers','like 2.5 vs 2.49'],['4','⭐⭐⭐⭐ Thousandths','like 3.108 vs 3.18']],
   practice:{tip:"✏️ Tap the symbol that makes each statement true: <b>&lt;</b> less than, <b>&gt;</b> greater than, <b>=</b> equal to.",
     rows:L=>Array.from({length:12},()=>{const p=pair(L);
       return {q:`<span class="bigq">${p.A} <span class="circ">?</span> ${p.B}</span>`,kind:'choice',choices:['<','>','='],check:v=>v===p.s,answer:`${p.A} ${p.s} ${p.B}`,why:explain(p)}})},
   flash:L=>Array.from({length:12},()=>{const p=pair(L);return {tag:'🐊 < , > or = ?',q:`<span class="bigq">${p.A} <span class="circ">?</span> ${p.B}</span>`,a:p.s,x:explain(p)}}),
   quiz:L=>Array.from({length:10},(_,i)=>{
-    if(i%4===3){const vals=new Set();const list=[];let g=0;while(list.length<4&&g++<100){const p=pair(L);for(const [h,s] of [[p.a,p.A],[p.b,p.B]])if(!vals.has(h)&&list.length<4){vals.add(h);list.push([h,s])}}
+    if(i%4===3){let list=[];if(L==='3'||L==='4')list=sameWholeList(L);else{const vals=new Set();let g=0;while(list.length<4&&g++<100){const p=pair(L);for(const [h,s] of [[p.a,p.A],[p.b,p.B]])if(!vals.has(h)&&list.length<4){vals.add(h);list.push([h,s])}}}
       const best=list.reduce((m,x)=>x[0]>m[0]?x:m);const o=shuffle(list.map(x=>x[1]));
-      return {p:'Which number is the <b>greatest</b>?',opts:o,ans:o.indexOf(best[1]),why:`Line them up with zeros: ${list.map(x=>fmt(x[0],2)).join(', ')}.`}}
+      return {p:'Which number is the <b>greatest</b>?',opts:o,ans:o.indexOf(best[1]),why:`Line them up with zeros: ${lineUp(list.map(x=>x[1]))}.`}}
+    if(i%4===1&&(L==='3'||L==='4')){const list=sameWholeList(L);
+      const sorted=[...list].sort((x,y)=>x[0]-y[0]).map(x=>x[1]),cands=[sorted,[...sorted].reverse(),[...list].sort((x,y)=>x[1].length-y[1].length||x[0]-y[0]).map(x=>x[1]),[sorted[1],sorted[0],...sorted.slice(2)],[sorted[0],sorted[2],sorted[1],sorted[3]],[...list].sort((x,y)=>x[1].localeCompare(y[1])).map(x=>x[1])];
+      const seen=new Set(),opts=[];for(const c of cands){const t=c.join(', ');if(!seen.has(t)){seen.add(t);opts.push(t)}if(opts.length===4)break}
+      const o=shuffle(opts);return {p:'Which list is in order from <b>least to greatest</b>?',opts:o,ans:o.indexOf(sorted.join(', ')),why:`Line them up with zeros: ${lineUp(sorted)}.`}}
     const p=pair(L),o=['<','>','='];return {p:`Which symbol makes it true?<br><span class="bigq">${p.A} <span class="circ">?</span> ${p.B}</span>`,opts:o,ans:o.indexOf(p.s),why:explain(p)}}),
   match:()=>{const used=new Set(),out=[];while(out.length<6){const t=rnd(1,9),h=Math.random()<.5?t*10:rnd(1,99);if(used.has(h))continue;used.add(h);
       out.push(h%10===0?[`0.${h/10}`,`${h} hundredths`]:[`0.${pad2(h)}`,`${h} hundredth${h===1?'':'s'}`])}return out},
@@ -1801,6 +1834,152 @@ const M=[["Conductivity","how easily heat or electricity flows"],["Reflectivity"
 makeGuide({id:"properties-of-matter",prefix:"pom",color:"#9b59b6",h1:`Properties of <span style="color:#9b59b6">Matter</span> ⚡`,sub:"Conductors, magnets, dissolving, mixtures, solutions and evaporation!",
   cards:T,vocab:V,flash:()=>staticFlash(F,T),quiz,
   match:()=>shuffle(M).slice(0,6),matchPrompt:"Tap a science word, then tap what matches it!",superstar:"WOW! Properties pro! 🏆"});
+})();
+
+/* =====================================================================
+   Shared exact-decimal helpers (numbers as strings — no rounding errors)
+   ===================================================================== */
+const DEC={
+  norm(x){x=String(x).replace(/[\s,]/g,'');if(x.startsWith('.'))x='0'+x;if(!/^\d+(\.\d+)?$/.test(x))return null;let [w,f='']=x.split('.');w=w.replace(/^0+(?=\d)/,'');f=f.replace(/0+$/,'');return f?w+'.'+f:w},
+  shift(x,k){ // x × 10^k (k may be negative)
+    let [w,f='']=DEC.norm(x).split('.');let digits=w+f,pt=w.length+k;
+    if(pt<=0){digits='0'.repeat(1-pt)+digits;pt=1}
+    if(pt>digits.length)digits=digits+'0'.repeat(pt-digits.length);
+    const fr=digits.slice(pt);return DEC.norm(digits.slice(0,pt)+(fr?'.'+fr:''));
+  },
+  show(x){const n=DEC.norm(x);const [w,f]=n.split('.');return w.replace(/\B(?=(\d{3})+(?!\d))/g,',')+(f?'.'+f:'')},
+  eq(a,b){const x=DEC.norm(a),y=DEC.norm(b);return x!==null&&x===y}
+};
+const POW=k=>`10<sup>${k}</sup>`;
+
+/* =====================================================================
+   GUIDE: POWERS OF 10 (Math) — ×10 / ÷10, exponents, place value patterns
+   ===================================================================== */
+(function(){
+// a "nice" decimal with 1–2 nonzero digits, like 0.07, 0.4, 0.35, 7.5
+function nice(L){
+  const d=String(rnd(1,9)),two=Math.random()<.4?d+String(rnd(1,9)):d;
+  const k=L==='1'?rnd(-3,1):rnd(-3,0);
+  return DEC.shift(two,k-(two.length-1));
+}
+const POWNAME=['1','10','100','1,000','10,000','100,000','1,000,000'];
+function fact(L){ // returns {q, a, why, kind}
+  if(L==='1'){
+    const x=nice('1'),t=rnd(1,4);
+    if(t===1)return {q:`${DEC.show(x)} × 10 = ?`,a:DEC.shift(x,1),why:'× 10 moves every digit one place to the LEFT (10 times bigger).'};
+    if(t===2)return {q:`${DEC.show(x)} ÷ 10 = ?`,a:DEC.shift(x,-1),why:'÷ 10 moves every digit one place to the RIGHT (one tenth as big).'};
+    if(t===3)return {q:`? × 10 = ${DEC.show(DEC.shift(x,1))}`,a:x,why:`${DEC.show(x)} × 10 = ${DEC.show(DEC.shift(x,1))}`};
+    return {q:`${DEC.show(x)} × 100 = ?`,a:DEC.shift(x,2),why:'× 100 moves every digit two places to the left.'};
+  }
+  if(L==='2'){
+    const t=rnd(1,4),k=rnd(1,6);
+    if(t===1)return {q:`${POWNAME[k]} = 10<sup>☐</sup>`,a:String(k),exp:true,why:`${POWNAME[k]} has ${k} zero${k>1?'s':''}, so it's ${POW(k)}.`};
+    if(t===2)return {q:`${POW(k)} = ?`,a:POWNAME[k].replace(/,/g,''),why:`${POW(k)} means ${k} tens multiplied: ${Array(k).fill(10).join(' × ')}.`};
+    const x=nice('2'),kk=rnd(1,4),y=DEC.shift(x,kk);
+    if(t===3)return {q:`${DEC.show(x)} × ${POW(kk)} = ?`,a:y,why:`${POW(kk)} moves each digit ${kk} place${kk>1?'s':''} to the left.`};
+    return {q:`${DEC.show(x)} × 10<sup>☐</sup> = ${DEC.show(y)}`,a:String(kk),exp:true,why:`The digits moved ${kk} place${kk>1?'s':''} to the left, so it's ${POW(kk)}.`};
+  }
+  // L3: mixed, including division and "how many times"
+  const t=rnd(1,4),x=nice('2'),kk=rnd(1,3);
+  if(t===1){const big=DEC.shift(x,kk);return {q:`${DEC.show(big)} ÷ ${POW(kk)} = ?`,a:x,why:`÷ ${POW(kk)} moves each digit ${kk} place${kk>1?'s':''} to the right.`}}
+  if(t===2){const y=DEC.shift(x,1);return {q:`${DEC.show(y)} is how many times as much as ${DEC.show(x)}?`,a:'10',why:`${DEC.show(x)} × 10 = ${DEC.show(y)}`}}
+  if(t===3){const y=DEC.shift(x,-1);return {q:`${DEC.show(x)} × ${POWNAME[kk]} = ?`,a:DEC.shift(x,kk),why:`× ${POWNAME[kk]} moves each digit ${kk} place${kk>1?'s':''} to the left.`}}
+  return {q:`? × 10 = ${DEC.show(x)}`,a:DEC.shift(x,-1),why:`${DEC.show(DEC.shift(x,-1))} × 10 = ${DEC.show(x)}`};
+}
+// "digit worth one tenth" question, like the unit test
+function tenthQ(){
+  let digs;do{digs=Array.from({length:5},()=>rnd(1,9))}while(new Set(digs).size<5);
+  const show=a=>`${a[0]}${a[1]}${a[2]}.${a[3]}${a[4]}`;
+  const p=rnd(1,3),d=digs[p];                 // digit in tens/ones/tenths spot (index 1..3)
+  const moved=to=>{const a=[...digs];[a[p],a[to]]=[a[to],a[p]];return show(a)};
+  const correct=moved(p+1),opts=[correct];
+  for(const to of [p-1,p+2,p-2,p+3,0,4])if(to>=0&&to<=4&&to!==p&&to!==p+1&&opts.length<4){const o=moved(to);if(!opts.includes(o))opts.push(o)}
+  const place=['hundreds','tens','ones','tenths','hundredths'];
+  return {p:`In which number does the digit <b>${d}</b> have <b>one tenth</b> the value it has in <b>${show(digs)}</b>?`,opts:shuffle(opts),ans:null,correct,why:`In ${show(digs)} the ${d} is in the ${place[p]} place. One tenth of that is the ${place[p+1]} place → ${correct}.`};
+}
+const T=[
+ {n:"Place Value Pattern",e:"🔁",c:"#2d9cdb",facts:[`Each place is worth ${KW("10 times")} the place to its right.`,`Each place is worth ${KW("one tenth")} of the place to its left.`,`1 → 0.1 → 0.01 → 0.001 (each is one tenth of the one before)`],t:"Move left = 10 times bigger. Move right = one tenth!"},
+ {n:"× 10 and ÷ 10",e:"↔️",c:"#1fb58f",facts:[`${KW("× 10")}: every digit moves ${KW("one place left")}. 0.07 × 10 = ${KW("0.7")}`,`${KW("÷ 10")}: every digit moves ${KW("one place right")}. 0.7 ÷ 10 = ${KW("0.07")}`,`A 0.2 kg ball is ${KW("10 times")} as heavy as a 0.02 kg ball.`],t:"× 10 = left, ÷ 10 = right!"},
+ {n:"Exponents",e:"🚀",c:"#7c5cff",facts:[`An ${KW("exponent")} tells how many 10s are multiplied.`,`10<sup>2</sup> = 10 × 10 = ${KW("100")}  ·  10<sup>3</sup> = ${KW("1,000")}`,`The exponent matches the ${KW("number of zeros")}: 10,000 = ${KW("10<sup>4</sup>")} and 100,000 = 10<sup>5</sup>`],t:"Exponent = number of zeros!"},
+ {n:"Multiplying by Powers of 10",e:"✖️",c:"#ff7a59",facts:[`Each power of 10 moves the digits ${KW("one more place left")}.`,`0.4 × 10<sup>3</sup> = ${KW("400")} (3 places)`,`0.009 × 10<sup>4</sup> = ${KW("90")}  ·  0.35 × 10<sup>2</sup> = ${KW("35")}`],t:"Count the exponent, move that many places!"},
+ {n:"The “Just Add Zeros” Trap",e:"⚠️",c:"#ff4f8b",facts:[`For ${KW("whole numbers")}, adding zeros works: 5 × 10<sup>3</sup> = 5,000.`,`For ${KW("decimals")} it does NOT: 0.5 × 10<sup>3</sup> is ${KW("500")}, not 0.5000!`,`0.47 × 1,000 = ${KW("470")}. Think “move the digits,” not “add zeros.”`],t:"Move the digits — don't just add zeros!"},
+ {n:"Dividing by Powers of 10",e:"➗",c:"#d4a017",facts:[`Dividing moves the digits to the ${KW("right")}.`,`45 ÷ 10<sup>2</sup> = ${KW("0.45")}  ·  8 ÷ 1,000 = ${KW("0.008")}`],t:"÷ moves digits right!"},
+ {n:"A Digit Worth One Tenth",e:"🔍",c:"#9b59b6",facts:[`In 358.26, the 8 is in the ${KW("ones")} place (worth 8).`,`One tenth of that is the ${KW("tenths")} place (worth 0.8).`,`So 325.${KW("8")}6 has an 8 worth one tenth as much!`],t:"One tenth = one place to the right!"}
+];
+const V=[["Power of 10","A number like 10, 100, 1,000 made by multiplying 10s."],["Exponent","The small raised number that tells how many 10s are multiplied."],["10 times as much","One place to the left in place value."],["One tenth of","One place to the right in place value."],["Place value","How much a digit is worth because of where it sits."]];
+const LV=[['1','⭐ × 10 and ÷ 10','like 0.07 × 10'],['2','⭐⭐ Exponents','like 0.4 × 10²'],['3','⭐⭐⭐ Mix It Up','÷ and “how many times”']];
+makeGuide({id:"powers-of-10",prefix:"p10",color:"#7c5cff",h1:`Powers of <span style="color:#7c5cff">10</span> 🚀`,sub:"Multiply and divide by 10, 100, 1,000 — and what exponents mean.",
+  intro:"Read the cards, then try the <b>Practice Sheet</b>. Pick a level up top — new problems every time! 🚀",
+  cards:T,vocab:V,levels:LV,
+  practice:{tip:"✏️ Type each answer, then tap <b>Check My Answers</b>. When you see 10<sup>☐</sup>, type just the <b>exponent</b> (the small number).",
+    rows:L=>Array.from({length:12},()=>{const f=fact(L);return {q:`<span class="bigq">${f.q}</span>`,inputmode:'decimal',placeholder:f.exp?'Exponent':'Answer',check:v=>f.exp?v.replace(/\s/g,'')===f.a:DEC.eq(v,f.a),answer:f.exp?POW(f.a):DEC.show(f.a),why:f.why}})},
+  flash:L=>Array.from({length:12},()=>{const f=fact(L);return {tag:'🚀 Powers of 10',q:`<span class="bigq">${f.q}</span>`,a:f.exp?POW(f.a):DEC.show(f.a),x:f.why}}),
+  quiz:L=>Array.from({length:10},(_,i)=>{
+    if(i===9){const q=tenthQ();return {p:q.p,opts:q.opts,ans:q.opts.indexOf(q.correct),why:q.why}}
+    if(i===8){const x=nice('2'),y=DEC.shift(x,1),o=shuffle([`${DEC.show(x)} × 10 = ${DEC.show(y)}`,`${DEC.show(x)} × 100 = ${DEC.show(y)}`,`${DEC.show(y)} × 10 = ${DEC.show(x)}`,`${DEC.show(y)} ÷ 100 = ${DEC.show(x)}`]);
+      return {p:`A model shows ${DEC.show(x)} and ${DEC.show(y)}. Which equation is true?`,opts:o,ans:o.indexOf(`${DEC.show(x)} × 10 = ${DEC.show(y)}`),why:`${DEC.show(y)} is 10 times ${DEC.show(x)}.`}}
+    if(i===7){const k=rnd(3,6),o=shuffle([3,4,5,6].map(POW));return {p:`What is ${POWNAME[k]} written as a power of 10?`,opts:o,ans:o.indexOf(POW(k)),why:`${POWNAME[k]} has ${k} zeros.`}}
+    if(i===6){const x=DEC.shift(String(rnd(1,9)),-1),k=rnd(2,3),right=DEC.show(DEC.shift(x,k)),trap=x+'0'.repeat(k);
+      const o=shuffle([right,trap,DEC.show(DEC.shift(x,k-1)),DEC.show(DEC.shift(x,k+1))]);return {p:`What is ${DEC.show(x)} × ${POW(k)}?`,opts:o,ans:o.indexOf(right),why:`Move the digits ${k} places left — don't just add zeros! (${trap} is the same as ${DEC.show(x)})`}}
+    const f=fact(L);if(f.exp){const o=shuffle([1,2,3,4,5,6].filter(n=>String(n)!==f.a).slice(0,3).concat(+f.a).map(POW));return {p:f.q.replace('10<sup>☐</sup>','10<sup>?</sup>'),opts:o,ans:o.indexOf(POW(f.a)),why:f.why}}
+    const a=DEC.show(f.a),cand=[a,DEC.show(DEC.shift(f.a,1)),DEC.show(DEC.shift(f.a,-1)),DEC.show(DEC.shift(f.a,2)),DEC.show(DEC.shift(f.a,-2))];
+    const o=shuffle([...new Set(cand)].slice(0,4));return {p:`<span class="bigq">${f.q}</span>`,opts:o,ans:o.indexOf(a),why:f.why}}),
+  match:()=>shuffle([1,2,3,4,5,6]).slice(0,6).map(k=>[POW(k),POWNAME[k]]),
+  matchPrompt:"Tap a power of 10, then tap the number it equals!",superstar:"WOW! Power of 10 pro! 🏆"});
+})();
+
+/* =====================================================================
+   GUIDE: ROUNDING DECIMALS (Math) — nearest whole, tenth, hundredth
+   Values kept as whole thousandths (integers).
+   ===================================================================== */
+(function(){
+const PL={'1':['whole number',1000,0],'2':['tenth',100,1],'3':['hundredth',10,2]};
+const fmt=(v,dec)=>{const w=Math.floor(v/1000),r=String(v%1000).padStart(3,'0');return dec?`${w}.${r.slice(0,dec)}`:`${w}`};
+const show3=v=>{const w=Math.floor(v/1000);let f=String(v%1000).padStart(3,'0');return `${w}.${f}`};
+function roundV(v,u){return Math.floor((v+u/2)/u)*u}
+function num(L,tricky){
+  let w=rnd(0,20),f=rnd(1,999);
+  if(tricky){const u=PL[L][1];f=Math.floor(f/u)*u+u-rnd(1,Math.min(u-1,u/2+3)) ; if(f>=1000)f=999}
+  if(L==='1'&&Math.random()<.4)f=rnd(450,550);            // near the halfway point
+  if(L==='2'&&Math.random()<.4)f=rnd(0,9)*100+rnd(40,60); // like 4.48, 4.514
+  if(L==='3'&&Math.random()<.4)f=rnd(0,99)*10+rnd(3,7);
+  if(f<=0)f=rnd(1,999);
+  return w*1000+f;
+}
+function problem(L){
+  const lv=L==='4'?pick(['1','2','3']):L,[name,u,dec]=PL[lv];
+  const v=num(lv,L==='4'&&Math.random()<.5),r=roundV(v,u),look=['tenths','hundredths','thousandths'][dec];
+  const digit=Math.floor((v%u)/(u/10));
+  return {v,r,name,dec,u,lv,V:show3(v).replace(/0+$/,'').replace(/\.$/,''),R:fmt(r,dec),why:`Look at the ${look} digit: ${digit}. ${digit>=5?'5 or more → round UP.':'4 or less → stay the same.'}`};
+}
+const T=[
+ {n:"What Is Rounding?",e:"🎯",c:"#2d9cdb",facts:[`${KW("Rounding")} means finding a ${KW("nearby, simpler")} number.`,`8.723 pounds is about ${KW("9")} pounds.`,`We round to a ${KW("place")}: the nearest whole number, tenth or hundredth.`],t:"Rounding = a friendly nearby number!"},
+ {n:"Look Next Door",e:"🚪",c:"#1fb58f",facts:[`1. Find the place you're rounding to.`,`2. Look at the digit ${KW("one place to the right")} (next door).`,`3. ${KW("5 or more")} → round ${KW("up")}. ${KW("4 or less")} → ${KW("stay the same")}.`,`4. Drop all the digits after your place.`],t:"5 or more, raise the score. 4 or less, let it rest!"},
+ {n:"Nearest Whole Number",e:"1️⃣",c:"#ff7a59",facts:[`Look at the ${KW("tenths")} digit.`,`8.501 → tenths digit is 5 → ${KW("9")}`,`8.099 → tenths digit is 0 → ${KW("8")}`,`9.429 → tenths digit is 4 → ${KW("9")}`],t:"Whole number? Check the tenths!"},
+ {n:"Nearest Tenth",e:"🔟",c:"#7c5cff",facts:[`Look at the ${KW("hundredths")} digit.`,`4.514 → hundredths digit is 1 → ${KW("4.5")}`,`4.575 → hundredths digit is 7 → ${KW("4.6")}`,`4.48 → hundredths digit is 8 → ${KW("4.5")}`],t:"Tenth? Check the hundredths!"},
+ {n:"Nearest Hundredth",e:"💯",c:"#ff4f8b",facts:[`Look at the ${KW("thousandths")} digit.`,`5.468 → thousandths digit is 8 → ${KW("5.47")}`,`4.547 → thousandths digit is 7 → ${KW("4.55")}`],t:"Hundredth? Check the thousandths!"},
+ {n:"Tricky Ones",e:"🤯",c:"#d4a017",facts:[`Sometimes rounding up makes a ${KW("chain")}: 12.950 to the nearest tenth → ${KW("13.0")}`,`0.049 to the nearest hundredth → ${KW("0.05")}`,`6.995 to the nearest whole number → ${KW("7")}`],t:"When a 9 rounds up, it carries over!"}
+];
+const V=[["Round","Change a number to a nearby, simpler number."],["Nearest whole number","Round so there are no digits after the decimal point."],["Nearest tenth","Round to one digit after the decimal point."],["Nearest hundredth","Round to two digits after the decimal point."],["Round up","The digit in your place goes up by 1."]];
+const LV=[['1','⭐ Whole Number','like 8.723 → 9'],['2','⭐⭐ Tenths','like 4.575 → 4.6'],['3','⭐⭐⭐ Hundredths','like 5.468 → 5.47'],['4','🔀 Mix + Tricky','like 12.95 → 13.0']];
+const eqR=(input,p)=>{const x=DEC.norm(input);return x!==null&&x===DEC.norm(p.R)};
+makeGuide({id:"rounding-decimals",prefix:"rnd",color:"#ff7a59",h1:`Rounding <span style="color:#ff7a59">Decimals</span> 🎯`,sub:"Round to the nearest whole number, tenth or hundredth.",
+  intro:"Read the cards, then try the <b>Practice Sheet</b>. Pick a level up top — new problems every time! 🚀",
+  cards:T,vocab:V,levels:LV,
+  practice:{tip:"✏️ Round each number, type your answer, then tap <b>Check My Answers</b>. Remember: <b>look next door!</b>",
+    rows:L=>Array.from({length:12},()=>{const p=problem(L);return {q:`Round <b class="bigq">${p.V}</b> to the nearest <b>${p.name}</b>`,inputmode:'decimal',placeholder:'Rounded number',check:v=>eqR(v,p),answer:p.R,why:p.why}})},
+  flash:L=>Array.from({length:12},()=>{const p=problem(L);return {tag:`🎯 Round to the nearest ${p.name}`,q:`<span class="bigq">${p.V}</span>`,a:p.R,x:p.why}}),
+  quiz:L=>Array.from({length:10},(_,i)=>{
+    if(i%3===2){ // which number rounds to X?
+      const p=problem(L),target=p.r,opts=[p.V];let g=0;
+      while(opts.length<4&&g++<200){const q=problem(p.lv);const rr=roundV(q.v,p.u);if(rr!==target&&Math.abs(q.v-target)<p.u*3&&!opts.includes(q.V))opts.push(q.V);
+        if(g>100&&rr!==target&&!opts.includes(q.V))opts.push(q.V)}
+      while(opts.length<4){const w=show3(target+p.u*(opts.length+1)).replace(/0+$/,'').replace(/\.$/,'');if(!opts.includes(w))opts.push(w)}
+      const o=shuffle(opts);return {p:`Which number rounds to <b>${p.R}</b> (nearest ${p.name})?`,opts:o,ans:o.indexOf(p.V),why:`${p.V} → ${p.why}`}}
+    const p=problem(L),cands=[p.R,fmt(Math.floor(p.v/p.u)*p.u+(p.r===Math.floor(p.v/p.u)*p.u?p.u:0),p.dec),fmt(p.r+p.u,p.dec),fmt(Math.max(0,p.r-p.u),p.dec),fmt(roundV(p.v,p.u===1000?100:p.u===100?10:1000),p.u===1000?1:p.u===100?2:0)];
+    const o=shuffle([...new Set(cands)].filter(x=>x!==undefined).slice(0,4));return {p:`Round <b>${p.V}</b> to the nearest <b>${p.name}</b>.`,opts:o,ans:o.indexOf(p.R),why:p.why}}),
+  match:L=>{const out=[],seen=new Set();let g=0;const lv=L==='4'?'2':L;while(out.length<6&&g++<300){const p=problem(lv);if(!seen.has(p.R)&&!out.some(x=>x[0]===p.V)){seen.add(p.R);out.push([p.V,p.R])}}return out},
+  matchPrompt:"Tap a number, then tap what it rounds to (same place as your level)!",superstar:"WOW! Rounding rock star! 🏆"});
 })();
 
 /* =====================================================================
